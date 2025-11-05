@@ -1,4 +1,4 @@
-import React from 'react';
+// HomePage of Zedlabs
 
 const HomePage = () => {
   return (

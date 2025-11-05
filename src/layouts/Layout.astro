@@ -1,5 +1,6 @@
 ---
 import  SpeedInsights  from "@vercel/speed-insights/astro"
+import Analytics from '@vercel/analytics/astro'
 ---
 <!doctype html>
 <html lang="en">
@@ -13,6 +14,7 @@ import  SpeedInsights  from "@vercel/speed-insights/astro"
 	<body>
 		<slot />
 		<SpeedInsights />
+		<Analytics />
 	</body>
 </html>
 
