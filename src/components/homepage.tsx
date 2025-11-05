@@ -1,14 +1,14 @@
 // HomePage of Zedlabs
+import Home from "./page";
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 
 const HomePage = () => {
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh',
-    }}>
-      <h1>zedlabs</h1>
+    <div >
+      <SpeedInsights />
+      <Analytics />
+      <Home />
     </div>
   );
 };

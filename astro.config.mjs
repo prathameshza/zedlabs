@@ -1,9 +1,18 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
+import vercel from '@astrojs/vercel/static'; // or '/serverless' depending on your needs
 
 import react from '@astrojs/react';
 
-// https://astro.build/config
+import tailwindcss from '@tailwindcss/vite';
+
 export default defineConfig({
-  integrations: [react()]
+  adapter: vercel({
+    analytics: true, // This enables both Web Analytics and Speed Insights
+  }),
+
+  integrations: [react()],
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
