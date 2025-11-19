@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel/static'; // or '/serverless' depending on your needs
+import vercel from '@astrojs/vercel'; // or '/serverless' depending on your needs
 
 import react from '@astrojs/react';
 
