@@ -2,29 +2,55 @@
 
 import { useEffect, useState } from "react"
 
-interface Stripe {
-  id: number
-  angle: number
-  width: number
-  delay: number
-}
+
 
 export default function Home() {
-  const [stripes, setStripes] = useState<Stripe[]>([])
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
   const [showContactForm, setShowContactForm] = useState(false)
+  const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    // Generate diagonal gradient stripes with varying angles
-    const newStripes: Stripe[] = Array.from({ length: 8 }, (_, i) => ({
-      id: i,
-      angle: 25 + i * 8,
-      width: Math.random() * 80 + 40,
-      delay: i * 0.3,
-    }))
-    setStripes(newStripes)
+    setMounted(true)
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | "system" | null
+    if (savedTheme) {
+      setTheme(savedTheme)
+    }
+  }, [])
 
+  useEffect(() => {
+    if (!mounted) return
+
+    const root = document.documentElement
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+    const effectiveTheme = theme === "system" ? systemTheme : theme
+
+    if (effectiveTheme === "dark") {
+      root.classList.add("dark")
+    } else {
+      root.classList.remove("dark")
+    }
+
+    if (theme !== "system") {
+      localStorage.setItem("theme", theme)
+    } else {
+      localStorage.removeItem("theme")
+    }
+  }, [theme, mounted])
+
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      if (prev === "system") {
+        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+        return systemTheme === "dark" ? "light" : "dark"
+      }
+      return prev === "dark" ? "light" : "dark"
+    })
+  }
+
+  useEffect(() => {
     // Intersection Observer to track active section
     const observerOptions = {
       root: null,
@@ -142,7 +168,7 @@ export default function Home() {
         })();
       `
       document.body.appendChild(script)
-      
+
       return () => {
         document.body.removeChild(script)
       }
@@ -150,87 +176,95 @@ export default function Home() {
   }, [showContactForm])
 
   return (
-    <div className="min-h-screen w-full overflow-hidden relative">
-      <video
-        className="background-video"
-        autoPlay
-        loop
-        muted
-        playsInline
-      >
-        <source src="/background/background-vid.mp4" type="video/mp4" />
-      </video>
-      <div className="fixed inset-0 bg-black/50 z-[-1]"></div>
-
+    <div className="min-h-screen w-full overflow-hidden relative bg-background">
       <header className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
+          <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
             {/* Logo */}
-            <div className="text-xl md:text-2xl font-bold text-white rajdhani-semibold">zedlabs</div>
+            <img src="/zedlabs_logo.png" alt="zedlabs" className="h-8 md:h-10 w-auto" />
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
-              <a href="#about" className="text-white/80 hover:text-white text-sm font-medium transition rajdhani-regular">
+              <a href="#about" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">
                 About
               </a>
-              <a href="#products" className="text-white/80 hover:text-white text-sm font-medium transition rajdhani-regular">
+              <a href="#products" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">
                 Products
               </a>
-              <a href="#privacy" className="text-white/80 hover:text-white text-sm font-medium transition rajdhani-regular">
+              <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">
                 Privacy
               </a>
-              <a href="#contact" className="text-white/80 hover:text-white text-sm font-medium transition rajdhani-regular">
+              <a href="#contact" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">
                 Contact
               </a>
             </nav>
 
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden text-white p-2"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
+            {/* Theme Toggle & Mobile Menu Button */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleTheme}
+                className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/50"
+                aria-label="Toggle theme"
+              >
+                {mounted && (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                )}
+              </button>
+
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden text-foreground p-2"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 mx-4">
-            <nav className="flex flex-col gap-2 px-6 py-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
-              <a 
-                href="#about" 
-                className="text-white/80 hover:text-white text-sm font-medium transition rajdhani-regular py-2"
+            <nav className="flex flex-col gap-2 px-6 py-4 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
+              <a
+                href="#about"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About
               </a>
-              <a 
-                href="#products" 
-                className="text-white/80 hover:text-white text-sm font-medium transition rajdhani-regular py-2"
+              <a
+                href="#products"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Products
               </a>
-              <a 
-                href="#privacy" 
-                className="text-white/80 hover:text-white text-sm font-medium transition rajdhani-regular py-2"
+              <a
+                href="#privacy"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Privacy
               </a>
-              <a 
-                href="#contact" 
-                className="text-white/80 hover:text-white text-sm font-medium transition rajdhani-regular py-2"
+              <a
+                href="#contact"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contact
@@ -256,13 +290,12 @@ export default function Home() {
             aria-label={`Go to ${section.label}`}
           >
             <div
-              className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${
-                activeSection === section.id
-                  ? "bg-white border-white scale-125"
-                  : "bg-transparent border-white/40 hover:border-white/80"
-              }`}
+              className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${activeSection === section.id
+                ? "bg-primary border-primary scale-125"
+                : "bg-transparent border-muted-foreground/40 hover:border-primary"
+                }`}
             />
-            <span className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 rounded-lg text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap rajdhani-regular">
+            <span className="absolute right-6 top-1/2 -translate-y-1/2 bg-card/50 backdrop-blur-md border border-border px-3 py-1 rounded-lg text-foreground text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap quicksand-regular">
               {section.label}
             </span>
           </button>
@@ -274,19 +307,19 @@ export default function Home() {
         <div className="text-center space-y-6 md:space-y-8 max-w-4xl">
           {/* Main Heading */}
           <div className="space-y-3 md:space-y-4">
-            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold text-white leading-none rajdhani-bold">
-              <span className="block">zedlabs</span>
-            </h1>
+            <div className="flex justify-center">
+              <img src="/zedlabs_logo.png" alt="zedlabs" className="w-full max-w-[280px] sm:max-w-md md:max-w-2xl lg:max-w-4xl h-auto" />
+            </div>
 
             {/* Subheading with mixed styling */}
-            <p className="text-base sm:text-lg md:text-2xl text-white/70 font-light leading-relaxed rajdhani-light">
+            <p className="text-base sm:text-lg md:text-2xl text-muted-foreground font-light leading-relaxed quicksand-light">
               where innovation meets execution
             </p>
           </div>
 
           {/* Description */}
-          <p className="text-white/60 text-base sm:text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed rajdhani-light px-4">
-            Build the future with cutting-edge software solutions designed for teams that think differently.
+          <p className="text-muted-foreground text-base sm:text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed quicksand-light px-4">
+            Build the future with cutting-edge software solutions designed for everyday people who want simplicity and power in their daily lives
           </p>
         </div>
       </main>
@@ -294,12 +327,12 @@ export default function Home() {
       {/* About Section */}
       <section id="about" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 md:p-12">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 md:mb-6 rajdhani-bold">About Us</h2>
-            <p className="text-white/70 text-lg md:text-xl leading-relaxed rajdhani-regular mb-4">
+          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">About Us</h2>
+            <p className="text-muted-foreground text-lg md:text-xl leading-relaxed quicksand-regular mb-4">
               We are a two-person team passionate about creating software that makes life easier. At zedlabs, we focus on developing practical app utilities that solve everyday problems.
             </p>
-            <p className="text-white/70 text-lg md:text-xl leading-relaxed rajdhani-regular">
+            <p className="text-muted-foreground text-lg md:text-xl leading-relaxed quicksand-regular">
               Our mission is simple: build tools that people actually need and enjoy using. We believe great software should be intuitive, efficient, and make your daily tasks smoother.
             </p>
           </div>
@@ -309,32 +342,32 @@ export default function Home() {
       {/* Products Section */}
       <section id="products" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 md:mb-12 text-center rajdhani-bold">Our Products</h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-8 md:mb-12 text-center quicksand-bold">Our Products</h2>
           <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 md:p-8">
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4 rajdhani-semibold">Nekochat</h3>
-              <p className="text-white/70 rajdhani-regular mb-3 md:mb-4 text-base md:text-lg">
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm">
+              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Nekochat</h3>
+              <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
                 A powerful private and offline tool to run llama.cpp supported models in mobile.
               </p>
-              <p className="text-white/70 rajdhani-regular text-base md:text-lg">
+              <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
                 Features include local AI model execution, complete privacy, offline functionality, and support for multiple llama.cpp compatible models.
               </p>
             </div>
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 md:p-8">
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4 rajdhani-semibold">Shaderboy</h3>
-              <p className="text-white/70 rajdhani-regular mb-3 md:mb-4 text-base md:text-lg">
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm">
+              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Shaderboy</h3>
+              <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
                 A Shadertoy inspired utility that lets users create shader simulations in their mobile phones.
               </p>
-              <p className="text-white/70 rajdhani-regular text-base md:text-lg">
+              <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
                 Create stunning visual effects, real-time shader coding, built-in examples, and mobile-optimized performance for creative developers on the go.
               </p>
             </div>
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 md:p-8">
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4 rajdhani-semibold">Motionbox3d</h3>
-              <p className="text-white/70 rajdhani-regular mb-3 md:mb-4 text-base md:text-lg">
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm">
+              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Motionbox3d</h3>
+              <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
                 Brings the simplicity of a video editor to 3D models in the mobile environment.
               </p>
-              <p className="text-white/70 rajdhani-regular text-base md:text-lg">
+              <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
                 Intuitive timeline-based editing, 3D model manipulation, animation controls, and export capabilities—all optimized for mobile devices.
               </p>
             </div>
@@ -345,17 +378,17 @@ export default function Home() {
       {/* Privacy Section */}
       <section id="privacy" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 md:p-12">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 md:mb-6 rajdhani-bold">Privacy Policy</h2>
-            <div className="space-y-4 text-white/70 rajdhani-regular">
+          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Privacy Policy</h2>
+            <div className="space-y-4 text-muted-foreground quicksand-regular">
               <p className="text-lg md:text-xl leading-relaxed">
                 At zedlabs, we take your privacy seriously. We are committed to protecting your personal information and being transparent about how we collect and use it.
               </p>
-              <h3 className="text-xl md:text-2xl font-semibold text-white mt-4 md:mt-6 mb-2 md:mb-3 rajdhani-semibold">Data Collection</h3>
+              <h3 className="text-xl md:text-2xl font-semibold text-foreground mt-4 md:mt-6 mb-2 md:mb-3 quicksand-semibold">Data Collection</h3>
               <p className="text-base md:text-lg leading-relaxed">
                 We collect only the information necessary to provide our services. This includes basic account information and usage data to improve our products.
               </p>
-              <h3 className="text-xl md:text-2xl font-semibold text-white mt-4 md:mt-6 mb-2 md:mb-3 rajdhani-semibold">Data Security</h3>
+              <h3 className="text-xl md:text-2xl font-semibold text-foreground mt-4 md:mt-6 mb-2 md:mb-3 quicksand-semibold">Data Security</h3>
               <p className="text-base md:text-lg leading-relaxed">
                 All data is encrypted and stored securely. We implement industry-standard security measures to protect your information from unauthorized access.
               </p>
@@ -367,18 +400,18 @@ export default function Home() {
       {/* Contact Section */}
       <section id="contact" className="relative z-10 px-4 md:px-8 py-12 md:py-20 pb-16 md:pb-32">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 md:p-12">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 md:mb-6 rajdhani-bold">Contact Us</h2>
+          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Contact Us</h2>
             <div className="space-y-4 md:space-y-6">
-              <p className="text-white/70 text-lg md:text-xl rajdhani-regular">
+              <p className="text-muted-foreground text-lg md:text-xl quicksand-regular">
                 Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
               </p>
-              <div className="grid md:grid-cols-2 gap-4 md:gap-6 text-white/70 rajdhani-regular">
+              <div className="grid md:grid-cols-2 gap-4 md:gap-6 text-muted-foreground quicksand-regular">
                 <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-white mb-2 rajdhani-semibold">Email</h3>
-                  <button 
+                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Email</h3>
+                  <button
                     onClick={() => setShowContactForm(true)}
-                    className="flex items-center gap-2 text-base md:text-lg hover:text-white transition-colors group"
+                    className="flex items-center gap-2 text-base md:text-lg hover:text-primary transition-colors group"
                   >
                     <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -387,7 +420,7 @@ export default function Home() {
                   </button>
                 </div>
                 <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-white mb-2 rajdhani-semibold">Location</h3>
+                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Location</h3>
                   <p className="text-base md:text-lg">Pune, MH</p>
                 </div>
               </div>
@@ -399,10 +432,10 @@ export default function Home() {
       {/* Contact Form Modal */}
       {showContactForm && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-4xl max-h-[90vh] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 md:p-8 overflow-y-auto">
+          <div className="relative w-full max-w-4xl max-h-[90vh] bg-card/90 backdrop-blur-md border border-border rounded-2xl p-6 md:p-8 overflow-y-auto shadow-xl">
             <button
               onClick={() => setShowContactForm(false)}
-              className="absolute top-4 right-4 text-white hover:text-white/70 transition-colors z-10"
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10"
               aria-label="Close form"
             >
               <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
