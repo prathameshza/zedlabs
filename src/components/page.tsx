@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react"
 
-
-
 export default function Home() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -375,23 +373,63 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Privacy Section */}
+      {/* Privacy Section - UPDATED */}
       <section id="privacy" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
         <div className="max-w-6xl mx-auto">
           <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
             <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Privacy Policy</h2>
-            <div className="space-y-4 text-muted-foreground quicksand-regular">
+            
+            <div className="space-y-6 text-muted-foreground quicksand-regular">
+              
               <p className="text-lg md:text-xl leading-relaxed">
-                At zedlabs, we take your privacy seriously. We are committed to protecting your personal information and being transparent about how we collect and use it.
+                At ZedLabs, we respect your privacy and are committed to being transparent about how data is handled in our app.
               </p>
-              <h3 className="text-xl md:text-2xl font-semibold text-foreground mt-4 md:mt-6 mb-2 md:mb-3 quicksand-semibold">Data Collection</h3>
-              <p className="text-base md:text-lg leading-relaxed">
-                We collect only the information necessary to provide our services. This includes basic account information and usage data to improve our products.
-              </p>
-              <h3 className="text-xl md:text-2xl font-semibold text-foreground mt-4 md:mt-6 mb-2 md:mb-3 quicksand-semibold">Data Security</h3>
-              <p className="text-base md:text-lg leading-relaxed">
-                All data is encrypted and stored securely. We implement industry-standard security measures to protect your information from unauthorized access.
-              </p>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Information Collection and Use</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  Our app does not require users to create an account and does not directly collect or store personal information such as name, email address, or phone number.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Advertising</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  Our app displays advertisements provided by Google AdMob. AdMob may collect and use information such as the device’s Advertising ID and app interaction data to display and measure ads. This data is used for advertising purposes and may be shared with Google in accordance with their policies.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Data Security</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  Any data transmitted by third-party services such as AdMob is encrypted in transit using secure protocols.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">User Choices</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  Users can manage or reset their Advertising ID through their device settings. You can also opt out of ad personalization from your Google account settings.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Third-Party Privacy Policies</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  For more information on how Google handles data, please review{' '}
+                  <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary underline transition-colors">
+                    Google’s Privacy Policy
+                  </a>.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Changes to This Privacy Policy</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  We may update this Privacy Policy from time to time. Any changes will be posted on this page.
+                </p>
+              </div>
+
             </div>
           </div>
         </div>
