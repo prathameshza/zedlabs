@@ -1,0 +1,36 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductPage from '../components/ProductPage';
+
+// Import Assets
+import notebookLogo from '../assets/products/notebook/logo/Notebook_logo.png';
+
+// Import Screenshots (Importing multiple frames for the gallery)
+import frame1 from '../assets/products/notebook/Notebook PlayStore Screenshots/Frame 1.png';
+import frame2 from '../assets/products/notebook/Notebook PlayStore Screenshots/Frame 2.png';
+import frame3 from '../assets/products/notebook/Notebook PlayStore Screenshots/Frame 3.png';
+import frame4 from '../assets/products/notebook/Notebook PlayStore Screenshots/Frame 4.png';
+import frame5 from '../assets/products/notebook/Notebook PlayStore Screenshots/Frame 5.png';
+
+const screenshots = [
+  frame1.src,
+  frame2.src,
+  frame3.src,
+  frame4.src,
+  frame5.src
+];
+
+const description = `Transform the way you write and organize your thoughts. Notebook is a versatile writing application designed for everyone from casual note-takers to serious writers. Whether you are jotting down a quick idea, organizing a to-do list, or writing your next novel, Notebook provides the structure and customization you need.`;
+---
+
+<Layout>
+  <ProductPage 
+    client:load
+    title="Notebook"
+    tagline="Notes, PDFs, Docs"
+    description={description}
+    logoSrc={notebookLogo.src}
+    screenshotSrcs={screenshots}
+    downloadLink="https://play.google.com/store/apps/details?id=com.zedlabs.notebook&pcampaignid=web_share"
+  />
+</Layout>

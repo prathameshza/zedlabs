@@ -1,0 +1,1726 @@
+File location: README.md
+
+# Astro Starter Kit: Basics
+
+```sh
+npm create astro@latest -- --template basics
+```
+
+> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+
+## 🚀 Project Structure
+
+Inside of your Astro project, you'll see the following folders and files:
+
+```text
+/
+├── public/
+│   └── favicon.svg
+├── src
+│   ├── assets
+│   │   └── astro.svg
+│   ├── components
+│   │   └── Welcome.astro
+│   ├── layouts
+│   │   └── Layout.astro
+│   └── pages
+│       └── index.astro
+└── package.json
+```
+
+To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+
+## 🧞 Commands
+
+All commands are run from the root of the project, from a terminal:
+
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm install`             | Installs dependencies                            |
+| `npm run dev`             | Starts local dev server at `localhost:4321`      |
+| `npm run build`           | Build your production site to `./dist/`          |
+| `npm run preview`         | Preview your build locally, before deploying     |
+| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `npm run astro -- --help` | Get help using the Astro CLI                     |
+
+## 👀 Want to learn more?
+
+Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+
+--------------------------------------------------------------------------------
+
+File location: astro.config.mjs
+
+import { defineConfig } from 'astro/config';
+import vercel from '@astrojs/vercel'; // or '/serverless' depending on your needs
+
+import react from '@astrojs/react';
+
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  adapter: vercel({
+    analytics: true, // This enables both Web Analytics and Speed Insights
+  }),
+
+  integrations: [react()],
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
+});
+
+--------------------------------------------------------------------------------
+
+File location: package.json
+
+{
+  "name": "zedlabs",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.4.1",
+    "@astrojs/vercel": "^8.0.4",
+    "@tailwindcss/vite": "^4.1.16",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vercel/analytics": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0",
+    "astro": "^5.15.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.16",
+    "tw-animate-css": "^1.4.0"
+  }
+}
+
+
+--------------------------------------------------------------------------------
+
+Asset file: src\assets\astro.svg
+
+Asset file: src\assets\background.svg
+
+Asset file: src\assets\google_play\image.png
+
+Asset file: src\assets\products\notebook\Notebook PlayStore Screenshots\Frame 1.png
+
+Asset file: src\assets\products\notebook\Notebook PlayStore Screenshots\Frame 2.png
+
+Asset file: src\assets\products\notebook\Notebook PlayStore Screenshots\Frame 3.png
+
+Asset file: src\assets\products\notebook\Notebook PlayStore Screenshots\Frame 4.png
+
+Asset file: src\assets\products\notebook\Notebook PlayStore Screenshots\Frame 5.png
+
+Asset file: src\assets\products\notebook\Notebook PlayStore Screenshots\Frame 6.png
+
+Asset file: src\assets\products\notebook\Notebook PlayStore Screenshots\Frame 7.png
+
+Asset file: src\assets\products\notebook\Notebook PlayStore Screenshots\Frame 8.png
+
+Asset file: src\assets\products\notebook\logo\Notebook_logo.png
+
+File location: src\components\PrivacyPolicy.tsx
+
+import React from 'react';
+
+interface PrivacyPolicyProps {
+  variant?: 'general' | 'notebook';
+}
+
+export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProps) {
+  return (
+    <div className="space-y-6 text-muted-foreground quicksand-regular">
+      <p className="text-lg md:text-xl leading-relaxed">
+        At ZedLabs, we respect your privacy and are committed to being transparent about how data is handled in our app.
+      </p>
+
+      <div>
+        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Information Collection and Use</h3>
+        <p className="text-base md:text-lg leading-relaxed">
+          Our app does not require users to create an account and does not directly collect or store personal information such as name, email address, or phone number.
+        </p>
+      </div>
+
+      <div>
+        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Advertising</h3>
+        <p className="text-base md:text-lg leading-relaxed">
+          Our app displays advertisements provided by Google AdMob. AdMob may collect and use information such as the device’s Advertising ID and app interaction data to display and measure ads. This data is used for advertising purposes and may be shared with Google in accordance with their policies.
+        </p>
+      </div>
+
+      <div>
+        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Data Security</h3>
+        <p className="text-base md:text-lg leading-relaxed">
+          Any data transmitted by third-party services such as AdMob is encrypted in transit using secure protocols.
+        </p>
+      </div>
+
+      <div>
+        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">User Choices</h3>
+        <p className="text-base md:text-lg leading-relaxed">
+          Users can manage or reset their Advertising ID through their device settings. You can also opt out of ad personalization from your Google account settings.
+        </p>
+      </div>
+
+      <div>
+        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Third-Party Privacy Policies</h3>
+        <p className="text-base md:text-lg leading-relaxed">
+          For more information on how Google handles data, please review{' '}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary underline transition-colors">
+            Google’s Privacy Policy
+          </a>.
+        </p>
+      </div>
+
+      <div>
+        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Changes to This Privacy Policy</h3>
+        <p className="text-base md:text-lg leading-relaxed">
+          We may update this Privacy Policy from time to time. Any changes will be posted on this page.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+--------------------------------------------------------------------------------
+
+File location: src\components\ProductPage.tsx
+
+"use client"
+
+import { useEffect, useState } from "react"
+import googlePlayBadge from "../assets/google_play/image.png";
+import PrivacyPolicy from "./PrivacyPolicy";
+
+interface ProductPageProps {
+  title: string;
+  tagline: string;
+  description: string;
+  logoSrc: string;
+  screenshotSrcs: string[];
+  downloadLink: string;
+}
+
+export default function ProductPage({ 
+  title, 
+  tagline, 
+  description, 
+  logoSrc, 
+  screenshotSrcs, 
+  downloadLink 
+}: ProductPageProps) {
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showContactForm, setShowContactForm] = useState(false)
+  const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
+  const [mounted, setMounted] = useState(false)
+
+  // --- Theme Logic ---
+  useEffect(() => {
+    setMounted(true)
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | "system" | null
+    if (savedTheme) {
+      setTheme(savedTheme)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+    const root = document.documentElement
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+    const effectiveTheme = theme === "system" ? systemTheme : theme
+
+    if (effectiveTheme === "dark") {
+      root.classList.add("dark")
+    } else {
+      root.classList.remove("dark")
+    }
+
+    if (theme !== "system") {
+      localStorage.setItem("theme", theme)
+    } else {
+      localStorage.removeItem("theme")
+    }
+  }, [theme, mounted])
+
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      if (prev === "system") {
+        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+        return systemTheme === "dark" ? "light" : "dark"
+      }
+      return prev === "dark" ? "light" : "dark"
+    })
+  }
+
+  // --- Contact Form Logic (Zoho) ---
+  useEffect(() => {
+    if (showContactForm) {
+      const script = document.createElement("script")
+      script.type = "text/javascript"
+      script.innerHTML = `
+        (function() {
+          try{
+            var f = document.createElement("iframe");
+            var ifrmSrc = 'https://forms.zohopublic.in/prathmeshpaware9090gm1/form/ContactUs/formperma/UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18?zf_rszfm=1';
+            try{
+              if ( typeof ZFAdvLead != "undefined" && typeof zfutm_zfAdvLead != "undefined" ) {
+                for( var prmIdx = 0 ; prmIdx < ZFAdvLead.utmPNameArr.length ; prmIdx ++ ) {
+                  var utmPm = ZFAdvLead.utmPNameArr[ prmIdx ];
+                  utmPm = ( ZFAdvLead.isSameDomian && ( ZFAdvLead.utmcustPNameArr.indexOf(utmPm) == -1 ) ) ? "zf_" + utmPm : utmPm;
+                  var utmVal = zfutm_zfAdvLead.zfautm_gC_enc( ZFAdvLead.utmPNameArr[ prmIdx ] );
+                  if ( typeof utmVal !== "undefined" ) {
+                    if ( utmVal != "" ) {
+                      if(ifrmSrc.indexOf('?') > 0){
+                        ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal;
+                      }else{
+                        ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal;
+                      }
+                    }
+                  }
+                }
+              }
+              if ( typeof ZFLead !== "undefined" && typeof zfutm_zfLead !== "undefined" ) {
+                for( var prmIdx = 0 ; prmIdx < ZFLead.utmPNameArr.length ; prmIdx ++ ) {
+                  var utmPm = ZFLead.utmPNameArr[ prmIdx ];
+                  var utmVal = zfutm_zfLead.zfutm_gC_enc( ZFLead.utmPNameArr[ prmIdx ] );
+                  if ( typeof utmVal !== "undefined" ) {
+                    if ( utmVal != "" ){
+                      if(ifrmSrc.indexOf('?') > 0){
+                        ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal;
+                      }else{
+                        ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal;
+                      }
+                    }
+                  }
+                }
+              }
+            }catch(e){}
+            f.src = ifrmSrc;
+            f.style.border="none";
+            f.style.height="910px";
+            f.style.width="90%";
+            f.style.transition="all 0.5s ease";
+            f.setAttribute("aria-label", 'Contact Us');
+            var d = document.getElementById("zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18");
+            if (d) {
+              d.appendChild(f);
+            }
+            window.addEventListener('message', function (){
+              var evntData = event.data;
+              if( evntData && evntData.constructor == String ){
+                var zf_ifrm_data = evntData.split("|");
+                if ( zf_ifrm_data.length == 2 || zf_ifrm_data.length == 3 ) {
+                  var zf_perma = zf_ifrm_data[0];
+                  var zf_ifrm_ht_nw = ( parseInt(zf_ifrm_data[1], 10) + 15 ) + "px";
+                  var iframe = document.getElementById("zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18").getElementsByTagName("iframe")[0];
+                  if ( (iframe.src).indexOf('formperma') > 0 && (iframe.src).indexOf(zf_perma) > 0 ) {
+                    var prevIframeHeight = iframe.style.height;
+                    var zf_tout = false;
+                    if( zf_ifrm_data.length == 3 ) {
+                      iframe.scrollIntoView();
+                      zf_tout = true;
+                    }
+                    if ( prevIframeHeight != zf_ifrm_ht_nw ) {
+                      if( zf_tout ) {
+                        setTimeout(function(){
+                          iframe.style.height = zf_ifrm_ht_nw;
+                        },500);
+                      } else {
+                        iframe.style.height = zf_ifrm_ht_nw;
+                      }
+                    }
+                  }
+                }
+              }
+            }, false);
+          }catch(e){}
+        })();
+      `
+      document.body.appendChild(script)
+
+      return () => {
+        document.body.removeChild(script)
+      }
+    }
+  }, [showContactForm])
+
+  return (
+    <div className="min-h-screen w-full overflow-x-hidden relative bg-background">
+      
+      {/* Header */}
+      <header className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
+            {/* Logo - Links back to Home */}
+            <a href="/" className="hover:opacity-80 transition-opacity">
+              <img src="/zedlabs_logo.png" alt="zedlabs" className="h-8 md:h-10 w-auto" />
+            </a>
+
+            {/* Desktop Navigation - Only Privacy & Contact */}
+            <nav className="hidden md:flex items-center gap-8">
+              <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">Privacy</a>
+              <a href="#contact" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">Contact</a>
+            </nav>
+
+            {/* Theme Toggle & Mobile Menu */}
+            <div className="flex items-center gap-2">
+              <button onClick={toggleTheme} className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/50">
+                {mounted && (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                )}
+              </button>
+              
+              <button className="md:hidden text-foreground p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Mobile Menu - Only Privacy & Contact */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-4 mx-4">
+            <nav className="flex flex-col gap-2 px-6 py-4 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
+              <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2" onClick={() => setMobileMenuOpen(false)}>Privacy</a>
+              <a href="#contact" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2" onClick={() => setMobileMenuOpen(false)}>Contact</a>
+            </nav>
+          </div>
+        )}
+      </header>
+
+      {/* Main Product Content */}
+      <main className="relative z-10 pt-32 pb-12 px-4 md:px-8">
+        <div className="max-w-6xl mx-auto space-y-12">
+          
+          {/* Hero Section */}
+          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            
+            {/* App Logo */}
+            <div className="shrink-0">
+              <img 
+                src={logoSrc} 
+                alt={`${title} Logo`} 
+                className="w-32 h-32 md:w-48 md:h-48 rounded-4xl shadow-lg border border-border/50"
+              />
+            </div>
+
+            {/* Product Info */}
+            <div className="flex-1 text-center md:text-left space-y-4">
+              <h1 className="text-4xl md:text-6xl font-bold text-foreground quicksand-bold">{title}</h1>
+              <p className="text-xl md:text-2xl text-primary font-medium quicksand-medium">{tagline}</p>
+              <p className="text-muted-foreground text-lg leading-relaxed quicksand-regular max-w-2xl">
+                {description}
+              </p>
+              
+              <div className="pt-4 flex justify-center md:justify-start">
+                <a 
+                  href={downloadLink} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:opacity-80 transition-opacity"
+                >
+                  <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-14 w-auto" />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Screenshots Section */}
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6 quicksand-bold px-2">Screenshots</h2>
+            <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x snap-mandatory scrollbar-hide">
+              {screenshotSrcs.map((src, index) => (
+                <div key={index} className="shrink-0 snap-center first:pl-2 last:pr-2">
+                  <img 
+                    src={src} 
+                    alt={`Screenshot ${index + 1}`} 
+                    className="h-[400px] md:h-[500px] w-auto rounded-xl border border-border/50 shadow-md"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+      {/* Privacy Section (Notebook Specific) */}
+      <section id="privacy" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Privacy Policy</h2>
+            {/* Using the component - 'notebook' variant */}
+            <PrivacyPolicy variant="notebook" />
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="relative z-10 px-4 md:px-8 py-12 md:py-20 pb-16 md:pb-32">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Contact Us</h2>
+            <div className="space-y-4 md:space-y-6">
+              <p className="text-muted-foreground text-lg md:text-xl quicksand-regular">
+                Have questions about {title}? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+              </p>
+              <div className="grid md:grid-cols-2 gap-4 md:gap-6 text-muted-foreground quicksand-regular">
+                <div>
+                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Email</h3>
+                  <button
+                    onClick={() => setShowContactForm(true)}
+                    className="flex items-center gap-2 text-base md:text-lg hover:text-primary transition-colors group"
+                  >
+                    <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    <span>Contact Us</span>
+                  </button>
+                </div>
+                <div>
+                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Location</h3>
+                  <p className="text-base md:text-lg">Pune, MH</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Modal */}
+      {showContactForm && (
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="relative w-full max-w-4xl max-h-[90vh] bg-card/90 backdrop-blur-md border border-border rounded-2xl p-6 md:p-8 overflow-y-auto shadow-xl">
+            <button
+              onClick={() => setShowContactForm(false)}
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10"
+              aria-label="Close form"
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div id="zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18" className="w-full flex justify-center"></div>
+          </div>
+        </div>
+      )}
+
+    </div>
+  )
+}
+
+--------------------------------------------------------------------------------
+
+File location: src\components\Welcome.astro
+
+---
+import astroLogo from '../assets/astro.svg';
+import background from '../assets/background.svg';
+---
+
+<div id="container">
+	<img id="background" src={background.src} alt="" fetchpriority="high" />
+	<main>
+		<section id="hero">
+			<a href="https://astro.build"
+				><img src={astroLogo.src} width="115" height="48" alt="Astro Homepage" /></a
+			>
+			<h1>
+				To get started, open the <code><pre>src/pages</pre></code> directory in your project.
+			</h1>
+			<section id="links">
+				<a class="button" href="https://docs.astro.build">Read our docs</a>
+				<a href="https://astro.build/chat"
+					>Join our Discord <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"
+						><path
+							fill="currentColor"
+							d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"
+						></path></svg
+					>
+				</a>
+			</section>
+		</section>
+	</main>
+
+	<a href="https://astro.build/blog/astro-5/" id="news" class="box">
+		<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg"
+			><path
+				d="M24.667 12c1.333 1.414 2 3.192 2 5.334 0 4.62-4.934 5.7-7.334 12C18.444 28.567 18 27.456 18 26c0-4.642 6.667-7.053 6.667-14Zm-5.334-5.333c1.6 1.65 2.4 3.43 2.4 5.333 0 6.602-8.06 7.59-6.4 17.334C13.111 27.787 12 25.564 12 22.666c0-4.434 7.333-8 7.333-16Zm-6-5.333C15.111 3.555 16 5.556 16 7.333c0 8.333-11.333 10.962-5.333 22-3.488-.774-6-4-6-8 0-8.667 8.666-10 8.666-20Z"
+				fill="#111827"></path></svg
+		>
+		<h2>What's New in Astro 5.0?</h2>
+		<p>
+			From content layers to server islands, click to learn more about the new features and
+			improvements in Astro 5.0
+		</p>
+	</a>
+</div>
+
+<style>
+	#background {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+		filter: blur(100px);
+	}
+
+	#container {
+		font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+		height: 100%;
+	}
+
+	main {
+		height: 100%;
+		display: flex;
+		justify-content: center;
+	}
+
+	#hero {
+		display: flex;
+		align-items: start;
+		flex-direction: column;
+		justify-content: center;
+		padding: 16px;
+	}
+
+	h1 {
+		font-size: 22px;
+		margin-top: 0.25em;
+	}
+
+	#links {
+		display: flex;
+		gap: 16px;
+	}
+
+	#links a {
+		display: flex;
+		align-items: center;
+		padding: 10px 12px;
+		color: #111827;
+		text-decoration: none;
+		transition: color 0.2s;
+	}
+
+	#links a:hover {
+		color: rgb(78, 80, 86);
+	}
+
+	#links a svg {
+		height: 1em;
+		margin-left: 8px;
+	}
+
+	#links a.button {
+		color: white;
+		background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+		box-shadow:
+			inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+			inset 0 -2px 0 rgba(0, 0, 0, 0.24);
+		border-radius: 10px;
+	}
+
+	#links a.button:hover {
+		color: rgb(230, 230, 230);
+		box-shadow: none;
+	}
+
+	pre {
+		font-family:
+			ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono',
+			monospace;
+		font-weight: normal;
+		background: linear-gradient(14deg, #d83333 0%, #f041ff 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		margin: 0;
+	}
+
+	h2 {
+		margin: 0 0 1em;
+		font-weight: normal;
+		color: #111827;
+		font-size: 20px;
+	}
+
+	p {
+		color: #4b5563;
+		font-size: 16px;
+		line-height: 24px;
+		letter-spacing: -0.006em;
+		margin: 0;
+	}
+
+	code {
+		display: inline-block;
+		background:
+			linear-gradient(66.77deg, #f3cddd 0%, #f5cee7 100%) padding-box,
+			linear-gradient(155deg, #d83333 0%, #f041ff 18%, #f5cee7 45%) border-box;
+		border-radius: 8px;
+		border: 1px solid transparent;
+		padding: 6px 8px;
+	}
+
+	.box {
+		padding: 16px;
+		background: rgba(255, 255, 255, 1);
+		border-radius: 16px;
+		border: 1px solid white;
+	}
+
+	#news {
+		position: absolute;
+		bottom: 16px;
+		right: 16px;
+		max-width: 300px;
+		text-decoration: none;
+		transition: background 0.2s;
+		backdrop-filter: blur(50px);
+	}
+
+	#news:hover {
+		background: rgba(255, 255, 255, 0.55);
+	}
+
+	@media screen and (max-height: 368px) {
+		#news {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		#container {
+			display: flex;
+			flex-direction: column;
+		}
+
+		#hero {
+			display: block;
+			padding-top: 10%;
+		}
+
+		#links {
+			flex-wrap: wrap;
+		}
+
+		#links a.button {
+			padding: 14px 18px;
+		}
+
+		#news {
+			right: 16px;
+			left: 16px;
+			bottom: 2.5rem;
+			max-width: 100%;
+		}
+
+		h1 {
+			line-height: 1.5;
+		}
+	}
+</style>
+
+
+--------------------------------------------------------------------------------
+
+File location: src\components\homepage.tsx
+
+// HomePage of Zedlabs
+import Home from "./page";
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
+
+const HomePage = () => {
+  return (
+    <div >
+      <SpeedInsights />
+      <Analytics />
+      <Home />
+    </div>
+  );
+};
+
+export default HomePage;
+
+
+--------------------------------------------------------------------------------
+
+File location: src\components\page.tsx
+
+"use client"
+
+import { useEffect, useState } from "react"
+// Import the Google Play badge image
+import googlePlayBadge from "../assets/google_play/image.png";
+
+export default function Home() {
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState("home")
+  const [showContactForm, setShowContactForm] = useState(false)
+  const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | "system" | null
+    if (savedTheme) {
+      setTheme(savedTheme)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+
+    const root = document.documentElement
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+    const effectiveTheme = theme === "system" ? systemTheme : theme
+
+    if (effectiveTheme === "dark") {
+      root.classList.add("dark")
+    } else {
+      root.classList.remove("dark")
+    }
+
+    if (theme !== "system") {
+      localStorage.setItem("theme", theme)
+    } else {
+      localStorage.removeItem("theme")
+    }
+  }, [theme, mounted])
+
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      if (prev === "system") {
+        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+        return systemTheme === "dark" ? "light" : "dark"
+      }
+      return prev === "dark" ? "light" : "dark"
+    })
+  }
+
+  useEffect(() => {
+    // Intersection Observer to track active section
+    const observerOptions = {
+      root: null,
+      rootMargin: "-50% 0px -50% 0px",
+      threshold: 0,
+    }
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id || "home")
+        }
+      })
+    }
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions)
+
+    // Observe all sections
+    const sections = document.querySelectorAll("section, main")
+    sections.forEach((section) => observer.observe(section))
+
+    return () => observer.disconnect()
+  }, [])
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    } else if (sectionId === "home") {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+  }
+
+  useEffect(() => {
+    if (showContactForm) {
+      const script = document.createElement("script")
+      script.type = "text/javascript"
+      script.innerHTML = `
+        (function() {
+          try{
+            var f = document.createElement("iframe");
+            var ifrmSrc = 'https://forms.zohopublic.in/prathmeshpaware9090gm1/form/ContactUs/formperma/UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18?zf_rszfm=1';
+            try{
+              if ( typeof ZFAdvLead != "undefined" && typeof zfutm_zfAdvLead != "undefined" ) {
+                for( var prmIdx = 0 ; prmIdx < ZFAdvLead.utmPNameArr.length ; prmIdx ++ ) {
+                  var utmPm = ZFAdvLead.utmPNameArr[ prmIdx ];
+                  utmPm = ( ZFAdvLead.isSameDomian && ( ZFAdvLead.utmcustPNameArr.indexOf(utmPm) == -1 ) ) ? "zf_" + utmPm : utmPm;
+                  var utmVal = zfutm_zfAdvLead.zfautm_gC_enc( ZFAdvLead.utmPNameArr[ prmIdx ] );
+                  if ( typeof utmVal !== "undefined" ) {
+                    if ( utmVal != "" ) {
+                      if(ifrmSrc.indexOf('?') > 0){
+                        ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal;
+                      }else{
+                        ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal;
+                      }
+                    }
+                  }
+                }
+              }
+              if ( typeof ZFLead !== "undefined" && typeof zfutm_zfLead !== "undefined" ) {
+                for( var prmIdx = 0 ; prmIdx < ZFLead.utmPNameArr.length ; prmIdx ++ ) {
+                  var utmPm = ZFLead.utmPNameArr[ prmIdx ];
+                  var utmVal = zfutm_zfLead.zfutm_gC_enc( ZFLead.utmPNameArr[ prmIdx ] );
+                  if ( typeof utmVal !== "undefined" ) {
+                    if ( utmVal != "" ){
+                      if(ifrmSrc.indexOf('?') > 0){
+                        ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal;
+                      }else{
+                        ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal;
+                      }
+                    }
+                  }
+                }
+              }
+            }catch(e){}
+            f.src = ifrmSrc;
+            f.style.border="none";
+            f.style.height="910px";
+            f.style.width="90%";
+            f.style.transition="all 0.5s ease";
+            f.setAttribute("aria-label", 'Contact Us');
+            var d = document.getElementById("zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18");
+            if (d) {
+              d.appendChild(f);
+            }
+            window.addEventListener('message', function (){
+              var evntData = event.data;
+              if( evntData && evntData.constructor == String ){
+                var zf_ifrm_data = evntData.split("|");
+                if ( zf_ifrm_data.length == 2 || zf_ifrm_data.length == 3 ) {
+                  var zf_perma = zf_ifrm_data[0];
+                  var zf_ifrm_ht_nw = ( parseInt(zf_ifrm_data[1], 10) + 15 ) + "px";
+                  var iframe = document.getElementById("zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18").getElementsByTagName("iframe")[0];
+                  if ( (iframe.src).indexOf('formperma') > 0 && (iframe.src).indexOf(zf_perma) > 0 ) {
+                    var prevIframeHeight = iframe.style.height;
+                    var zf_tout = false;
+                    if( zf_ifrm_data.length == 3 ) {
+                      iframe.scrollIntoView();
+                      zf_tout = true;
+                    }
+                    if ( prevIframeHeight != zf_ifrm_ht_nw ) {
+                      if( zf_tout ) {
+                        setTimeout(function(){
+                          iframe.style.height = zf_ifrm_ht_nw;
+                        },500);
+                      } else {
+                        iframe.style.height = zf_ifrm_ht_nw;
+                      }
+                    }
+                  }
+                }
+              }
+            }, false);
+          }catch(e){}
+        })();
+      `
+      document.body.appendChild(script)
+
+      return () => {
+        document.body.removeChild(script)
+      }
+    }
+  }, [showContactForm])
+
+  return (
+    <div className="min-h-screen w-full overflow-hidden relative bg-background">
+      <header className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
+            {/* Logo */}
+            <img src="/zedlabs_logo.png" alt="zedlabs" className="h-8 md:h-10 w-auto" />
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-8">
+              <a href="#about" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">
+                About
+              </a>
+              <a href="#products" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">
+                Products
+              </a>
+              <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">
+                Privacy
+              </a>
+              <a href="#contact" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">
+                Contact
+              </a>
+            </nav>
+
+            {/* Theme Toggle & Mobile Menu Button */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleTheme}
+                className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/50"
+                aria-label="Toggle theme"
+              >
+                {mounted && (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                )}
+              </button>
+
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden text-foreground p-2"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-4 mx-4">
+            <nav className="flex flex-col gap-2 px-6 py-4 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
+              <a
+                href="#about"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                About
+              </a>
+              <a
+                href="#products"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Products
+              </a>
+              <a
+                href="#privacy"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Privacy
+              </a>
+              <a
+                href="#contact"
+                className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
+              </a>
+            </nav>
+          </div>
+        )}
+      </header>
+
+      {/* Dot Navigation */}
+      <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-4">
+        {[
+          { id: "home", label: "Home" },
+          { id: "about", label: "About" },
+          { id: "products", label: "Products" },
+          { id: "privacy", label: "Privacy" },
+          { id: "contact", label: "Contact" },
+        ].map((section) => (
+          <button
+            key={section.id}
+            onClick={() => scrollToSection(section.id)}
+            className="group relative"
+            aria-label={`Go to ${section.label}`}
+          >
+            <div
+              className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${activeSection === section.id
+                ? "bg-primary border-primary scale-125"
+                : "bg-transparent border-muted-foreground/40 hover:border-primary"
+                }`}
+            />
+            <span className="absolute right-6 top-1/2 -translate-y-1/2 bg-card/50 backdrop-blur-md border border-border px-3 py-1 rounded-lg text-foreground text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap quicksand-regular">
+              {section.label}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Main Content */}
+      <main id="home" className="relative z-10 min-h-screen flex items-center justify-center px-4 md:px-8">
+        <div className="text-center space-y-6 md:space-y-8 max-w-4xl">
+          {/* Main Heading */}
+          <div className="space-y-3 md:space-y-4">
+            <div className="flex justify-center">
+              <img src="/zedlabs_logo.png" alt="zedlabs" className="w-full max-w-[280px] sm:max-w-md md:max-w-2xl lg:max-w-4xl h-auto" />
+            </div>
+
+            {/* Subheading with mixed styling */}
+            <p className="text-base sm:text-lg md:text-2xl text-muted-foreground font-light leading-relaxed quicksand-light">
+              where innovation meets execution
+            </p>
+          </div>
+
+          {/* Description */}
+          <p className="text-muted-foreground text-base sm:text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed quicksand-light px-4">
+            Build the future with cutting-edge software solutions designed for everyday people who want simplicity and power in their daily lives
+          </p>
+        </div>
+      </main>
+
+      {/* About Section */}
+      <section id="about" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">About Us</h2>
+            <p className="text-muted-foreground text-lg md:text-xl leading-relaxed quicksand-regular mb-4">
+              We are a two-person team passionate about creating software that makes life easier. At zedlabs, we focus on developing practical app utilities that solve everyday problems.
+            </p>
+            <p className="text-muted-foreground text-lg md:text-xl leading-relaxed quicksand-regular">
+              Our mission is simple: build tools that people actually need and enjoy using. We believe great software should be intuitive, efficient, and make your daily tasks smoother.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Products Section */}
+      <section id="products" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-8 md:mb-12 text-center quicksand-bold">Our Products</h2>
+          <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+            
+            {/* Notebook Card - Updated to separate click areas */}
+            <div 
+              className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative"
+            >
+              <a href="/notebook" className="flex-1 focus:outline-none block">
+                <div className="flex justify-between items-start mb-3 md:mb-4">
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground quicksand-semibold">Notebook</h3>
+                  <svg className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </div>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
+                  Transform the way you write and organize your thoughts. Notes, PDFs, and Docs in one place.
+                </p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg mb-4">
+                  A versatile writing app for everyone. Create quick Notes for standalone thoughts or structured Books for larger projects.
+                </p>
+              </a>
+              
+              <div className="mt-4 relative z-20">
+                 <a 
+                  href="https://play.google.com/store/apps/details?id=com.zedlabs.notebook&pcampaignid=web_share" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-block hover:opacity-80 transition-opacity"
+                >
+                  <img 
+                    src={googlePlayBadge.src} 
+                    alt="Get it on Google Play" 
+                    className="h-12 w-auto"
+                  />
+                </a>
+              </div>
+            </div>
+
+            {/* Nekochat - Coming Soon */}
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between">
+              <div>
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Nekochat</h3>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
+                  A powerful private and offline tool to run llama.cpp supported models in mobile.
+                </p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
+                  Features include local AI model execution, complete privacy, offline functionality, and support for multiple llama.cpp compatible models.
+                </p>
+              </div>
+              <div className="mt-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
+                  Coming Soon
+                </span>
+              </div>
+            </div>
+            
+            {/* Shaderboy - Coming Soon */}
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between">
+              <div>
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Shaderboy</h3>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
+                  A Shadertoy inspired utility that lets users create shader simulations in their mobile phones.
+                </p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
+                  Create stunning visual effects, real-time shader coding, built-in examples, and mobile-optimized performance for creative developers on the go.
+                </p>
+              </div>
+              <div className="mt-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
+                  Coming Soon
+                </span>
+              </div>
+            </div>
+            
+            {/* Motionbox3d - Coming Soon */}
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between">
+              <div>
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Motionbox3d</h3>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
+                  Brings the simplicity of a video editor to 3D models in the mobile environment.
+                </p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
+                  Intuitive timeline-based editing, 3D model manipulation, animation controls, and export capabilities—all optimized for mobile devices.
+                </p>
+              </div>
+              <div className="mt-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
+                  Coming Soon
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Privacy Section */}
+      <section id="privacy" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Privacy Policy</h2>
+            
+            <div className="space-y-6 text-muted-foreground quicksand-regular">
+              
+              <p className="text-lg md:text-xl leading-relaxed">
+                At ZedLabs, we respect your privacy and are committed to being transparent about how data is handled in our app.
+              </p>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Information Collection and Use</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  Our app does not require users to create an account and does not directly collect or store personal information such as name, email address, or phone number.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Advertising</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  Our app displays advertisements provided by Google AdMob. AdMob may collect and use information such as the device’s Advertising ID and app interaction data to display and measure ads. This data is used for advertising purposes and may be shared with Google in accordance with their policies.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Data Security</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  Any data transmitted by third-party services such as AdMob is encrypted in transit using secure protocols.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">User Choices</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  Users can manage or reset their Advertising ID through their device settings. You can also opt out of ad personalization from your Google account settings.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Third-Party Privacy Policies</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  For more information on how Google handles data, please review{' '}
+                  <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary underline transition-colors">
+                    Google’s Privacy Policy
+                  </a>.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Changes to This Privacy Policy</h3>
+                <p className="text-base md:text-lg leading-relaxed">
+                  We may update this Privacy Policy from time to time. Any changes will be posted on this page.
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="relative z-10 px-4 md:px-8 py-12 md:py-20 pb-16 md:pb-32">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Contact Us</h2>
+            <div className="space-y-4 md:space-y-6">
+              <p className="text-muted-foreground text-lg md:text-xl quicksand-regular">
+                Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+              </p>
+              <div className="grid md:grid-cols-2 gap-4 md:gap-6 text-muted-foreground quicksand-regular">
+                <div>
+                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Email</h3>
+                  <button
+                    onClick={() => setShowContactForm(true)}
+                    className="flex items-center gap-2 text-base md:text-lg hover:text-primary transition-colors group"
+                  >
+                    <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    <span>Contact Us</span>
+                  </button>
+                </div>
+                <div>
+                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Location</h3>
+                  <p className="text-base md:text-lg">Pune, MH</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Modal */}
+      {showContactForm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="relative w-full max-w-4xl max-h-[90vh] bg-card/90 backdrop-blur-md border border-border rounded-2xl p-6 md:p-8 overflow-y-auto shadow-xl">
+            <button
+              onClick={() => setShowContactForm(false)}
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10"
+              aria-label="Close form"
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div id="zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18" className="w-full flex justify-center"></div>
+          </div>
+        </div>
+      )}
+
+    </div>
+  )
+}
+
+--------------------------------------------------------------------------------
+
+File location: src\layouts\Layout.astro
+
+---
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/png" href="/zedlabs_favicon.png" />
+		<meta name="generator" content={Astro.generator} />
+
+		<!-- Google Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+		<title>zedlabs</title>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\404.astro
+
+---
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found | zedlabs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/zedlabs_favicon.png">
+</head>
+<body class="bg-black">
+  <div class="min-h-screen w-full overflow-hidden relative">
+    <video
+      class="background-video"
+      autoplay
+      loop
+      muted
+      playsinline
+    >
+      <source src="/background/background-vid.mp4" type="video/mp4" />
+    </video>
+    <div class="fixed inset-0 bg-black/50 z-[-1]"></div>
+
+    <header class="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
+      <div class="flex items-center justify-between max-w-7xl mx-auto">
+        <div class="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
+          <a href="/" class="text-xl md:text-2xl font-bold text-white rajdhani-semibold hover:text-white/80 transition">
+            zedlabs
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="relative z-10 min-h-screen flex items-center justify-center px-4 md:px-8">
+      <div class="text-center space-y-6 md:space-y-8 max-w-4xl">
+        <div class="space-y-3 md:space-y-4">
+          <h1 class="text-8xl md:text-9xl font-bold text-white leading-none rajdhani-bold">
+            404
+          </h1>
+          <p class="text-2xl md:text-4xl text-white/70 font-light leading-relaxed rajdhani-light">
+            Page Not Found
+          </p>
+        </div>
+
+        <p class="text-white/60 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed rajdhani-regular px-4">
+          The page you're looking for doesn't exist or has been moved.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+          <a
+            href="/"
+            class="px-8 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white hover:bg-white/20 transition-all rajdhani-medium text-lg"
+          >
+            Go Home
+          </a>
+          <a
+            href="/#contact"
+            class="px-8 py-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all rajdhani-medium text-lg"
+          >
+            Contact Us
+          </a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
+
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\index.astro
+
+---
+import HomePage from '../components/homepage';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+	<HomePage client:load />
+</Layout>
+
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\notebook.astro
+
+---
+import Layout from '../layouts/Layout.astro';
+import ProductPage from '../components/ProductPage';
+
+// Import Assets
+import notebookLogo from '../assets/products/notebook/logo/Notebook_logo.png';
+
+// Import Screenshots (Importing multiple frames for the gallery)
+import frame1 from '../assets/products/notebook/Notebook PlayStore Screenshots/Frame 1.png';
+import frame2 from '../assets/products/notebook/Notebook PlayStore Screenshots/Frame 2.png';
+import frame3 from '../assets/products/notebook/Notebook PlayStore Screenshots/Frame 3.png';
+import frame4 from '../assets/products/notebook/Notebook PlayStore Screenshots/Frame 4.png';
+import frame5 from '../assets/products/notebook/Notebook PlayStore Screenshots/Frame 5.png';
+
+const screenshots = [
+  frame1.src,
+  frame2.src,
+  frame3.src,
+  frame4.src,
+  frame5.src
+];
+
+const description = `Transform the way you write and organize your thoughts. Notebook is a versatile writing application designed for everyone from casual note-takers to serious writers. Whether you are jotting down a quick idea, organizing a to-do list, or writing your next novel, Notebook provides the structure and customization you need.`;
+---
+
+<Layout>
+  <ProductPage 
+    client:load
+    title="Notebook"
+    tagline="Notes, PDFs, Docs"
+    description={description}
+    logoSrc={notebookLogo.src}
+    screenshotSrcs={screenshots}
+    downloadLink="https://play.google.com/store/apps/details?id=com.zedlabs.notebook&pcampaignid=web_share"
+  />
+</Layout>
+
+--------------------------------------------------------------------------------
+
+File location: src\styles\global.css
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Light Theme */
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.6 0.15 230);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.145 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.35 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.145 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.886 0 0);
+  --input: oklch(0.886 0 0);
+  --ring: oklch(0.6 0.15 230);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.145 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.145 0 0);
+  --sidebar-border: oklch(0.886 0 0);
+  --sidebar-ring: oklch(0.145 0 0);
+}
+
+.dark {
+  /* Dark Theme */
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.6 0.15 230);
+  --primary-foreground: oklch(0.145 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.6 0.15 230);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.6 0.15 230);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+@theme inline {
+  --font-sans: "Geist", "Geist Fallback";
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply text-foreground;
+    position: relative;
+  }
+
+  /* Hide Scrollbar */
+  ::-webkit-scrollbar {
+    width: 0px;
+    display: none;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: none;
+  }
+}
+
+/* Added tech glyph animation styles */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.glyph {
+  animation: float 6s ease-in-out infinite;
+  opacity: 0.08;
+}
+
+.glyph-rotate {
+  animation: rotate 20s linear infinite;
+}
+
+
+
+@layer components {
+  .body {
+    font-family: 'Quicksand', sans-serif;
+  }
+}
+
+.quicksand-light {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.quicksand-regular {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.quicksand-medium {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.quicksand-semibold {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.quicksand-bold {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+--------------------------------------------------------------------------------
+
+File location: tsconfig.json
+
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [
+    ".astro/types.d.ts",
+    "**/*"
+  ],
+  "exclude": [
+    "dist"
+  ],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  }
+}
+
+--------------------------------------------------------------------------------
+

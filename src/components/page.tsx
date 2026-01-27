@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+// Import the Google Play badge image
+import googlePlayBadge from "../assets/google_play/image.png";
 
 export default function Home() {
 
@@ -341,39 +343,101 @@ export default function Home() {
       <section id="products" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-8 md:mb-12 text-center quicksand-bold">Our Products</h2>
-          <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm">
-              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Nekochat</h3>
-              <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
-                A powerful private and offline tool to run llama.cpp supported models in mobile.
-              </p>
-              <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
-                Features include local AI model execution, complete privacy, offline functionality, and support for multiple llama.cpp compatible models.
-              </p>
+          <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+            
+            {/* Notebook Card - Updated to separate click areas */}
+            <div 
+              className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative"
+            >
+              <a href="/notebook" className="flex-1 focus:outline-none block">
+                <div className="flex justify-between items-start mb-3 md:mb-4">
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground quicksand-semibold">Notebook</h3>
+                  <svg className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </div>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
+                  Transform the way you write and organize your thoughts. Notes, PDFs, and Docs in one place.
+                </p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg mb-4">
+                  A versatile writing app for everyone. Create quick Notes for standalone thoughts or structured Books for larger projects.
+                </p>
+              </a>
+              
+              <div className="mt-4 relative z-20">
+                 <a 
+                  href="https://play.google.com/store/apps/details?id=com.zedlabs.notebook&pcampaignid=web_share" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-block hover:opacity-80 transition-opacity"
+                >
+                  <img 
+                    src={googlePlayBadge.src} 
+                    alt="Get it on Google Play" 
+                    className="h-12 w-auto"
+                  />
+                </a>
+              </div>
             </div>
-            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm">
-              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Shaderboy</h3>
-              <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
-                A Shadertoy inspired utility that lets users create shader simulations in their mobile phones.
-              </p>
-              <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
-                Create stunning visual effects, real-time shader coding, built-in examples, and mobile-optimized performance for creative developers on the go.
-              </p>
+
+            {/* Nekochat - Coming Soon */}
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between">
+              <div>
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Nekochat</h3>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
+                  A powerful private and offline tool to run llama.cpp supported models in mobile.
+                </p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
+                  Features include local AI model execution, complete privacy, offline functionality, and support for multiple llama.cpp compatible models.
+                </p>
+              </div>
+              <div className="mt-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
+                  Coming Soon
+                </span>
+              </div>
             </div>
-            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm">
-              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Motionbox3d</h3>
-              <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
-                Brings the simplicity of a video editor to 3D models in the mobile environment.
-              </p>
-              <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
-                Intuitive timeline-based editing, 3D model manipulation, animation controls, and export capabilities—all optimized for mobile devices.
-              </p>
+            
+            {/* Shaderboy - Coming Soon */}
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between">
+              <div>
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Shaderboy</h3>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
+                  A Shadertoy inspired utility that lets users create shader simulations in their mobile phones.
+                </p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
+                  Create stunning visual effects, real-time shader coding, built-in examples, and mobile-optimized performance for creative developers on the go.
+                </p>
+              </div>
+              <div className="mt-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
+                  Coming Soon
+                </span>
+              </div>
+            </div>
+            
+            {/* Motionbox3d - Coming Soon */}
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between">
+              <div>
+                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Motionbox3d</h3>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
+                  Brings the simplicity of a video editor to 3D models in the mobile environment.
+                </p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
+                  Intuitive timeline-based editing, 3D model manipulation, animation controls, and export capabilities—all optimized for mobile devices.
+                </p>
+              </div>
+              <div className="mt-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
+                  Coming Soon
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Privacy Section - UPDATED */}
+      {/* Privacy Section */}
       <section id="privacy" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
         <div className="max-w-6xl mx-auto">
           <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
