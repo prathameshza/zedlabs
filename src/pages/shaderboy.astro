@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductPage from '../components/ProductPage';
+
+// Import Assets
+import shaderboyLogo from '../assets/products/shaderboy/logo/shaderboy_logo.png';
+
+// Import Screenshots
+import frame1 from '../assets/products/shaderboy/Shaderboy PlayStore Screenshots/Frame 1.png';
+import frame2 from '../assets/products/shaderboy/Shaderboy PlayStore Screenshots/Frame 2.png';
+import frame3 from '../assets/products/shaderboy/Shaderboy PlayStore Screenshots/Frame 3.png';
+import frame4 from '../assets/products/shaderboy/Shaderboy PlayStore Screenshots/Frame 4.png';
+import frame5 from '../assets/products/shaderboy/Shaderboy PlayStore Screenshots/Frame 5.png';
+import frame6 from '../assets/products/shaderboy/Shaderboy PlayStore Screenshots/Frame 6.png';
+import frame7 from '../assets/products/shaderboy/Shaderboy PlayStore Screenshots/Frame 7.png';
+
+const screenshots = [
+  frame1.src,
+  frame2.src,
+  frame3.src,
+  frame4.src,
+  frame5.src,
+  frame6.src,
+  frame7.src
+];
+
+const description = `Shaderboy is a Shadertoy inspired utility that lets users create shader simulations directly on their mobile phones. It features real-time shader coding, built-in examples, and mobile-optimized performance for creative developers on the go.`;
+---
+
+<Layout>
+  <ProductPage 
+    client:load
+    title="Shaderboy"
+    tagline="Create Shaders on Mobile"
+    description={description}
+    logoSrc={shaderboyLogo.src}
+    screenshotSrcs={screenshots}
+    isComingSoon={true}
+  />
+</Layout>

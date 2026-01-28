@@ -10,7 +10,8 @@ interface ProductPageProps {
   description: string;
   logoSrc: string;
   screenshotSrcs: string[];
-  downloadLink: string;
+  downloadLink?: string;
+  isComingSoon?: boolean;
 }
 
 export default function ProductPage({ 
@@ -19,7 +20,8 @@ export default function ProductPage({
   description, 
   logoSrc, 
   screenshotSrcs, 
-  downloadLink 
+  downloadLink,
+  isComingSoon = false
 }: ProductPageProps) {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -27,13 +29,10 @@ export default function ProductPage({
   const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
   const [mounted, setMounted] = useState(false)
 
-  // --- Theme Logic ---
   useEffect(() => {
     setMounted(true)
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | "system" | null
-    if (savedTheme) {
-      setTheme(savedTheme)
-    }
+    if (savedTheme) { setTheme(savedTheme) }
   }, [])
 
   useEffect(() => {
@@ -42,17 +41,11 @@ export default function ProductPage({
     const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
     const effectiveTheme = theme === "system" ? systemTheme : theme
 
-    if (effectiveTheme === "dark") {
-      root.classList.add("dark")
-    } else {
-      root.classList.remove("dark")
-    }
+    if (effectiveTheme === "dark") { root.classList.add("dark") } 
+    else { root.classList.remove("dark") }
 
-    if (theme !== "system") {
-      localStorage.setItem("theme", theme)
-    } else {
-      localStorage.removeItem("theme")
-    }
+    if (theme !== "system") { localStorage.setItem("theme", theme) } 
+    else { localStorage.removeItem("theme") }
   }, [theme, mounted])
 
   const toggleTheme = () => {
@@ -83,11 +76,8 @@ export default function ProductPage({
                   var utmVal = zfutm_zfAdvLead.zfautm_gC_enc( ZFAdvLead.utmPNameArr[ prmIdx ] );
                   if ( typeof utmVal !== "undefined" ) {
                     if ( utmVal != "" ) {
-                      if(ifrmSrc.indexOf('?') > 0){
-                        ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal;
-                      }else{
-                        ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal;
-                      }
+                      if(ifrmSrc.indexOf('?') > 0){ ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal; }
+                      else{ ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal; }
                     }
                   }
                 }
@@ -98,26 +88,18 @@ export default function ProductPage({
                   var utmVal = zfutm_zfLead.zfutm_gC_enc( ZFLead.utmPNameArr[ prmIdx ] );
                   if ( typeof utmVal !== "undefined" ) {
                     if ( utmVal != "" ){
-                      if(ifrmSrc.indexOf('?') > 0){
-                        ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal;
-                      }else{
-                        ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal;
-                      }
+                      if(ifrmSrc.indexOf('?') > 0){ ifrmSrc = ifrmSrc+'&'+utmPm+'='+utmVal; }
+                      else{ ifrmSrc = ifrmSrc+'?'+utmPm+'='+utmVal; }
                     }
                   }
                 }
               }
             }catch(e){}
             f.src = ifrmSrc;
-            f.style.border="none";
-            f.style.height="910px";
-            f.style.width="90%";
-            f.style.transition="all 0.5s ease";
+            f.style.border="none"; f.style.height="910px"; f.style.width="90%"; f.style.transition="all 0.5s ease";
             f.setAttribute("aria-label", 'Contact Us');
             var d = document.getElementById("zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18");
-            if (d) {
-              d.appendChild(f);
-            }
+            if (d) { d.appendChild(f); }
             window.addEventListener('message', function (){
               var evntData = event.data;
               if( evntData && evntData.constructor == String ){
@@ -129,18 +111,10 @@ export default function ProductPage({
                   if ( (iframe.src).indexOf('formperma') > 0 && (iframe.src).indexOf(zf_perma) > 0 ) {
                     var prevIframeHeight = iframe.style.height;
                     var zf_tout = false;
-                    if( zf_ifrm_data.length == 3 ) {
-                      iframe.scrollIntoView();
-                      zf_tout = true;
-                    }
+                    if( zf_ifrm_data.length == 3 ) { iframe.scrollIntoView(); zf_tout = true; }
                     if ( prevIframeHeight != zf_ifrm_ht_nw ) {
-                      if( zf_tout ) {
-                        setTimeout(function(){
-                          iframe.style.height = zf_ifrm_ht_nw;
-                        },500);
-                      } else {
-                        iframe.style.height = zf_ifrm_ht_nw;
-                      }
+                      if( zf_tout ) { setTimeout(function(){ iframe.style.height = zf_ifrm_ht_nw; },500); } 
+                      else { iframe.style.height = zf_ifrm_ht_nw; }
                     }
                   }
                 }
@@ -150,10 +124,7 @@ export default function ProductPage({
         })();
       `
       document.body.appendChild(script)
-
-      return () => {
-        document.body.removeChild(script)
-      }
+      return () => { document.body.removeChild(script) }
     }
   }, [showContactForm])
 
@@ -164,18 +135,13 @@ export default function ProductPage({
       <header className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
-            {/* Logo - Links back to Home */}
             <a href="/" className="hover:opacity-80 transition-opacity">
               <img src="/zedlabs_logo.png" alt="zedlabs" className="h-8 md:h-10 w-auto" />
             </a>
-
-            {/* Desktop Navigation - Only Privacy & Contact */}
             <nav className="hidden md:flex items-center gap-8">
               <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">Privacy</a>
               <a href="#contact" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">Contact</a>
             </nav>
-
-            {/* Theme Toggle & Mobile Menu */}
             <div className="flex items-center gap-2">
               <button onClick={toggleTheme} className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/50">
                 {mounted && (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? (
@@ -184,15 +150,12 @@ export default function ProductPage({
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
                 )}
               </button>
-              
               <button className="md:hidden text-foreground p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
               </button>
             </div>
           </div>
         </div>
-        
-        {/* Mobile Menu - Only Privacy & Contact */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 mx-4">
             <nav className="flex flex-col gap-2 px-6 py-4 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
@@ -228,14 +191,20 @@ export default function ProductPage({
               </p>
               
               <div className="pt-4 flex justify-center md:justify-start">
-                <a 
-                  href={downloadLink} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:opacity-80 transition-opacity"
-                >
-                  <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-14 w-auto" />
-                </a>
+                {isComingSoon ? (
+                   <span className="inline-flex items-center px-6 py-3 rounded-full text-base font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
+                    Coming Soon
+                  </span>
+                ) : (
+                  <a 
+                    href={downloadLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:opacity-80 transition-opacity"
+                  >
+                    <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-14 w-auto" />
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -264,7 +233,6 @@ export default function ProductPage({
         <div className="max-w-6xl mx-auto">
           <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
             <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Privacy Policy</h2>
-            {/* Using the component - 'notebook' variant */}
             <PrivacyPolicy variant="notebook" />
           </div>
         </div>

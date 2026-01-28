@@ -128,6 +128,22 @@ Asset file: src\assets\products\notebook\Notebook PlayStore Screenshots\Frame 8.
 
 Asset file: src\assets\products\notebook\logo\Notebook_logo.png
 
+Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 1.png
+
+Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 2.png
+
+Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 3.png
+
+Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 4.png
+
+Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 5.png
+
+Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 6.png
+
+Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 7.png
+
+Asset file: src\assets\products\shaderboy\logo\shaderboy_logo.png
+
 File location: src\components\PrivacyPolicy.tsx
 
 import React from 'react';
