@@ -1,0 +1,48 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <div class="min-h-screen bg-background relative overflow-x-hidden">
+    <!-- Header -->
+    <header class="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
+      <div class="flex items-center justify-between max-w-7xl mx-auto">
+        <div class="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
+          <a href="/" class="hover:opacity-80 transition-opacity">
+            <img src="/zedlabs_logo.png" alt="zedlabs" class="h-8 md:h-10 w-auto" />
+          </a>
+          <nav>
+            <a href="/" class="text-muted-foreground hover:text-primary text-sm font-medium quicksand-regular">Home</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main class="relative z-10 pt-32 pb-12 px-4 md:px-8">
+      <div class="max-w-4xl mx-auto">
+        <div class="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
+          <h1 class="text-4xl md:text-6xl font-bold text-foreground mb-4 quicksand-bold">WebCodeBox</h1>
+          <p class="text-destructive text-xl mb-8 quicksand-medium">Account Deletion</p>
+          
+          <div class="space-y-6 text-muted-foreground quicksand-regular">
+            <p class="text-lg md:text-xl leading-relaxed">
+              To delete your WebCodeBox account, please contact us at 
+              <a href="mailto:zedlabs@zohomail.in" class="text-primary hover:underline">zedlabs@zohomail.in</a> 
+              or use the in-app delete button.
+            </p>
+            
+            <p class="text-lg md:text-xl leading-relaxed">
+              We will delete your email, display name, and all saved projects within 30 days.
+            </p>
+          </div>
+
+          <div class="mt-12 pt-8 border-t border-border">
+            <a href="/webcodebox/privacy" class="text-muted-foreground hover:text-primary transition-colors text-sm quicksand-medium">
+              View Privacy Policy
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</Layout>
