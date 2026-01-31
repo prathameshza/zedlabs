@@ -1,0 +1,38 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PrivacyPolicy from '../../components/PrivacyPolicy';
+---
+
+<Layout>
+  <div class="min-h-screen bg-background relative overflow-x-hidden">
+    <header class="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
+      <div class="flex items-center justify-between max-w-7xl mx-auto">
+        <div class="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
+          <a href="/" class="hover:opacity-80 transition-opacity">
+            <img src="/zedlabs_logo.png" alt="zedlabs" class="h-8 md:h-10 w-auto" />
+          </a>
+          <nav>
+            <a href="/" class="text-muted-foreground hover:text-primary text-sm font-medium quicksand-regular">Home</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main class="relative z-10 pt-32 pb-12 px-4 md:px-8">
+      <div class="max-w-4xl mx-auto">
+        <div class="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
+          <h1 class="text-4xl md:text-6xl font-bold text-foreground mb-4 quicksand-bold">WebCodeBox</h1>
+          <p class="text-primary text-xl mb-8 quicksand-medium">Privacy Policy</p>
+          
+          <PrivacyPolicy variant="webcodebox" client:load />
+
+          <div class="mt-12 pt-8 border-t border-border">
+            <p class="text-muted-foreground text-sm">
+             </strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</Layout>

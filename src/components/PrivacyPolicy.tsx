@@ -1,51 +1,62 @@
 import React from 'react';
 
 interface PrivacyPolicyProps {
-  variant?: 'general' | 'notebook';
+  variant?: 'general' | 'notebook' | 'webcodebox';
 }
 
 export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProps) {
   return (
     <div className="space-y-6 text-muted-foreground quicksand-regular">
       <p className="text-lg md:text-xl leading-relaxed">
-        At ZedLabs, we respect your privacy and are committed to being transparent about how data is handled in our app.
+        At ZedLabs, we respect your privacy and are committed to being transparent about how data is handled in <strong>WebCodeBox</strong>.
       </p>
 
-      <div>
-        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Information Collection and Use</h3>
-        <p className="text-base md:text-lg leading-relaxed">
-          Our app does not require users to create an account and does not directly collect or store personal information such as name, email address, or phone number.
-        </p>
-      </div>
+      {/* 1. AUTHENTICATION SECTION (Crucial for Play Store Review) */}
+      {(variant === 'webcodebox') && (
+        <div>
+          <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Authentication & User Data</h3>
+          <p className="text-base md:text-lg leading-relaxed">
+            WebCodeBox offers "Login with Google" via Firebase Authentication. When you sign in, we collect your <strong>email address, name, and profile picture URL</strong>. This data is used solely to identify your account, sync your preferences across devices, and manage your pro features. We do not store any other personal files or sensitive data in the cloud.
+          </p>
+        </div>
+      )}
+
+      {/* 2. IN-APP PURCHASES */}
+      {(variant === 'webcodebox') && (
+        <div>
+          <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">In-App Purchases & Payments</h3>
+          <p className="text-base md:text-lg leading-relaxed">
+            We offer premium features via Google Play In-App Billing. All payment transactions are processed securely by Google. ZedLabs <strong>does not</strong> collect or store your credit card numbers or financial information. We only receive a confirmation token from Google to verify your purchase.
+          </p>
+        </div>
+      )}
 
       <div>
         <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Advertising</h3>
         <p className="text-base md:text-lg leading-relaxed">
-          Our app displays advertisements provided by Google AdMob. AdMob may collect and use information such as the device’s Advertising ID and app interaction data to display and measure ads. This data is used for advertising purposes and may be shared with Google in accordance with their policies.
+          Our app displays advertisements provided by Google AdMob. AdMob may collect and use information such as the device’s Advertising ID and app interaction data to display and measure ads.
         </p>
       </div>
 
-      <div>
-        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Data Security</h3>
-        <p className="text-base md:text-lg leading-relaxed">
-          Any data transmitted by third-party services such as AdMob is encrypted in transit using secure protocols.
-        </p>
-      </div>
+      {/* 3. DATA DELETION (Required by Google) */}
+      {variant === 'webcodebox' && (
+        <div>
+          <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Data Retention and Deletion</h3>
+          <p className="text-base md:text-lg leading-relaxed">
+            We retain your login information as long as your account is active. You may request the deletion of your account and associated data at any time by contacting us via the support link below.
+          </p>
+        </div>
+      )}
 
       <div>
-        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">User Choices</h3>
+        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Third-Party Services</h3>
         <p className="text-base md:text-lg leading-relaxed">
-          Users can manage or reset their Advertising ID through their device settings. You can also opt out of ad personalization from your Google account settings.
-        </p>
-      </div>
-
-      <div>
-        <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Third-Party Privacy Policies</h3>
-        <p className="text-base md:text-lg leading-relaxed">
-          For more information on how Google handles data, please review{' '}
-          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary underline transition-colors">
-            Google’s Privacy Policy
-          </a>.
+          We use the following third-party services:
+          <ul className="list-disc ml-6 mt-2 space-y-1">
+            <li><a href="https://policies.google.com/privacy" className="underline">Google Play Services</a></li>
+            <li><a href="https://firebase.google.com/support/privacy" className="underline">Firebase Authentication</a></li>
+            <li><a href="https://developers.google.com/admob/terms" className="underline">AdMob</a></li>
+          </ul>
         </p>
       </div>
 
