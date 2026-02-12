@@ -1,14 +1,18 @@
 import React from 'react';
 
 interface PrivacyPolicyProps {
-  variant?: 'general' | 'notebook' | 'webcodebox';
+  variant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy';
 }
 
 export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProps) {
+  const appName = variant === 'webcodebox' ? 'WebCodeBox' :
+    variant === 'notebook' ? 'Notebook' :
+      variant === 'shaderboy' ? 'Shaderboy' : 'our apps';
+
   return (
     <div className="space-y-6 text-muted-foreground quicksand-regular">
       <p className="text-lg md:text-xl leading-relaxed">
-        At ZedLabs, we respect your privacy and are committed to being transparent about how data is handled in <strong>WebCodeBox</strong>.
+        At ZedLabs, we respect your privacy and are committed to being transparent about how data is handled in <strong>{appName}</strong>.
       </p>
 
       {/* 1. AUTHENTICATION SECTION (Crucial for Play Store Review) */}
@@ -38,6 +42,15 @@ export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProp
         </p>
       </div>
 
+      {(variant === 'shaderboy' || variant === 'notebook') && (
+        <div>
+          <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Data Storage</h3>
+          <p className="text-base md:text-lg leading-relaxed">
+            Protecting your creative work is important to us. <strong>{appName} does not store any of your data in the cloud.</strong> All your projects, code are stored strictly in your device's local storage. This means your data stays with you and is never uploaded to our servers.
+          </p>
+        </div>
+      )}
+
       {/* 3. DATA DELETION (Required by Google) */}
       {variant === 'webcodebox' && (
         <div>
@@ -54,7 +67,12 @@ export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProp
           We use the following third-party services:
           <ul className="list-disc ml-6 mt-2 space-y-1">
             <li><a href="https://policies.google.com/privacy" className="underline">Google Play Services</a></li>
-            <li><a href="https://firebase.google.com/support/privacy" className="underline">Firebase Authentication</a></li>
+            {variant === 'webcodebox' && (
+              <li><a href="https://firebase.google.com/support/privacy" className="underline">Firebase Authentication</a></li>
+            )}
+            {(variant === 'shaderboy' || variant === 'webcodebox') && (
+              <li><a href="https://firebase.google.com/support/privacy" className="underline">Firebase Analytics</a></li>
+            )}
             <li><a href="https://developers.google.com/admob/terms" className="underline">AdMob</a></li>
           </ul>
         </p>

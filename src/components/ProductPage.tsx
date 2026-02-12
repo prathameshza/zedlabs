@@ -12,16 +12,18 @@ interface ProductPageProps {
   screenshotSrcs: string[];
   downloadLink?: string;
   isComingSoon?: boolean;
+  privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy';
 }
 
-export default function ProductPage({ 
-  title, 
-  tagline, 
-  description, 
-  logoSrc, 
-  screenshotSrcs, 
+export default function ProductPage({
+  title,
+  tagline,
+  description,
+  logoSrc,
+  screenshotSrcs,
   downloadLink,
-  isComingSoon = false
+  isComingSoon = false,
+  privacyVariant = 'notebook'
 }: ProductPageProps) {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -41,10 +43,10 @@ export default function ProductPage({
     const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
     const effectiveTheme = theme === "system" ? systemTheme : theme
 
-    if (effectiveTheme === "dark") { root.classList.add("dark") } 
+    if (effectiveTheme === "dark") { root.classList.add("dark") }
     else { root.classList.remove("dark") }
 
-    if (theme !== "system") { localStorage.setItem("theme", theme) } 
+    if (theme !== "system") { localStorage.setItem("theme", theme) }
     else { localStorage.removeItem("theme") }
   }, [theme, mounted])
 
@@ -130,7 +132,7 @@ export default function ProductPage({
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden relative bg-background">
-      
+
       {/* Header */}
       <header className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -169,15 +171,15 @@ export default function ProductPage({
       {/* Main Product Content */}
       <main className="relative z-10 pt-32 pb-12 px-4 md:px-8">
         <div className="max-w-6xl mx-auto space-y-12">
-          
+
           {/* Hero Section */}
           <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm flex flex-col md:flex-row items-center gap-8 md:gap-12">
-            
+
             {/* App Logo */}
             <div className="shrink-0">
-              <img 
-                src={logoSrc} 
-                alt={`${title} Logo`} 
+              <img
+                src={logoSrc}
+                alt={`${title} Logo`}
                 className="w-32 h-32 md:w-48 md:h-48 rounded-4xl shadow-lg border border-border/50"
               />
             </div>
@@ -189,16 +191,16 @@ export default function ProductPage({
               <p className="text-muted-foreground text-lg leading-relaxed quicksand-regular max-w-2xl">
                 {description}
               </p>
-              
+
               <div className="pt-4 flex justify-center md:justify-start">
                 {isComingSoon ? (
-                   <span className="inline-flex items-center px-6 py-3 rounded-full text-base font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
+                  <span className="inline-flex items-center px-6 py-3 rounded-full text-base font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
                     Coming Soon
                   </span>
                 ) : (
-                  <a 
-                    href={downloadLink} 
-                    target="_blank" 
+                  <a
+                    href={downloadLink}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="hover:opacity-80 transition-opacity"
                   >
@@ -215,9 +217,9 @@ export default function ProductPage({
             <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x snap-mandatory scrollbar-hide">
               {screenshotSrcs.map((src, index) => (
                 <div key={index} className="shrink-0 snap-center first:pl-2 last:pr-2">
-                  <img 
-                    src={src} 
-                    alt={`Screenshot ${index + 1}`} 
+                  <img
+                    src={src}
+                    alt={`Screenshot ${index + 1}`}
                     className="h-[400px] md:h-[500px] w-auto rounded-xl border border-border/50 shadow-md"
                   />
                 </div>
@@ -228,12 +230,12 @@ export default function ProductPage({
         </div>
       </main>
 
-      {/* Privacy Section (Notebook Specific) */}
+      {/* Privacy Section (Product Specific) */}
       <section id="privacy" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
         <div className="max-w-6xl mx-auto">
           <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
             <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Privacy Policy</h2>
-            <PrivacyPolicy variant="notebook" />
+            <PrivacyPolicy variant={privacyVariant} />
           </div>
         </div>
       </section>
