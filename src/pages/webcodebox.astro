@@ -1,0 +1,44 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductPage from '../components/ProductPage';
+
+// Import Assets
+import webcodeboxLogo from '../assets/products/webcodebox/logo/logo.png';
+
+// Import Screenshots
+import frame1 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame1.png';
+import frame2 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame2.png';
+import frame3 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame3.png';
+import frame4 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame4.png';
+import frame5 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame5.png';
+import frame6 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame6.png';
+import frame7 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame7.png';
+
+const screenshots = [
+  frame1.src,
+  frame2.src,
+  frame3.src,
+  frame4.src,
+  frame5.src,
+  frame6.src,
+  frame7.src
+];
+
+const description = `WebCodeBox is a powerful mobile IDE designed for web development on the go. It provides a comprehensive coding environment with syntax highlighting, live preview, and support for HTML, CSS, and JavaScript. Whether you're learning to code or building complex web applications, WebCodeBox offers the tools you need directly on your mobile device.`;
+
+const downloadLink = "https://play.google.com/store/apps/details?id=com.zedlabs.webcodebox&pcampaignid=web_share";
+---
+
+<Layout>
+  <ProductPage 
+    client:load
+    title="WebCodeBox"
+    tagline="Code on the Go"
+    description={description}
+    logoSrc={webcodeboxLogo.src}
+    screenshotSrcs={screenshots}
+    downloadLink={downloadLink}
+    isComingSoon={false}
+    privacyVariant="webcodebox"
+  />
+</Layout>

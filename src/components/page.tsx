@@ -13,7 +13,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false)
 
   // ... [Keep existing Theme and Intersection Observer logic unchanged] ...
-  
+
   // Theme Logic
   useEffect(() => {
     setMounted(true)
@@ -28,9 +28,9 @@ export default function Home() {
     const root = document.documentElement
     const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
     const effectiveTheme = theme === "system" ? systemTheme : theme
-    if (effectiveTheme === "dark") { root.classList.add("dark") } 
+    if (effectiveTheme === "dark") { root.classList.add("dark") }
     else { root.classList.remove("dark") }
-    if (theme !== "system") { localStorage.setItem("theme", theme) } 
+    if (theme !== "system") { localStorage.setItem("theme", theme) }
     else { localStorage.removeItem("theme") }
   }, [theme, mounted])
 
@@ -60,7 +60,7 @@ export default function Home() {
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
-    if (element) { element.scrollIntoView({ behavior: "smooth" }) } 
+    if (element) { element.scrollIntoView({ behavior: "smooth" }) }
     else if (sectionId === "home") { window.scrollTo({ top: 0, behavior: "smooth" }) }
   }
 
@@ -218,7 +218,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-8 md:mb-12 text-center quicksand-bold">Our Products</h2>
           <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-            
+
             {/* Notebook Card */}
             <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
               <a href="/notebook" className="flex-1 focus:outline-none block">
@@ -232,7 +232,26 @@ export default function Home() {
                 <p className="text-muted-foreground quicksand-regular text-base md:text-lg mb-4">A versatile writing app for everyone. Create quick Notes for standalone thoughts or structured Books for larger projects.</p>
               </a>
               <div className="mt-4 relative z-20">
-                 <a href="https://play.google.com/store/apps/details?id=com.zedlabs.notebook&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity">
+                <a href="https://play.google.com/store/apps/details?id=com.zedlabs.notebook&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity">
+                  <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-12 w-auto" />
+                </a>
+              </div>
+            </div>
+
+            {/* WebCodeBox Card */}
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
+              <a href="/webcodebox" className="flex-1 focus:outline-none block">
+                <div className="flex justify-between items-start mb-3 md:mb-4">
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground quicksand-semibold">WebCodeBox</h3>
+                  <svg className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </div>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">Code on the Go. A powerful mobile IDE for web development.</p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg mb-4">Write, test, and debug HTML, CSS, and JavaScript directly on your device with live preview and syntax highlighting.</p>
+              </a>
+              <div className="mt-4 relative z-20">
+                <a href="https://play.google.com/store/apps/details?id=com.zedlabs.webcodebox&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity">
                   <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-12 w-auto" />
                 </a>
               </div>
@@ -249,7 +268,7 @@ export default function Home() {
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">Coming Soon</span>
               </div>
             </div>
-            
+
             {/* Shaderboy - Updated to be Linkable */}
             <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
               <a href="/shaderboy" className="flex-1 focus:outline-none block">
@@ -272,7 +291,7 @@ export default function Home() {
                 </span>
               </div>
             </div>
-            
+
             {/* Motionbox3d - Coming Soon */}
             <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between">
               <div>
