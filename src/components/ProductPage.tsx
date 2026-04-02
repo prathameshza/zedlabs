@@ -12,7 +12,7 @@ interface ProductPageProps {
   screenshotSrcs: string[];
   downloadLink?: string;
   isComingSoon?: boolean;
-  privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy';
+  privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller';
 }
 
 export default function ProductPage({
@@ -212,20 +212,22 @@ export default function ProductPage({
           </div>
 
           {/* Screenshots Section */}
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6 quicksand-bold px-2">Screenshots</h2>
-            <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x snap-mandatory scrollbar-hide">
-              {screenshotSrcs.map((src, index) => (
-                <div key={index} className="shrink-0 snap-center first:pl-2 last:pr-2">
-                  <img
-                    src={src}
-                    alt={`Screenshot ${index + 1}`}
-                    className="h-[400px] md:h-[500px] w-auto rounded-xl border border-border/50 shadow-md"
-                  />
-                </div>
-              ))}
+          {screenshotSrcs.length > 0 && (
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6 quicksand-bold px-2">Screenshots</h2>
+              <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x snap-mandatory scrollbar-hide">
+                {screenshotSrcs.map((src, index) => (
+                  <div key={index} className="shrink-0 snap-center first:pl-2 last:pr-2">
+                    <img
+                      src={src}
+                      alt={`Screenshot ${index + 1}`}
+                      className="h-[400px] md:h-[500px] w-auto rounded-xl border border-border/50 shadow-md"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
         </div>
       </main>

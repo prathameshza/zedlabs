@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductPage from '../components/ProductPage';
+
+// Import Assets
+import pocketControllerLogo from '../assets/products/pocketcontroller/logo/pocketcontroller.png';
+
+const description = `The ultimate bridge between your mobile device and PC, turning your phone into a powerful controller. Customizable layouts, low-latency performance, and hardware-level emulation for a seamless gaming and productivity experience.`;
+---
+
+<Layout>
+  <ProductPage 
+    client:load
+    title="PocketController"
+    tagline="Your Phone, Your Controller"
+    description={description}
+    logoSrc={pocketControllerLogo.src}
+    screenshotSrcs={[]}
+    isComingSoon={true}
+    privacyVariant="pocketcontroller"
+  />
+</Layout>

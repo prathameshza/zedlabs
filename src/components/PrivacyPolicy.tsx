@@ -1,13 +1,14 @@
 import React from 'react';
 
 interface PrivacyPolicyProps {
-  variant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy';
+  variant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller';
 }
 
 export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProps) {
   const appName = variant === 'webcodebox' ? 'WebCodeBox' :
     variant === 'notebook' ? 'Notebook' :
-      variant === 'shaderboy' ? 'Shaderboy' : 'our apps';
+      variant === 'shaderboy' ? 'Shaderboy' : 
+        variant === 'pocketcontroller' ? 'PocketController' : 'our apps';
 
   return (
     <div className="space-y-6 text-muted-foreground quicksand-regular">

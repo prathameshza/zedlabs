@@ -303,6 +303,23 @@ export default function Home() {
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">Coming Soon</span>
               </div>
             </div>
+
+            {/* PocketController - Coming Soon */}
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
+              <a href="/pocketcontroller" className="flex-1 focus:outline-none block">
+                <div className="flex justify-between items-start mb-3 md:mb-4">
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground quicksand-semibold">PocketController</h3>
+                  <svg className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </div>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">The ultimate bridge between your mobile device and PC, turning your phone into a powerful controller.</p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">Customizable layouts, low-latency performance, and hardware-level emulation for a seamless gaming and productivity experience.</p>
+              </a>
+              <div className="mt-4 relative z-20 pointer-events-none">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">Coming Soon</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
