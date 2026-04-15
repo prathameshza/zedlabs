@@ -5,6 +5,25 @@ import ProductPage from '../components/ProductPage';
 // Import Assets
 import pocketControllerLogo from '../assets/products/pocketcontroller/logo/pocketcontroller.png';
 
+// Import Screenshots
+import flashcard1 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (1).png';
+import flashcard2 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (2).png';
+import flashcard3 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (3).png';
+import flashcard4 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (4).png';
+import flashcard5 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (5).png';
+import flashcard6 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (6).png';
+import flashcard7 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (7).png';
+
+const screenshots = [
+  flashcard1.src,
+  flashcard2.src,
+  flashcard3.src,
+  flashcard4.src,
+  flashcard5.src,
+  flashcard6.src,
+  flashcard7.src,
+];
+
 const description = `The ultimate bridge between your mobile device and PC, turning your phone into a powerful controller. Customizable layouts, low-latency performance, and hardware-level emulation for a seamless gaming and productivity experience.`;
 ---
 
@@ -15,7 +34,8 @@ const description = `The ultimate bridge between your mobile device and PC, turn
     tagline="Your Phone, Your Controller"
     description={description}
     logoSrc={pocketControllerLogo.src}
-    screenshotSrcs={[]}
+    screenshotSrcs={screenshots}
+    pcDownloadLink="/pocketcontroller/download"
     isComingSoon={true}
     privacyVariant="pocketcontroller"
   />

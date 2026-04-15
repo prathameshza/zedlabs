@@ -11,6 +11,7 @@ interface ProductPageProps {
   logoSrc: string;
   screenshotSrcs: string[];
   downloadLink?: string;
+  pcDownloadLink?: string;
   isComingSoon?: boolean;
   privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller';
 }
@@ -22,6 +23,7 @@ export default function ProductPage({
   logoSrc,
   screenshotSrcs,
   downloadLink,
+  pcDownloadLink,
   isComingSoon = false,
   privacyVariant = 'notebook'
 }: ProductPageProps) {
@@ -192,7 +194,7 @@ export default function ProductPage({
                 {description}
               </p>
 
-              <div className="pt-4 flex justify-center md:justify-start">
+              <div className="pt-4 flex flex-col md:flex-row items-center justify-center md:justify-start gap-4">
                 {isComingSoon ? (
                   <span className="inline-flex items-center px-6 py-3 rounded-full text-base font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
                     Coming Soon
@@ -205,6 +207,18 @@ export default function ProductPage({
                     className="hover:opacity-80 transition-opacity"
                   >
                     <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-14 w-auto" />
+                  </a>
+                )}
+
+                {pcDownloadLink && (
+                  <a
+                    href={pcDownloadLink}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full font-bold text-base hover:opacity-90 transition-all shadow-md hover:scale-105 active:scale-95 quicksand-bold"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download PC Client
                   </a>
                 )}
               </div>
