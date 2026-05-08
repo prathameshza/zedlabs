@@ -6,6 +6,7 @@ import DownloadPage from '../../components/DownloadPage';
 import pocketControllerLogo from '../../assets/products/pocketcontroller/logo/pocketcontroller.png';
 
 const pcDownloadUrl = "https://github.com/zedlabs-corp/PocketController/releases/download/Setup/PocketController.Setup.1.0.0.exe";
+const vigemDriverUrl = "https://vigembusdriver.com/";
 ---
 
 <Layout>
@@ -16,5 +17,7 @@ const pcDownloadUrl = "https://github.com/zedlabs-corp/PocketController/releases
     downloadLink={pcDownloadUrl}
     version="1.0.0"
     platform="Windows x64"
+    comingSoon={true}
+    vigemDriverLink={vigemDriverUrl}
   />
 </Layout>

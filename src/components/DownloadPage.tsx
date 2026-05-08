@@ -8,6 +8,8 @@ interface DownloadPageProps {
   downloadLink: string;
   version: string;
   platform: string;
+  comingSoon?: boolean;
+  vigemDriverLink?: string;
 }
 
 export default function DownloadPage({
@@ -15,7 +17,9 @@ export default function DownloadPage({
   logoSrc,
   downloadLink,
   version,
-  platform
+  platform,
+  comingSoon = false,
+  vigemDriverLink
 }: DownloadPageProps) {
 
   const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
@@ -93,17 +97,41 @@ export default function DownloadPage({
 
           <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-8 md:p-12 shadow-sm space-y-6">
             <div className="flex flex-col items-center gap-4">
-              <a
-                href={downloadLink}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-xl hover:opacity-90 transition-all shadow-lg hover:scale-105 active:scale-95 quicksand-bold"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Download for Windows
-              </a>
+              {comingSoon ? (
+                <div className="inline-flex items-center gap-3 px-8 py-4 bg-muted text-muted-foreground rounded-xl font-bold text-xl quicksand-bold cursor-not-allowed">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Coming Soon
+                </div>
+              ) : (
+                <a
+                  href={downloadLink}
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-xl hover:opacity-90 transition-all shadow-lg hover:scale-105 active:scale-95 quicksand-bold"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Download for Windows
+                </a>
+              )}
+              
+              {vigemDriverLink && (
+                <a
+                  href={vigemDriverLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold text-base hover:bg-blue-700 transition-all shadow-md hover:scale-105 active:scale-95 quicksand-bold"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  </svg>
+                  Download ViGEm Bus Driver
+                </a>
+              )}
+              
               <p className="text-sm text-muted-foreground quicksand-regular">
-                Version {version} • Windows 10/11 (x64)
+                {comingSoon ? "Windows version is currently in development" : `Version ${version} • Windows 10/11 (x64)`}
               </p>
             </div>
 

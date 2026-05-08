@@ -12,6 +12,7 @@ interface ProductPageProps {
   screenshotSrcs: string[];
   downloadLink?: string;
   pcDownloadLink?: string;
+  prereleaseDownloadLink?: string;
   isComingSoon?: boolean;
   privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller';
 }
@@ -24,6 +25,7 @@ export default function ProductPage({
   screenshotSrcs,
   downloadLink,
   pcDownloadLink,
+  prereleaseDownloadLink,
   isComingSoon = false,
   privacyVariant = 'notebook'
 }: ProductPageProps) {
@@ -219,6 +221,20 @@ export default function ProductPage({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
                     Download PC Client
+                  </a>
+                )}
+
+                {prereleaseDownloadLink && (
+                  <a
+                    href={prereleaseDownloadLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-full font-bold text-base hover:bg-orange-600 transition-all shadow-md hover:scale-105 active:scale-95 quicksand-bold"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Testing Pre-Release
                   </a>
                 )}
               </div>
