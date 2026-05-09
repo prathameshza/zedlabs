@@ -10,6 +10,7 @@ interface DownloadPageProps {
   platform: string;
   comingSoon?: boolean;
   vigemDriverLink?: string;
+  microsoftStoreLink?: string;
 }
 
 export default function DownloadPage({
@@ -19,7 +20,8 @@ export default function DownloadPage({
   version,
   platform,
   comingSoon = false,
-  vigemDriverLink
+  vigemDriverLink,
+  microsoftStoreLink
 }: DownloadPageProps) {
 
   const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
@@ -105,15 +107,23 @@ export default function DownloadPage({
                   Coming Soon
                 </div>
               ) : (
-                <a
-                  href={downloadLink}
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-xl hover:opacity-90 transition-all shadow-lg hover:scale-105 active:scale-95 quicksand-bold"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  Download for Windows
-                </a>
+                <div className="flex flex-col items-center gap-4">
+                  {microsoftStoreLink && (
+                    <a
+                      href={microsoftStoreLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:opacity-80 transition-opacity"
+                    >
+                      <img 
+                        src="https://get.microsoft.com/images/en-us%20dark.svg" 
+                        alt="Get it from Microsoft Store" 
+                        width="200"
+                        className="h-auto"
+                      />
+                    </a>
+                  )}
+                </div>
               )}
               
               {vigemDriverLink && (

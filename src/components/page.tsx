@@ -269,7 +269,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Shaderboy - Updated to be Linkable */}
+            {/* Shaderboy - Now Available */}
             <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
               <a href="/shaderboy" className="flex-1 focus:outline-none block">
                 <div className="flex justify-between items-start mb-3 md:mb-4">
@@ -285,10 +285,10 @@ export default function Home() {
                   Create stunning visual effects, real-time shader coding, built-in examples, and mobile-optimized performance for creative developers on the go.
                 </p>
               </a>
-              <div className="mt-4 relative z-20 pointer-events-none">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
-                  Coming Soon
-                </span>
+              <div className="mt-4 relative z-20">
+                <a href="https://play.google.com/store/apps/details?id=com.zedlabs.shaderboy&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity">
+                  <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-12 w-auto" />
+                </a>
               </div>
             </div>
 

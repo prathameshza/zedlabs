@@ -86,14 +86,14 @@ File location: package.json
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/react": "^4.4.1",
-    "@astrojs/vercel": "^8.0.4",
+    "@astrojs/react": "^5.0.3",
+    "@astrojs/vercel": "^10.0.4",
     "@tailwindcss/vite": "^4.1.16",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
-    "astro": "^5.15.3",
+    "astro": "^6.1.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "tailwindcss": "^4.1.16",
@@ -128,6 +128,28 @@ Asset file: src\assets\products\notebook\Notebook PlayStore Screenshots\Frame 8.
 
 Asset file: src\assets\products\notebook\logo\Notebook_logo.png
 
+Asset file: src\assets\products\pocketcontroller\PCclient\Screenshot 2026-04-15 194401.png
+
+Asset file: src\assets\products\pocketcontroller\PCclient\Screenshot 2026-04-15 194420.png
+
+Asset file: src\assets\products\pocketcontroller\PCclient\Screenshot 2026-04-15 194439.png
+
+Asset file: src\assets\products\pocketcontroller\PocketControllerFlashcards\flashcard (1).png
+
+Asset file: src\assets\products\pocketcontroller\PocketControllerFlashcards\flashcard (2).png
+
+Asset file: src\assets\products\pocketcontroller\PocketControllerFlashcards\flashcard (3).png
+
+Asset file: src\assets\products\pocketcontroller\PocketControllerFlashcards\flashcard (4).png
+
+Asset file: src\assets\products\pocketcontroller\PocketControllerFlashcards\flashcard (5).png
+
+Asset file: src\assets\products\pocketcontroller\PocketControllerFlashcards\flashcard (6).png
+
+Asset file: src\assets\products\pocketcontroller\PocketControllerFlashcards\flashcard (7).png
+
+Asset file: src\assets\products\pocketcontroller\logo\pocketcontroller.png
+
 Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 1.png
 
 Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 2.png
@@ -144,19 +166,203 @@ Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 
 
 Asset file: src\assets\products\shaderboy\logo\shaderboy_logo.png
 
+Asset file: src\assets\products\webcodebox\WebCodeBox PlayStore Screenshots\frame1.png
+
+Asset file: src\assets\products\webcodebox\WebCodeBox PlayStore Screenshots\frame2.png
+
+Asset file: src\assets\products\webcodebox\WebCodeBox PlayStore Screenshots\frame3.png
+
+Asset file: src\assets\products\webcodebox\WebCodeBox PlayStore Screenshots\frame4.png
+
+Asset file: src\assets\products\webcodebox\WebCodeBox PlayStore Screenshots\frame5.png
+
+Asset file: src\assets\products\webcodebox\WebCodeBox PlayStore Screenshots\frame6.png
+
+Asset file: src\assets\products\webcodebox\WebCodeBox PlayStore Screenshots\frame7.png
+
+Asset file: src\assets\products\webcodebox\logo\logo.png
+
+File location: src\components\DownloadPage.tsx
+
+"use client"
+
+import { useEffect, useState } from "react"
+
+interface DownloadPageProps {
+  title: string;
+  logoSrc: string;
+  downloadLink: string;
+  version: string;
+  platform: string;
+  comingSoon?: boolean;
+  vigemDriverLink?: string;
+}
+
+export default function DownloadPage({
+  title,
+  logoSrc,
+  downloadLink,
+  version,
+  platform,
+  comingSoon = false,
+  vigemDriverLink
+}: DownloadPageProps) {
+
+  const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | "system" | null
+    if (savedTheme) { setTheme(savedTheme) }
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+    const root = document.documentElement
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+    const effectiveTheme = theme === "system" ? systemTheme : theme
+
+    if (effectiveTheme === "dark") { root.classList.add("dark") }
+    else { root.classList.remove("dark") }
+
+    if (theme !== "system") { localStorage.setItem("theme", theme) }
+    else { localStorage.removeItem("theme") }
+  }, [theme, mounted])
+
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      if (prev === "system") {
+        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+        return systemTheme === "dark" ? "light" : "dark"
+      }
+      return prev === "dark" ? "light" : "dark"
+    })
+  }
+
+  return (
+    <div className="min-h-screen w-full overflow-x-hidden relative bg-background">
+
+      {/* Header */}
+      <header className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
+            <a href="/" className="hover:opacity-80 transition-opacity">
+              <img src="/zedlabs_logo.png" alt="zedlabs" className="h-8 md:h-10 w-auto" />
+            </a>
+            <div className="flex items-center gap-2">
+              <button onClick={toggleTheme} className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/50">
+                {mounted && (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen pt-20 pb-12 px-4 md:px-8">
+        <div className="max-w-3xl w-full text-center space-y-8">
+          
+          {/* App Logo */}
+          <div className="flex justify-center">
+            <img
+              src={logoSrc}
+              alt={`${title} Logo`}
+              className="w-32 h-32 md:w-48 md:h-48 rounded-4xl shadow-lg border border-border/50"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground quicksand-bold">Download {title}</h1>
+            <p className="text-xl text-muted-foreground quicksand-medium">Desktop Client for {platform}</p>
+          </div>
+
+          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-8 md:p-12 shadow-sm space-y-6">
+            <div className="flex flex-col items-center gap-4">
+              {comingSoon ? (
+                <div className="inline-flex items-center gap-3 px-8 py-4 bg-muted text-muted-foreground rounded-xl font-bold text-xl quicksand-bold cursor-not-allowed">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Coming Soon
+                </div>
+              ) : (
+                <a
+                  href={downloadLink}
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-xl hover:opacity-90 transition-all shadow-lg hover:scale-105 active:scale-95 quicksand-bold"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Download for Windows
+                </a>
+              )}
+              
+              {vigemDriverLink && (
+                <a
+                  href={vigemDriverLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold text-base hover:bg-blue-700 transition-all shadow-md hover:scale-105 active:scale-95 quicksand-bold"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  </svg>
+                  Download ViGEm Bus Driver
+                </a>
+              )}
+              
+              <p className="text-sm text-muted-foreground quicksand-regular">
+                {comingSoon ? "Windows version is currently in development" : `Version ${version} • Windows 10/11 (x64)`}
+              </p>
+            </div>
+
+            <div className="pt-6 border-t border-border/50 text-left space-y-4">
+              <h3 className="text-lg font-bold text-foreground quicksand-semibold">Installation Instructions:</h3>
+              <ol className="list-decimal list-inside space-y-2 text-muted-foreground quicksand-regular">
+                <li>Download the <code className="bg-muted px-1.5 py-0.5 rounded text-foreground">PocketController.Setup.1.0.0.exe</code> installer.</li>
+                <li>Run the installer and follow the on-screen instructions.</li>
+                <li>Once installed, launch PocketController from your desktop or start menu.</li>
+                <li>Ensure your mobile device and PC are on the same network for connection.</li>
+              </ol>
+            </div>
+          </div>
+
+          <p className="text-muted-foreground quicksand-regular">
+            Looking for the mobile app? <a href="/pocketcontroller" className="text-primary hover:underline">Go back to product page</a>
+          </p>
+        </div>
+      </main>
+
+    </div>
+  )
+}
+
+
+--------------------------------------------------------------------------------
+
 File location: src\components\PrivacyPolicy.tsx
 
 import React from 'react';
 
 interface PrivacyPolicyProps {
-  variant?: 'general' | 'notebook' | 'webcodebox';
+  variant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller';
 }
 
 export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProps) {
+  const appName = variant === 'webcodebox' ? 'WebCodeBox' :
+    variant === 'notebook' ? 'Notebook' :
+      variant === 'shaderboy' ? 'Shaderboy' : 
+        variant === 'pocketcontroller' ? 'PocketController' : 'our apps';
+
   return (
     <div className="space-y-6 text-muted-foreground quicksand-regular">
       <p className="text-lg md:text-xl leading-relaxed">
-        At ZedLabs, we respect your privacy and are committed to being transparent about how data is handled in <strong>WebCodeBox</strong>.
+        At ZedLabs, we respect your privacy and are committed to being transparent about how data is handled in <strong>{appName}</strong>.
       </p>
 
       {/* 1. AUTHENTICATION SECTION (Crucial for Play Store Review) */}
@@ -186,6 +392,15 @@ export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProp
         </p>
       </div>
 
+      {(variant === 'shaderboy' || variant === 'notebook') && (
+        <div>
+          <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Data Storage</h3>
+          <p className="text-base md:text-lg leading-relaxed">
+            Protecting your creative work is important to us. <strong>{appName} does not store any of your data in the cloud.</strong> All your projects, code are stored strictly in your device's local storage. This means your data stays with you and is never uploaded to our servers.
+          </p>
+        </div>
+      )}
+
       {/* 3. DATA DELETION (Required by Google) */}
       {variant === 'webcodebox' && (
         <div>
@@ -202,7 +417,12 @@ export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProp
           We use the following third-party services:
           <ul className="list-disc ml-6 mt-2 space-y-1">
             <li><a href="https://policies.google.com/privacy" className="underline">Google Play Services</a></li>
-            <li><a href="https://firebase.google.com/support/privacy" className="underline">Firebase Authentication</a></li>
+            {variant === 'webcodebox' && (
+              <li><a href="https://firebase.google.com/support/privacy" className="underline">Firebase Authentication</a></li>
+            )}
+            {(variant === 'shaderboy' || variant === 'webcodebox') && (
+              <li><a href="https://firebase.google.com/support/privacy" className="underline">Firebase Analytics</a></li>
+            )}
             <li><a href="https://developers.google.com/admob/terms" className="underline">AdMob</a></li>
           </ul>
         </p>
@@ -217,6 +437,7 @@ export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProp
     </div>
   );
 }
+
 
 --------------------------------------------------------------------------------
 
@@ -235,17 +456,23 @@ interface ProductPageProps {
   logoSrc: string;
   screenshotSrcs: string[];
   downloadLink?: string;
+  pcDownloadLink?: string;
+  prereleaseDownloadLink?: string;
   isComingSoon?: boolean;
+  privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller';
 }
 
-export default function ProductPage({ 
-  title, 
-  tagline, 
-  description, 
-  logoSrc, 
-  screenshotSrcs, 
+export default function ProductPage({
+  title,
+  tagline,
+  description,
+  logoSrc,
+  screenshotSrcs,
   downloadLink,
-  isComingSoon = false
+  pcDownloadLink,
+  prereleaseDownloadLink,
+  isComingSoon = false,
+  privacyVariant = 'notebook'
 }: ProductPageProps) {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -265,10 +492,10 @@ export default function ProductPage({
     const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
     const effectiveTheme = theme === "system" ? systemTheme : theme
 
-    if (effectiveTheme === "dark") { root.classList.add("dark") } 
+    if (effectiveTheme === "dark") { root.classList.add("dark") }
     else { root.classList.remove("dark") }
 
-    if (theme !== "system") { localStorage.setItem("theme", theme) } 
+    if (theme !== "system") { localStorage.setItem("theme", theme) }
     else { localStorage.removeItem("theme") }
   }, [theme, mounted])
 
@@ -354,7 +581,7 @@ export default function ProductPage({
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden relative bg-background">
-      
+
       {/* Header */}
       <header className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -393,15 +620,15 @@ export default function ProductPage({
       {/* Main Product Content */}
       <main className="relative z-10 pt-32 pb-12 px-4 md:px-8">
         <div className="max-w-6xl mx-auto space-y-12">
-          
+
           {/* Hero Section */}
           <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm flex flex-col md:flex-row items-center gap-8 md:gap-12">
-            
+
             {/* App Logo */}
             <div className="shrink-0">
-              <img 
-                src={logoSrc} 
-                alt={`${title} Logo`} 
+              <img
+                src={logoSrc}
+                alt={`${title} Logo`}
                 className="w-32 h-32 md:w-48 md:h-48 rounded-4xl shadow-lg border border-border/50"
               />
             </div>
@@ -413,20 +640,46 @@ export default function ProductPage({
               <p className="text-muted-foreground text-lg leading-relaxed quicksand-regular max-w-2xl">
                 {description}
               </p>
-              
-              <div className="pt-4 flex justify-center md:justify-start">
+
+              <div className="pt-4 flex flex-col md:flex-row items-center justify-center md:justify-start gap-4">
                 {isComingSoon ? (
-                   <span className="inline-flex items-center px-6 py-3 rounded-full text-base font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
+                  <span className="inline-flex items-center px-6 py-3 rounded-full text-base font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
                     Coming Soon
                   </span>
                 ) : (
-                  <a 
-                    href={downloadLink} 
-                    target="_blank" 
+                  <a
+                    href={downloadLink}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="hover:opacity-80 transition-opacity"
                   >
                     <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-14 w-auto" />
+                  </a>
+                )}
+
+                {pcDownloadLink && (
+                  <a
+                    href={pcDownloadLink}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full font-bold text-base hover:opacity-90 transition-all shadow-md hover:scale-105 active:scale-95 quicksand-bold"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download PC Client
+                  </a>
+                )}
+
+                {prereleaseDownloadLink && (
+                  <a
+                    href={prereleaseDownloadLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-full font-bold text-base hover:bg-orange-600 transition-all shadow-md hover:scale-105 active:scale-95 quicksand-bold"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Testing Pre-Release
                   </a>
                 )}
               </div>
@@ -434,30 +687,32 @@ export default function ProductPage({
           </div>
 
           {/* Screenshots Section */}
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6 quicksand-bold px-2">Screenshots</h2>
-            <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x snap-mandatory scrollbar-hide">
-              {screenshotSrcs.map((src, index) => (
-                <div key={index} className="shrink-0 snap-center first:pl-2 last:pr-2">
-                  <img 
-                    src={src} 
-                    alt={`Screenshot ${index + 1}`} 
-                    className="h-[400px] md:h-[500px] w-auto rounded-xl border border-border/50 shadow-md"
-                  />
-                </div>
-              ))}
+          {screenshotSrcs.length > 0 && (
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6 quicksand-bold px-2">Screenshots</h2>
+              <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x snap-mandatory scrollbar-hide">
+                {screenshotSrcs.map((src, index) => (
+                  <div key={index} className="shrink-0 snap-center first:pl-2 last:pr-2">
+                    <img
+                      src={src}
+                      alt={`Screenshot ${index + 1}`}
+                      className="h-[400px] md:h-[500px] w-auto rounded-xl border border-border/50 shadow-md"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
         </div>
       </main>
 
-      {/* Privacy Section (Notebook Specific) */}
+      {/* Privacy Section (Product Specific) */}
       <section id="privacy" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
         <div className="max-w-6xl mx-auto">
           <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
             <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Privacy Policy</h2>
-            <PrivacyPolicy variant="notebook" />
+            <PrivacyPolicy variant={privacyVariant} />
           </div>
         </div>
       </section>
@@ -773,7 +1028,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false)
 
   // ... [Keep existing Theme and Intersection Observer logic unchanged] ...
-  
+
   // Theme Logic
   useEffect(() => {
     setMounted(true)
@@ -788,9 +1043,9 @@ export default function Home() {
     const root = document.documentElement
     const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
     const effectiveTheme = theme === "system" ? systemTheme : theme
-    if (effectiveTheme === "dark") { root.classList.add("dark") } 
+    if (effectiveTheme === "dark") { root.classList.add("dark") }
     else { root.classList.remove("dark") }
-    if (theme !== "system") { localStorage.setItem("theme", theme) } 
+    if (theme !== "system") { localStorage.setItem("theme", theme) }
     else { localStorage.removeItem("theme") }
   }, [theme, mounted])
 
@@ -820,7 +1075,7 @@ export default function Home() {
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
-    if (element) { element.scrollIntoView({ behavior: "smooth" }) } 
+    if (element) { element.scrollIntoView({ behavior: "smooth" }) }
     else if (sectionId === "home") { window.scrollTo({ top: 0, behavior: "smooth" }) }
   }
 
@@ -978,7 +1233,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-8 md:mb-12 text-center quicksand-bold">Our Products</h2>
           <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-            
+
             {/* Notebook Card */}
             <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
               <a href="/notebook" className="flex-1 focus:outline-none block">
@@ -992,7 +1247,26 @@ export default function Home() {
                 <p className="text-muted-foreground quicksand-regular text-base md:text-lg mb-4">A versatile writing app for everyone. Create quick Notes for standalone thoughts or structured Books for larger projects.</p>
               </a>
               <div className="mt-4 relative z-20">
-                 <a href="https://play.google.com/store/apps/details?id=com.zedlabs.notebook&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity">
+                <a href="https://play.google.com/store/apps/details?id=com.zedlabs.notebook&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity">
+                  <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-12 w-auto" />
+                </a>
+              </div>
+            </div>
+
+            {/* WebCodeBox Card */}
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
+              <a href="/webcodebox" className="flex-1 focus:outline-none block">
+                <div className="flex justify-between items-start mb-3 md:mb-4">
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground quicksand-semibold">WebCodeBox</h3>
+                  <svg className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </div>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">Code on the Go. A powerful mobile IDE for web development.</p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg mb-4">Write, test, and debug HTML, CSS, and JavaScript directly on your device with live preview and syntax highlighting.</p>
+              </a>
+              <div className="mt-4 relative z-20">
+                <a href="https://play.google.com/store/apps/details?id=com.zedlabs.webcodebox&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity">
                   <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-12 w-auto" />
                 </a>
               </div>
@@ -1009,7 +1283,7 @@ export default function Home() {
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">Coming Soon</span>
               </div>
             </div>
-            
+
             {/* Shaderboy - Updated to be Linkable */}
             <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
               <a href="/shaderboy" className="flex-1 focus:outline-none block">
@@ -1032,7 +1306,7 @@ export default function Home() {
                 </span>
               </div>
             </div>
-            
+
             {/* Motionbox3d - Coming Soon */}
             <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between">
               <div>
@@ -1041,6 +1315,23 @@ export default function Home() {
                 <p className="text-muted-foreground quicksand-regular text-base md:text-lg">Intuitive timeline-based editing, 3D model manipulation, animation controls, and export capabilities—all optimized for mobile devices.</p>
               </div>
               <div className="mt-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">Coming Soon</span>
+              </div>
+            </div>
+
+            {/* PocketController - Coming Soon */}
+            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
+              <a href="/pocketcontroller" className="flex-1 focus:outline-none block">
+                <div className="flex justify-between items-start mb-3 md:mb-4">
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground quicksand-semibold">PocketController</h3>
+                  <svg className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </div>
+                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">The ultimate bridge between your mobile device and PC, turning your phone into a powerful controller.</p>
+                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">Customizable layouts, low-latency performance, and hardware-level emulation for a seamless gaming and productivity experience.</p>
+              </a>
+              <div className="mt-4 relative z-20 pointer-events-none">
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">Coming Soon</span>
               </div>
             </div>
@@ -1270,8 +1561,89 @@ const description = `Transform the way you write and organize your thoughts. Not
     logoSrc={notebookLogo.src}
     screenshotSrcs={screenshots}
     downloadLink="https://play.google.com/store/apps/details?id=com.zedlabs.notebook&pcampaignid=web_share"
+    privacyVariant="notebook"
   />
 </Layout>
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\pocketcontroller.astro
+
+---
+import Layout from '../layouts/Layout.astro';
+import ProductPage from '../components/ProductPage';
+
+// Import Assets
+import pocketControllerLogo from '../assets/products/pocketcontroller/logo/pocketcontroller.png';
+
+// Import Screenshots
+import flashcard1 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (1).png';
+import flashcard2 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (2).png';
+import flashcard3 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (3).png';
+import flashcard4 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (4).png';
+import flashcard5 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (5).png';
+import flashcard6 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (6).png';
+import flashcard7 from '../assets/products/pocketcontroller/PocketControllerFlashcards/flashcard (7).png';
+
+const screenshots = [
+  flashcard1.src,
+  flashcard2.src,
+  flashcard3.src,
+  flashcard4.src,
+  flashcard5.src,
+  flashcard6.src,
+  flashcard7.src,
+];
+
+const description = `The ultimate bridge between your mobile device and PC, turning your phone into a powerful controller. Customizable layouts, low-latency performance, and hardware-level emulation for a seamless gaming and productivity experience.`;
+
+const prereleaseDownloadUrl = "https://github.com/zedlabs-corp/PocketController/releases/download/Setup/pocketcontroller_prerealease.apk";
+---
+
+<Layout>
+  <ProductPage 
+    client:load
+    title="PocketController"
+    tagline="Your Phone, Your Controller"
+    description={description}
+    logoSrc={pocketControllerLogo.src}
+    screenshotSrcs={screenshots}
+    pcDownloadLink="/pocketcontroller/download"
+    prereleaseDownloadLink={prereleaseDownloadUrl}
+    isComingSoon={true}
+    privacyVariant="pocketcontroller"
+  />
+</Layout>
+
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\pocketcontroller\download.astro
+
+---
+import Layout from '../../layouts/Layout.astro';
+import DownloadPage from '../../components/DownloadPage';
+
+// Import Assets
+import pocketControllerLogo from '../../assets/products/pocketcontroller/logo/pocketcontroller.png';
+
+const pcDownloadUrl = "https://github.com/zedlabs-corp/PocketController/releases/download/Setup/PocketController.Setup.1.0.0.exe";
+const vigemDriverUrl = "https://vigembusdriver.com/";
+---
+
+<Layout>
+  <DownloadPage 
+    client:load
+    title="PocketController"
+    logoSrc={pocketControllerLogo.src}
+    downloadLink={pcDownloadUrl}
+    version="1.0.0"
+    platform="Windows x64"
+    comingSoon={true}
+    vigemDriverLink={vigemDriverUrl}
+  />
+</Layout>
+
 
 --------------------------------------------------------------------------------
 
@@ -1315,7 +1687,111 @@ const description = `Shaderboy is a Shadertoy inspired utility that lets users c
     logoSrc={shaderboyLogo.src}
     screenshotSrcs={screenshots}
     isComingSoon={true}
+    privacyVariant="shaderboy"
   />
+</Layout>
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\webcodebox.astro
+
+---
+import Layout from '../layouts/Layout.astro';
+import ProductPage from '../components/ProductPage';
+
+// Import Assets
+import webcodeboxLogo from '../assets/products/webcodebox/logo/logo.png';
+
+// Import Screenshots
+import frame1 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame1.png';
+import frame2 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame2.png';
+import frame3 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame3.png';
+import frame4 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame4.png';
+import frame5 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame5.png';
+import frame6 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame6.png';
+import frame7 from '../assets/products/webcodebox/WebCodeBox PlayStore Screenshots/frame7.png';
+
+const screenshots = [
+  frame1.src,
+  frame2.src,
+  frame3.src,
+  frame4.src,
+  frame5.src,
+  frame6.src,
+  frame7.src
+];
+
+const description = `WebCodeBox is a powerful mobile IDE designed for web development on the go. It provides a comprehensive coding environment with syntax highlighting, live preview, and support for HTML, CSS, and JavaScript. Whether you're learning to code or building complex web applications, WebCodeBox offers the tools you need directly on your mobile device.`;
+
+const downloadLink = "https://play.google.com/store/apps/details?id=com.zedlabs.webcodebox&pcampaignid=web_share";
+---
+
+<Layout>
+  <ProductPage 
+    client:load
+    title="WebCodeBox"
+    tagline="Code on the Go"
+    description={description}
+    logoSrc={webcodeboxLogo.src}
+    screenshotSrcs={screenshots}
+    downloadLink={downloadLink}
+    isComingSoon={false}
+    privacyVariant="webcodebox"
+  />
+</Layout>
+
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\webcodebox\delete-account.astro
+
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <div class="min-h-screen bg-background relative overflow-x-hidden">
+    <!-- Header -->
+    <header class="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
+      <div class="flex items-center justify-between max-w-7xl mx-auto">
+        <div class="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
+          <a href="/" class="hover:opacity-80 transition-opacity">
+            <img src="/zedlabs_logo.png" alt="zedlabs" class="h-8 md:h-10 w-auto" />
+          </a>
+          <nav>
+            <a href="/" class="text-muted-foreground hover:text-primary text-sm font-medium quicksand-regular">Home</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main class="relative z-10 pt-32 pb-12 px-4 md:px-8">
+      <div class="max-w-4xl mx-auto">
+        <div class="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
+          <h1 class="text-4xl md:text-6xl font-bold text-foreground mb-4 quicksand-bold">WebCodeBox</h1>
+          <p class="text-destructive text-xl mb-8 quicksand-medium">Account Deletion</p>
+          
+          <div class="space-y-6 text-muted-foreground quicksand-regular">
+            <p class="text-lg md:text-xl leading-relaxed">
+              To delete your WebCodeBox account, please contact us at 
+              <a href="mailto:zedlabs@zohomail.in" class="text-primary hover:underline">zedlabs@zohomail.in</a> 
+              or use the in-app delete button.
+            </p>
+            
+            <p class="text-lg md:text-xl leading-relaxed">
+              We will delete your email, display name, and all saved projects within 30 days.
+            </p>
+          </div>
+
+          <div class="mt-12 pt-8 border-t border-border">
+            <a href="/webcodebox/privacy" class="text-muted-foreground hover:text-primary transition-colors text-sm quicksand-medium">
+              View Privacy Policy
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
 </Layout>
 
 --------------------------------------------------------------------------------

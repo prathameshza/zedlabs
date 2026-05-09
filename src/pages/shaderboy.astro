@@ -25,6 +25,8 @@ const screenshots = [
 ];
 
 const description = `Shaderboy is a Shadertoy inspired utility that lets users create shader simulations directly on their mobile phones. It features real-time shader coding, built-in examples, and mobile-optimized performance for creative developers on the go.`;
+
+const googlePlayUrl = "https://play.google.com/store/apps/details?id=com.zedlabs.shaderboy&pcampaignid=web_share";
 ---
 
 <Layout>
@@ -35,7 +37,7 @@ const description = `Shaderboy is a Shadertoy inspired utility that lets users c
     description={description}
     logoSrc={shaderboyLogo.src}
     screenshotSrcs={screenshots}
-    isComingSoon={true}
+    downloadLink={googlePlayUrl}
     privacyVariant="shaderboy"
   />
 </Layout>
