@@ -14,7 +14,7 @@ interface ProductPageProps {
   pcDownloadLink?: string;
   prereleaseDownloadLink?: string;
   isComingSoon?: boolean;
-  privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller';
+  privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller' | 'yourpc';
 }
 
 export default function ProductPage({

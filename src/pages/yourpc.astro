@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductPage from '../components/ProductPage';
+
+// Import Assets
+import yourpcLogo from '../assets/products/yourpc/logo/YPC_logo.png';
+
+// Import Screenshots
+import screenshot1 from '../assets/products/yourpc/playstore_screenshots/Screenshot_20260512_012755.png';
+import screenshot2 from '../assets/products/yourpc/playstore_screenshots/Screenshot_20260512_012804.png';
+
+const screenshots = [
+  screenshot1.src,
+  screenshot2.src
+];
+
+const description = `YourPC is a powerful application that brings the Linux experience to your Android device. Using proot technology, it allows you to run Linux distributions like Debian directly on your phone, with more distributions on the way. It features a dedicated renderer for smooth performance and provides both terminal and VNC connectivity for a complete desktop-like experience on the go.`;
+---
+
+<Layout>
+  <ProductPage 
+    client:load
+    title="YourPC"
+    tagline="Linux on Android"
+    description={description}
+    logoSrc={yourpcLogo.src}
+    screenshotSrcs={screenshots}
+    isComingSoon={true}
+    privacyVariant="yourpc"
+  />
+</Layout>

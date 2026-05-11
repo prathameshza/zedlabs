@@ -1,14 +1,15 @@
 import React from 'react';
 
 interface PrivacyPolicyProps {
-  variant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller';
+  variant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller' | 'yourpc';
 }
 
 export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProps) {
   const appName = variant === 'webcodebox' ? 'WebCodeBox' :
     variant === 'notebook' ? 'Notebook' :
       variant === 'shaderboy' ? 'Shaderboy' : 
-        variant === 'pocketcontroller' ? 'PocketController' : 'our apps';
+        variant === 'pocketcontroller' ? 'PocketController' : 
+          variant === 'yourpc' ? 'YourPC' : 'our apps';
 
   return (
     <div className="space-y-6 text-muted-foreground quicksand-regular">
@@ -43,7 +44,7 @@ export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProp
         </p>
       </div>
 
-      {(variant === 'shaderboy' || variant === 'notebook') && (
+      {(variant === 'shaderboy' || variant === 'notebook' || variant === 'yourpc') && (
         <div>
           <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Data Storage</h3>
           <p className="text-base md:text-lg leading-relaxed">
