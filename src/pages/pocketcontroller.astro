@@ -28,16 +28,17 @@ const description = `The ultimate bridge between your mobile device and PC, turn
 
 ---
 
-<Layout>
-  <ProductPage 
-    client:load
-    title="PocketController"
-    tagline="Your Phone, Your Controller"
-    description={description}
-    logoSrc={pocketControllerLogo.src}
-    screenshotSrcs={screenshots}
-    pcDownloadLink="/pocketcontroller/download"
-    isComingSoon={true}
-    privacyVariant="pocketcontroller"
-  />
-</Layout>
+  <Layout>
+    <ProductPage 
+      client:load
+      title="PocketController"
+      tagline="Your Phone, Your Controller"
+      description={description}
+      logoSrc={pocketControllerLogo.src}
+      screenshotSrcs={screenshots}
+      downloadLink="https://play.google.com/store/apps/details?id=com.zedlabs.pocketcontroller&pcampaignid=web_share"
+      pcDownloadLink="/pocketcontroller/download"
+      isComingSoon={false}
+      privacyVariant="pocketcontroller"
+    />
+  </Layout>
