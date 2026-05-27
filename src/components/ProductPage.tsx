@@ -1,3 +1,4 @@
+/* File location: src/components/ProductPage.tsx */
 "use client"
 
 import { useEffect, useState } from "react"
@@ -15,6 +16,7 @@ interface ProductPageProps {
   prereleaseDownloadLink?: string;
   isComingSoon?: boolean;
   privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller' | 'yourpc';
+  docsLink?: string;
 }
 
 export default function ProductPage({
@@ -27,7 +29,8 @@ export default function ProductPage({
   pcDownloadLink,
   prereleaseDownloadLink,
   isComingSoon = false,
-  privacyVariant = 'notebook'
+  privacyVariant = 'notebook',
+  docsLink
 }: ProductPageProps) {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -64,7 +67,17 @@ export default function ProductPage({
     })
   }
 
-  // --- Contact Form Logic (Zoho) ---
+  const scrollCarousel = (direction: number) => {
+    const carousel = document.getElementById('screenshot-carousel');
+    if (carousel) {
+      const scrollAmount = 450;
+      carousel.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+
   useEffect(() => {
     if (showContactForm) {
       const script = document.createElement("script")
@@ -135,189 +148,232 @@ export default function ProductPage({
   }, [showContactForm])
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden relative bg-background">
+    <div className="min-h-screen w-full relative bg-background text-foreground overflow-x-hidden selection:bg-primary/25">
 
-      {/* Header */}
-      <header className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
-            <a href="/" className="hover:opacity-80 transition-opacity">
-              <img src="/zedlabs_logo.png" alt="zedlabs" className="h-8 md:h-10 w-auto" />
+      {/* Header - Solid elevated Surface */}
+      <header className="fixed top-0 w-full z-50 bg-card border-b border-border shadow-sm transition-all duration-300 ease-in-out h-20">
+        <div className="flex justify-between items-center max-w-7xl mx-auto px-6 md:px-12 h-full">
+          <div className="flex items-center gap-2">
+            <a href="/" className="hover:opacity-85 transition-opacity">
+              <img src="/zedlabs_logo.png" alt="zedlabs logo" className="h-9 w-auto" />
             </a>
-            <nav className="hidden md:flex items-center gap-8">
-              <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">Privacy</a>
-              <a href="#contact" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">Contact</a>
-            </nav>
-            <div className="flex items-center gap-2">
-              <button onClick={toggleTheme} className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/50">
-                {mounted && (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-                )}
-              </button>
-              <button className="md:hidden text-foreground p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-              </button>
-            </div>
+          </div>
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="/" className="text-muted-foreground hover:text-primary text-sm font-semibold transition quicksand-semibold">Ecosystem</a>
+            {docsLink && (
+              <a href={docsLink} className="text-muted-foreground hover:text-primary text-sm font-semibold transition quicksand-semibold">Documentation</a>
+            )}
+            <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-semibold transition quicksand-semibold">Privacy Policy</a>
+            <a href="#support" className="text-muted-foreground hover:text-primary text-sm font-semibold transition quicksand-semibold">Support</a>
+          </nav>
+          <div className="flex items-center gap-4">
+            <button onClick={toggleTheme} className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted" aria-label="Toggle theme">
+              {mounted && (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? (
+                <span className="material-symbols-outlined text-xl">light_mode</span>
+              ) : (
+                <span className="material-symbols-outlined text-xl">dark_mode</span>
+              )}
+            </button>
+            <button className="md:hidden text-foreground p-1" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
+              <span className="material-symbols-outlined text-2xl">{mobileMenuOpen ? 'close' : 'menu'}</span>
+            </button>
           </div>
         </div>
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 mx-4">
-            <nav className="flex flex-col gap-2 px-6 py-4 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
-              <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2" onClick={() => setMobileMenuOpen(false)}>Privacy</a>
-              <a href="#contact" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2" onClick={() => setMobileMenuOpen(false)}>Contact</a>
+          <div className="md:hidden absolute top-20 left-0 right-0 p-4 z-40">
+            <nav className="flex flex-col gap-2 px-6 py-4 rounded-xl bg-card border border-border shadow-lg">
+              <a href="/" className="text-left text-muted-foreground py-2 quicksand-regular">Home</a>
+              {docsLink && (
+                <a href={docsLink} className="text-left text-muted-foreground py-2 quicksand-regular">Documentation</a>
+              )}
+              <a href="#privacy" className="text-left text-muted-foreground py-2 quicksand-regular" onClick={() => setMobileMenuOpen(false)}>Privacy Policy</a>
+              <a href="#support" className="text-left text-muted-foreground py-2 quicksand-regular" onClick={() => setMobileMenuOpen(false)}>Support</a>
             </nav>
           </div>
         )}
       </header>
 
-      {/* Main Product Content */}
-      <main className="relative z-10 pt-32 pb-12 px-4 md:px-8">
-        <div className="max-w-6xl mx-auto space-y-12">
-
-          {/* Hero Section */}
-          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm flex flex-col md:flex-row items-center gap-8 md:gap-12">
-
-            {/* App Logo */}
-            <div className="shrink-0">
-              <img
-                src={logoSrc}
-                alt={`${title} Logo`}
-                className="w-32 h-32 md:w-48 md:h-48 rounded-4xl shadow-lg border border-border/50"
-              />
+      {/* Main Content */}
+      <main className="relative z-10 pt-32 pb-24">
+        
+        {/* Centered Product Hero */}
+        <section className="max-w-4xl mx-auto px-6 md:px-12 mb-24 text-center">
+          <div className="flex flex-col items-center space-y-6">
+            <div className="w-20 h-20 rounded-2xl glass-panel flex items-center justify-center border-primary/20 bg-muted shadow-sm">
+              <img src={logoSrc} alt={`${title} Logo`} className="w-16 h-16 rounded-xl object-contain" />
             </div>
+            
+            <h1 className="font-headline-xl text-4xl md:text-6xl text-foreground tracking-tight leading-tight quicksand-bold">{title}</h1>
+            <p className="text-primary text-xl font-semibold quicksand-semibold">{tagline}</p>
+            
+            <p className="font-body-md text-base md:text-lg text-muted-foreground leading-relaxed quicksand-regular max-w-2xl">
+              {description}
+            </p>
 
-            {/* Product Info */}
-            <div className="flex-1 text-center md:text-left space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground quicksand-bold">{title}</h1>
-              <p className="text-xl md:text-2xl text-primary font-medium quicksand-medium">{tagline}</p>
-              <p className="text-muted-foreground text-lg leading-relaxed quicksand-regular max-w-2xl">
-                {description}
-              </p>
+            <div className="pt-4 flex flex-wrap gap-4 items-center justify-center">
+              {isComingSoon ? (
+                <span className="inline-flex items-center px-6 py-3 rounded-full text-base font-medium bg-muted text-muted-foreground quicksand-medium border border-border">
+                  In Active Development
+                </span>
+              ) : (
+                <a
+                  href={downloadLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-85 transition-all"
+                >
+                  <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-[52px] w-auto" />
+                </a>
+              )}
 
-              <div className="pt-4 flex flex-col md:flex-row items-center justify-center md:justify-start gap-4">
-                {isComingSoon ? (
-                  <span className="inline-flex items-center px-6 py-3 rounded-full text-base font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
-                    Coming Soon
-                  </span>
-                ) : (
-                  <a
-                    href={downloadLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:opacity-80 transition-opacity"
-                  >
-                    <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-14 w-auto" />
-                  </a>
-                )}
+              {docsLink && (
+                <a
+                  href={docsLink}
+                  className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-neutral-800 text-neutral-100 hover:bg-neutral-700 rounded-xl font-bold text-base transition-all shadow-md hover:scale-[1.03] active:scale-95 quicksand-bold border border-neutral-700"
+                >
+                  <span className="material-symbols-outlined text-xl">menu_book</span>
+                  View Documentation
+                </a>
+              )}
 
-                {pcDownloadLink && (
-                  <a
-                    href={pcDownloadLink}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full font-bold text-base hover:opacity-90 transition-all shadow-md hover:scale-105 active:scale-95 quicksand-bold"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    Download PC Client
-                  </a>
-                )}
+              {pcDownloadLink && (
+                <a
+                  href={pcDownloadLink}
+                  className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-primary text-primary-foreground rounded-xl font-bold text-base hover:opacity-95 transition-all shadow-md hover:scale-[1.03] active:scale-95 quicksand-bold"
+                >
+                  <span className="material-symbols-outlined text-xl">download_for_offline</span>
+                  Download PC Client
+                </a>
+              )}
 
-                {prereleaseDownloadLink && (
-                  <a
-                    href={prereleaseDownloadLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-full font-bold text-base hover:bg-orange-600 transition-all shadow-md hover:scale-105 active:scale-95 quicksand-bold"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Testing Pre-Release
-                  </a>
-                )}
-              </div>
+              {prereleaseDownloadLink && (
+                <a
+                  href={prereleaseDownloadLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-orange-600 text-white rounded-xl font-bold text-base hover:bg-orange-700 transition-all shadow-md hover:scale-[1.03] active:scale-95 quicksand-bold"
+                >
+                  <span className="material-symbols-outlined text-xl">developer_mode</span>
+                  Try Beta Pre-Release
+                </a>
+              )}
             </div>
           </div>
+        </section>
 
-          {/* Screenshots Section */}
-          {screenshotSrcs.length > 0 && (
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6 quicksand-bold px-2">Screenshots</h2>
-              <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x snap-mandatory scrollbar-hide">
-                {screenshotSrcs.map((src, index) => (
-                  <div key={index} className="shrink-0 snap-center first:pl-2 last:pr-2">
-                    <img
-                      src={src}
-                      alt={`Screenshot ${index + 1}`}
-                      className="h-[400px] md:h-[500px] w-auto rounded-xl border border-border/50 shadow-md"
+        {/* Screenshot Carousel */}
+        {screenshotSrcs.length > 0 && (
+          <section className="mb-24 overflow-hidden">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 mb-8 flex justify-between items-end">
+              <div>
+                <h2 className="text-2xl md:text-4xl font-bold text-foreground quicksand-semibold">Interface Gallery</h2>
+                <p className="font-body-md text-sm md:text-base text-muted-foreground quicksand-regular">Peek inside the mechanics of the utility stack.</p>
+              </div>
+              <div className="flex gap-4">
+                <button aria-label="Scroll back" className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all bg-card" onClick={() => scrollCarousel(-1)}>
+                  <span className="material-symbols-outlined">arrow_back</span>
+                </button>
+                <button aria-label="Scroll forward" className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all bg-card" onClick={() => scrollCarousel(1)}>
+                  <span className="material-symbols-outlined">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex gap-8 overflow-x-auto px-6 md:px-12 hide-scrollbar snap-x snap-mandatory scroll-smooth" id="screenshot-carousel">
+              {screenshotSrcs.map((src, index) => (
+                <div key={index} className="flex-none max-w-[90vw] snap-start space-y-4">
+                  <div className="glass-panel p-2 rounded-2xl relative overflow-hidden bg-muted shadow-md flex items-center justify-center">
+                    <img 
+                      src={src} 
+                      alt={`${title} screenshot preview`} 
+                      className="max-h-[350px] md:max-h-[480px] w-auto h-auto object-contain rounded-xl" 
                     />
                   </div>
-                ))}
-              </div>
+                  <div className="px-2">
+                    <p className="text-xs text-primary uppercase font-bold tracking-wider mb-1">Preview {index + 1}</p>
+                    <p className="text-sm text-muted-foreground quicksand-semibold">Workspace View</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
+          </section>
+        )}
 
-        </div>
+        {/* Privacy Framework Section */}
+        <section id="privacy" className="max-w-7xl mx-auto px-6 md:px-12 mb-24">
+          <div className="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden bg-card shadow-md">
+            <div className="absolute top-0 right-0 p-8 opacity-[0.03] rotate-12 select-none pointer-events-none">
+              <span className="material-symbols-outlined text-[10rem] text-primary">encrypted</span>
+            </div>
+            
+            <div className="relative z-10 space-y-8">
+              <div>
+                <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-4 quicksand-semibold">Privacy Framework</h2>
+                <div className="w-16 h-1 bg-primary rounded-full mb-6" />
+              </div>
+              
+              <PrivacyPolicy variant={privacyVariant} />
+            </div>
+          </div>
+        </section>
+
+        {/* Support Section */}
+        <section id="support" className="max-w-7xl mx-auto px-6 md:px-12 text-center">
+          <div className="max-w-2xl mx-auto space-y-6">
+            <h2 className="text-2xl md:text-4xl font-bold text-foreground quicksand-semibold">Need Help or Support?</h2>
+            <p className="font-body-md text-base text-muted-foreground leading-relaxed quicksand-regular">
+              Have questions, experiencing bugs, or want to suggest updates? Reach out and we will help you resolve them.
+            </p>
+            <button 
+              onClick={() => setShowContactForm(true)}
+              className="glass-panel text-primary border-primary/40 px-10 py-4 rounded-full font-bold hover:bg-primary hover:text-primary-foreground transition-all shadow-md quicksand-bold cursor-pointer"
+            >
+              Open Support Form
+            </button>
+          </div>
+        </section>
+
       </main>
 
-      {/* Privacy Section (Product Specific) */}
-      <section id="privacy" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
-            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Privacy Policy</h2>
-            <PrivacyPolicy variant={privacyVariant} />
+      {/* Footer */}
+      <footer className="w-full py-16 bg-card border-t border-border relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 max-w-7xl mx-auto px-6 md:px-12">
+          <div className="col-span-1 md:col-span-1 space-y-4">
+            <img src="/zedlabs_logo.png" alt="zedlabs logo" className="h-8 w-auto" />
+            <p className="text-muted-foreground text-sm quicksand-regular">© 2026 ZedLabs Studio. Built for extreme performance.</p>
+          </div>
+          <div>
+            <h4 className="font-bold text-foreground mb-4 quicksand-bold">Product</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground quicksand-regular">
+              <li><a className="hover:text-primary transition-colors" href="#">System Hub</a></li>
+              <li><a className="hover:text-primary transition-colors" href="#">Local Client docs</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-foreground mb-4 quicksand-bold">Company</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground quicksand-regular">
+              <li><a className="hover:text-primary transition-colors" href="/">Home</a></li>
+              <li><a className="hover:text-primary transition-colors" href="/#about">About Us</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-foreground mb-4 quicksand-bold">Legal</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground quicksand-regular">
+              <li><a className="hover:text-primary transition-colors" href="#privacy">Privacy Audits</a></li>
+              <li><button className="hover:text-primary transition-colors text-left" onClick={() => setShowContactForm(true)}>Support</button></li>
+            </ul>
           </div>
         </div>
-      </section>
+      </footer>
 
-      {/* Contact Section */}
-      <section id="contact" className="relative z-10 px-4 md:px-8 py-12 md:py-20 pb-16 md:pb-32">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
-            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Contact Us</h2>
-            <div className="space-y-4 md:space-y-6">
-              <p className="text-muted-foreground text-lg md:text-xl quicksand-regular">
-                Have questions about {title}? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-              </p>
-              <div className="grid md:grid-cols-2 gap-4 md:gap-6 text-muted-foreground quicksand-regular">
-                <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Email</h3>
-                  <button
-                    onClick={() => setShowContactForm(true)}
-                    className="flex items-center gap-2 text-base md:text-lg hover:text-primary transition-colors group"
-                  >
-                    <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    <span>Contact Us</span>
-                  </button>
-                </div>
-                <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Location</h3>
-                  <p className="text-base md:text-lg">Pune, MH</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form Modal */}
+      {/* Zoho Form Modal */}
       {showContactForm && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-4xl max-h-[90vh] bg-card/90 backdrop-blur-md border border-border rounded-2xl p-6 md:p-8 overflow-y-auto shadow-xl">
-            <button
-              onClick={() => setShowContactForm(false)}
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10"
-              aria-label="Close form"
-            >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60">
+          <div className="relative w-full max-w-4xl max-h-[90vh] bg-card border border-border rounded-2xl p-6 md:p-8 overflow-y-auto shadow-2xl">
+            <button onClick={() => setShowContactForm(false)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10" aria-label="Close form">
+              <span className="material-symbols-outlined text-3xl">close</span>
             </button>
-            <div id="zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18" className="w-full flex justify-center"></div>
+            <div id="zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18" className="w-full flex justify-center pt-8"></div>
           </div>
         </div>
       )}

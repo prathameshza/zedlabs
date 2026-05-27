@@ -52,11 +52,10 @@ Feel free to check [our documentation](https://docs.astro.build) or jump into ou
 
 File location: astro.config.mjs
 
+/* File location: astro.config.mjs */
 import { defineConfig } from 'astro/config';
 import vercel from '@astrojs/vercel'; // or '/serverless' depending on your needs
-
 import react from '@astrojs/react';
-
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
@@ -88,7 +87,7 @@ File location: package.json
   "dependencies": {
     "@astrojs/react": "^5.0.3",
     "@astrojs/vercel": "^10.0.4",
-    "@tailwindcss/vite": "^4.1.16",
+    "@tailwindcss/vite": "^4.3.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vercel/analytics": "^1.5.0",
@@ -96,11 +95,13 @@ File location: package.json
     "astro": "^6.1.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "tailwindcss": "^4.1.16",
-    "tw-animate-css": "^1.4.0"
+    "tailwindcss": "^4.3.0",
+    "tw-animate-css": "^1.4.0",
+    "fumadocs-ui": "^16.9.1",
+    "fumadocs-core": "^16.9.1",
+    "lucide-react": "^1.16.0"
   }
 }
-
 
 --------------------------------------------------------------------------------
 
@@ -182,6 +183,12 @@ Asset file: src\assets\products\webcodebox\WebCodeBox PlayStore Screenshots\fram
 
 Asset file: src\assets\products\webcodebox\logo\logo.png
 
+Asset file: src\assets\products\yourpc\logo\YPC_logo.png
+
+Asset file: src\assets\products\yourpc\playstore_screenshots\Screenshot_20260512_012755.png
+
+Asset file: src\assets\products\yourpc\playstore_screenshots\Screenshot_20260512_012804.png
+
 File location: src\components\DownloadPage.tsx
 
 "use client"
@@ -196,6 +203,7 @@ interface DownloadPageProps {
   platform: string;
   comingSoon?: boolean;
   vigemDriverLink?: string;
+  microsoftStoreLink?: string;
 }
 
 export default function DownloadPage({
@@ -205,7 +213,8 @@ export default function DownloadPage({
   version,
   platform,
   comingSoon = false,
-  vigemDriverLink
+  vigemDriverLink,
+  microsoftStoreLink
 }: DownloadPageProps) {
 
   const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
@@ -291,15 +300,23 @@ export default function DownloadPage({
                   Coming Soon
                 </div>
               ) : (
-                <a
-                  href={downloadLink}
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-xl hover:opacity-90 transition-all shadow-lg hover:scale-105 active:scale-95 quicksand-bold"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  Download for Windows
-                </a>
+                <div className="flex flex-col items-center gap-4">
+                  {microsoftStoreLink && (
+                    <a
+                      href={microsoftStoreLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:opacity-80 transition-opacity"
+                    >
+                      <img 
+                        src="https://get.microsoft.com/images/en-us%20dark.svg" 
+                        alt="Get it from Microsoft Store" 
+                        width="200"
+                        className="h-auto"
+                      />
+                    </a>
+                  )}
+                </div>
               )}
               
               {vigemDriverLink && (
@@ -350,14 +367,15 @@ File location: src\components\PrivacyPolicy.tsx
 import React from 'react';
 
 interface PrivacyPolicyProps {
-  variant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller';
+  variant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller' | 'yourpc';
 }
 
 export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProps) {
   const appName = variant === 'webcodebox' ? 'WebCodeBox' :
     variant === 'notebook' ? 'Notebook' :
       variant === 'shaderboy' ? 'Shaderboy' : 
-        variant === 'pocketcontroller' ? 'PocketController' : 'our apps';
+        variant === 'pocketcontroller' ? 'PocketController' : 
+          variant === 'yourpc' ? 'YourPC' : 'our apps';
 
   return (
     <div className="space-y-6 text-muted-foreground quicksand-regular">
@@ -392,7 +410,7 @@ export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProp
         </p>
       </div>
 
-      {(variant === 'shaderboy' || variant === 'notebook') && (
+      {(variant === 'shaderboy' || variant === 'notebook' || variant === 'yourpc') && (
         <div>
           <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Data Storage</h3>
           <p className="text-base md:text-lg leading-relaxed">
@@ -443,6 +461,7 @@ export default function PrivacyPolicy({ variant = 'general' }: PrivacyPolicyProp
 
 File location: src\components\ProductPage.tsx
 
+/* File location: src/components/ProductPage.tsx */
 "use client"
 
 import { useEffect, useState } from "react"
@@ -459,7 +478,8 @@ interface ProductPageProps {
   pcDownloadLink?: string;
   prereleaseDownloadLink?: string;
   isComingSoon?: boolean;
-  privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller';
+  privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller' | 'yourpc';
+  docsLink?: string;
 }
 
 export default function ProductPage({
@@ -472,7 +492,8 @@ export default function ProductPage({
   pcDownloadLink,
   prereleaseDownloadLink,
   isComingSoon = false,
-  privacyVariant = 'notebook'
+  privacyVariant = 'notebook',
+  docsLink
 }: ProductPageProps) {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -509,7 +530,17 @@ export default function ProductPage({
     })
   }
 
-  // --- Contact Form Logic (Zoho) ---
+  const scrollCarousel = (direction: number) => {
+    const carousel = document.getElementById('screenshot-carousel');
+    if (carousel) {
+      const scrollAmount = 450;
+      carousel.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+
   useEffect(() => {
     if (showContactForm) {
       const script = document.createElement("script")
@@ -580,189 +611,232 @@ export default function ProductPage({
   }, [showContactForm])
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden relative bg-background">
+    <div className="min-h-screen w-full relative bg-background text-foreground overflow-x-hidden selection:bg-primary/25">
 
-      {/* Header */}
-      <header className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
-            <a href="/" className="hover:opacity-80 transition-opacity">
-              <img src="/zedlabs_logo.png" alt="zedlabs" className="h-8 md:h-10 w-auto" />
+      {/* Header - Solid elevated Surface */}
+      <header className="fixed top-0 w-full z-50 bg-card border-b border-border shadow-sm transition-all duration-300 ease-in-out h-20">
+        <div className="flex justify-between items-center max-w-7xl mx-auto px-6 md:px-12 h-full">
+          <div className="flex items-center gap-2">
+            <a href="/" className="hover:opacity-85 transition-opacity">
+              <img src="/zedlabs_logo.png" alt="zedlabs logo" className="h-9 w-auto" />
             </a>
-            <nav className="hidden md:flex items-center gap-8">
-              <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">Privacy</a>
-              <a href="#contact" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">Contact</a>
-            </nav>
-            <div className="flex items-center gap-2">
-              <button onClick={toggleTheme} className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/50">
-                {mounted && (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-                )}
-              </button>
-              <button className="md:hidden text-foreground p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-              </button>
-            </div>
+          </div>
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="/" className="text-muted-foreground hover:text-primary text-sm font-semibold transition quicksand-semibold">Ecosystem</a>
+            {docsLink && (
+              <a href={docsLink} className="text-muted-foreground hover:text-primary text-sm font-semibold transition quicksand-semibold">Documentation</a>
+            )}
+            <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-semibold transition quicksand-semibold">Privacy Policy</a>
+            <a href="#support" className="text-muted-foreground hover:text-primary text-sm font-semibold transition quicksand-semibold">Support</a>
+          </nav>
+          <div className="flex items-center gap-4">
+            <button onClick={toggleTheme} className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted" aria-label="Toggle theme">
+              {mounted && (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? (
+                <span className="material-symbols-outlined text-xl">light_mode</span>
+              ) : (
+                <span className="material-symbols-outlined text-xl">dark_mode</span>
+              )}
+            </button>
+            <button className="md:hidden text-foreground p-1" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
+              <span className="material-symbols-outlined text-2xl">{mobileMenuOpen ? 'close' : 'menu'}</span>
+            </button>
           </div>
         </div>
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 mx-4">
-            <nav className="flex flex-col gap-2 px-6 py-4 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
-              <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2" onClick={() => setMobileMenuOpen(false)}>Privacy</a>
-              <a href="#contact" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2" onClick={() => setMobileMenuOpen(false)}>Contact</a>
+          <div className="md:hidden absolute top-20 left-0 right-0 p-4 z-40">
+            <nav className="flex flex-col gap-2 px-6 py-4 rounded-xl bg-card border border-border shadow-lg">
+              <a href="/" className="text-left text-muted-foreground py-2 quicksand-regular">Home</a>
+              {docsLink && (
+                <a href={docsLink} className="text-left text-muted-foreground py-2 quicksand-regular">Documentation</a>
+              )}
+              <a href="#privacy" className="text-left text-muted-foreground py-2 quicksand-regular" onClick={() => setMobileMenuOpen(false)}>Privacy Policy</a>
+              <a href="#support" className="text-left text-muted-foreground py-2 quicksand-regular" onClick={() => setMobileMenuOpen(false)}>Support</a>
             </nav>
           </div>
         )}
       </header>
 
-      {/* Main Product Content */}
-      <main className="relative z-10 pt-32 pb-12 px-4 md:px-8">
-        <div className="max-w-6xl mx-auto space-y-12">
-
-          {/* Hero Section */}
-          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm flex flex-col md:flex-row items-center gap-8 md:gap-12">
-
-            {/* App Logo */}
-            <div className="shrink-0">
-              <img
-                src={logoSrc}
-                alt={`${title} Logo`}
-                className="w-32 h-32 md:w-48 md:h-48 rounded-4xl shadow-lg border border-border/50"
-              />
+      {/* Main Content */}
+      <main className="relative z-10 pt-32 pb-24">
+        
+        {/* Centered Product Hero */}
+        <section className="max-w-4xl mx-auto px-6 md:px-12 mb-24 text-center">
+          <div className="flex flex-col items-center space-y-6">
+            <div className="w-20 h-20 rounded-2xl glass-panel flex items-center justify-center border-primary/20 bg-muted shadow-sm">
+              <img src={logoSrc} alt={`${title} Logo`} className="w-16 h-16 rounded-xl object-contain" />
             </div>
+            
+            <h1 className="font-headline-xl text-4xl md:text-6xl text-foreground tracking-tight leading-tight quicksand-bold">{title}</h1>
+            <p className="text-primary text-xl font-semibold quicksand-semibold">{tagline}</p>
+            
+            <p className="font-body-md text-base md:text-lg text-muted-foreground leading-relaxed quicksand-regular max-w-2xl">
+              {description}
+            </p>
 
-            {/* Product Info */}
-            <div className="flex-1 text-center md:text-left space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground quicksand-bold">{title}</h1>
-              <p className="text-xl md:text-2xl text-primary font-medium quicksand-medium">{tagline}</p>
-              <p className="text-muted-foreground text-lg leading-relaxed quicksand-regular max-w-2xl">
-                {description}
-              </p>
+            <div className="pt-4 flex flex-wrap gap-4 items-center justify-center">
+              {isComingSoon ? (
+                <span className="inline-flex items-center px-6 py-3 rounded-full text-base font-medium bg-muted text-muted-foreground quicksand-medium border border-border">
+                  In Active Development
+                </span>
+              ) : (
+                <a
+                  href={downloadLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-85 transition-all"
+                >
+                  <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-[52px] w-auto" />
+                </a>
+              )}
 
-              <div className="pt-4 flex flex-col md:flex-row items-center justify-center md:justify-start gap-4">
-                {isComingSoon ? (
-                  <span className="inline-flex items-center px-6 py-3 rounded-full text-base font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
-                    Coming Soon
-                  </span>
-                ) : (
-                  <a
-                    href={downloadLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:opacity-80 transition-opacity"
-                  >
-                    <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-14 w-auto" />
-                  </a>
-                )}
+              {docsLink && (
+                <a
+                  href={docsLink}
+                  className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-neutral-800 text-neutral-100 hover:bg-neutral-700 rounded-xl font-bold text-base transition-all shadow-md hover:scale-[1.03] active:scale-95 quicksand-bold border border-neutral-700"
+                >
+                  <span className="material-symbols-outlined text-xl">menu_book</span>
+                  View Documentation
+                </a>
+              )}
 
-                {pcDownloadLink && (
-                  <a
-                    href={pcDownloadLink}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full font-bold text-base hover:opacity-90 transition-all shadow-md hover:scale-105 active:scale-95 quicksand-bold"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    Download PC Client
-                  </a>
-                )}
+              {pcDownloadLink && (
+                <a
+                  href={pcDownloadLink}
+                  className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-primary text-primary-foreground rounded-xl font-bold text-base hover:opacity-95 transition-all shadow-md hover:scale-[1.03] active:scale-95 quicksand-bold"
+                >
+                  <span className="material-symbols-outlined text-xl">download_for_offline</span>
+                  Download PC Client
+                </a>
+              )}
 
-                {prereleaseDownloadLink && (
-                  <a
-                    href={prereleaseDownloadLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-full font-bold text-base hover:bg-orange-600 transition-all shadow-md hover:scale-105 active:scale-95 quicksand-bold"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Testing Pre-Release
-                  </a>
-                )}
-              </div>
+              {prereleaseDownloadLink && (
+                <a
+                  href={prereleaseDownloadLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-orange-600 text-white rounded-xl font-bold text-base hover:bg-orange-700 transition-all shadow-md hover:scale-[1.03] active:scale-95 quicksand-bold"
+                >
+                  <span className="material-symbols-outlined text-xl">developer_mode</span>
+                  Try Beta Pre-Release
+                </a>
+              )}
             </div>
           </div>
+        </section>
 
-          {/* Screenshots Section */}
-          {screenshotSrcs.length > 0 && (
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6 quicksand-bold px-2">Screenshots</h2>
-              <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x snap-mandatory scrollbar-hide">
-                {screenshotSrcs.map((src, index) => (
-                  <div key={index} className="shrink-0 snap-center first:pl-2 last:pr-2">
-                    <img
-                      src={src}
-                      alt={`Screenshot ${index + 1}`}
-                      className="h-[400px] md:h-[500px] w-auto rounded-xl border border-border/50 shadow-md"
+        {/* Screenshot Carousel */}
+        {screenshotSrcs.length > 0 && (
+          <section className="mb-24 overflow-hidden">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 mb-8 flex justify-between items-end">
+              <div>
+                <h2 className="text-2xl md:text-4xl font-bold text-foreground quicksand-semibold">Interface Gallery</h2>
+                <p className="font-body-md text-sm md:text-base text-muted-foreground quicksand-regular">Peek inside the mechanics of the utility stack.</p>
+              </div>
+              <div className="flex gap-4">
+                <button aria-label="Scroll back" className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all bg-card" onClick={() => scrollCarousel(-1)}>
+                  <span className="material-symbols-outlined">arrow_back</span>
+                </button>
+                <button aria-label="Scroll forward" className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all bg-card" onClick={() => scrollCarousel(1)}>
+                  <span className="material-symbols-outlined">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex gap-8 overflow-x-auto px-6 md:px-12 hide-scrollbar snap-x snap-mandatory scroll-smooth" id="screenshot-carousel">
+              {screenshotSrcs.map((src, index) => (
+                <div key={index} className="flex-none max-w-[90vw] snap-start space-y-4">
+                  <div className="glass-panel p-2 rounded-2xl relative overflow-hidden bg-muted shadow-md flex items-center justify-center">
+                    <img 
+                      src={src} 
+                      alt={`${title} screenshot preview`} 
+                      className="max-h-[350px] md:max-h-[480px] w-auto h-auto object-contain rounded-xl" 
                     />
                   </div>
-                ))}
-              </div>
+                  <div className="px-2">
+                    <p className="text-xs text-primary uppercase font-bold tracking-wider mb-1">Preview {index + 1}</p>
+                    <p className="text-sm text-muted-foreground quicksand-semibold">Workspace View</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
+          </section>
+        )}
 
-        </div>
+        {/* Privacy Framework Section */}
+        <section id="privacy" className="max-w-7xl mx-auto px-6 md:px-12 mb-24">
+          <div className="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden bg-card shadow-md">
+            <div className="absolute top-0 right-0 p-8 opacity-[0.03] rotate-12 select-none pointer-events-none">
+              <span className="material-symbols-outlined text-[10rem] text-primary">encrypted</span>
+            </div>
+            
+            <div className="relative z-10 space-y-8">
+              <div>
+                <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-4 quicksand-semibold">Privacy Framework</h2>
+                <div className="w-16 h-1 bg-primary rounded-full mb-6" />
+              </div>
+              
+              <PrivacyPolicy variant={privacyVariant} />
+            </div>
+          </div>
+        </section>
+
+        {/* Support Section */}
+        <section id="support" className="max-w-7xl mx-auto px-6 md:px-12 text-center">
+          <div className="max-w-2xl mx-auto space-y-6">
+            <h2 className="text-2xl md:text-4xl font-bold text-foreground quicksand-semibold">Need Help or Support?</h2>
+            <p className="font-body-md text-base text-muted-foreground leading-relaxed quicksand-regular">
+              Have questions, experiencing bugs, or want to suggest updates? Reach out and we will help you resolve them.
+            </p>
+            <button 
+              onClick={() => setShowContactForm(true)}
+              className="glass-panel text-primary border-primary/40 px-10 py-4 rounded-full font-bold hover:bg-primary hover:text-primary-foreground transition-all shadow-md quicksand-bold cursor-pointer"
+            >
+              Open Support Form
+            </button>
+          </div>
+        </section>
+
       </main>
 
-      {/* Privacy Section (Product Specific) */}
-      <section id="privacy" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
-            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Privacy Policy</h2>
-            <PrivacyPolicy variant={privacyVariant} />
+      {/* Footer */}
+      <footer className="w-full py-16 bg-card border-t border-border relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 max-w-7xl mx-auto px-6 md:px-12">
+          <div className="col-span-1 md:col-span-1 space-y-4">
+            <img src="/zedlabs_logo.png" alt="zedlabs logo" className="h-8 w-auto" />
+            <p className="text-muted-foreground text-sm quicksand-regular">© 2026 ZedLabs Studio. Built for extreme performance.</p>
+          </div>
+          <div>
+            <h4 className="font-bold text-foreground mb-4 quicksand-bold">Product</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground quicksand-regular">
+              <li><a className="hover:text-primary transition-colors" href="#">System Hub</a></li>
+              <li><a className="hover:text-primary transition-colors" href="#">Local Client docs</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-foreground mb-4 quicksand-bold">Company</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground quicksand-regular">
+              <li><a className="hover:text-primary transition-colors" href="/">Home</a></li>
+              <li><a className="hover:text-primary transition-colors" href="/#about">About Us</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-foreground mb-4 quicksand-bold">Legal</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground quicksand-regular">
+              <li><a className="hover:text-primary transition-colors" href="#privacy">Privacy Audits</a></li>
+              <li><button className="hover:text-primary transition-colors text-left" onClick={() => setShowContactForm(true)}>Support</button></li>
+            </ul>
           </div>
         </div>
-      </section>
+      </footer>
 
-      {/* Contact Section */}
-      <section id="contact" className="relative z-10 px-4 md:px-8 py-12 md:py-20 pb-16 md:pb-32">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
-            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Contact Us</h2>
-            <div className="space-y-4 md:space-y-6">
-              <p className="text-muted-foreground text-lg md:text-xl quicksand-regular">
-                Have questions about {title}? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-              </p>
-              <div className="grid md:grid-cols-2 gap-4 md:gap-6 text-muted-foreground quicksand-regular">
-                <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Email</h3>
-                  <button
-                    onClick={() => setShowContactForm(true)}
-                    className="flex items-center gap-2 text-base md:text-lg hover:text-primary transition-colors group"
-                  >
-                    <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    <span>Contact Us</span>
-                  </button>
-                </div>
-                <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Location</h3>
-                  <p className="text-base md:text-lg">Pune, MH</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form Modal */}
+      {/* Zoho Form Modal */}
       {showContactForm && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-4xl max-h-[90vh] bg-card/90 backdrop-blur-md border border-border rounded-2xl p-6 md:p-8 overflow-y-auto shadow-xl">
-            <button
-              onClick={() => setShowContactForm(false)}
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10"
-              aria-label="Close form"
-            >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60">
+          <div className="relative w-full max-w-4xl max-h-[90vh] bg-card border border-border rounded-2xl p-6 md:p-8 overflow-y-auto shadow-2xl">
+            <button onClick={() => setShowContactForm(false)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10" aria-label="Close form">
+              <span className="material-symbols-outlined text-3xl">close</span>
             </button>
-            <div id="zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18" className="w-full flex justify-center"></div>
+            <div id="zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18" className="w-full flex justify-center pt-8"></div>
           </div>
         </div>
       )}
@@ -989,6 +1063,514 @@ import background from '../assets/background.svg';
 
 --------------------------------------------------------------------------------
 
+File location: src\components\YourPCDocs.tsx
+
+/* File location: src/components/YourPCDocs.tsx */
+import React, { useState, useEffect, useRef } from "react";
+
+// Official Fumadocs components loaded natively
+import { Callout } from "fumadocs-ui/components/callout";
+
+// Import all dynamic metadata, databases, and structural parameters from PageTree
+import { 
+  pageTree, 
+  pages, 
+  defaultPageId, 
+  yourPCConfigProperties, 
+  type DocNode 
+} from "../pages/yourpc/docs/PageTree";
+
+// Import the official YourPC logo gracefully
+import ypcLogo from "../assets/products/yourpc/logo/YPC_logo.png";
+
+export interface TypeProperty {
+  name: string;
+  type: string;
+  description: string;
+  remarks?: string;
+}
+
+// High-density TypeTable component mapped directly to TS definitions
+function TypeTable({ properties }: { properties: TypeProperty[] }) {
+  return (
+    <div className="overflow-x-auto border border-fd-border rounded-lg bg-fd-card/40 mt-6 max-w-[720px]">
+      <table className="w-full text-left border-collapse text-xs md:text-sm font-sans">
+        <thead>
+          <tr className="border-b border-fd-border bg-fd-muted text-fd-foreground font-semibold">
+            <th className="p-3">Field</th>
+            <th className="p-3">Type</th>
+            <th className="p-3">Description</th>
+          </tr>
+        </thead>
+        <tbody className="text-fd-muted-foreground divide-y divide-fd-border">
+          {properties.map((prop) => (
+            <tr key={prop.name} className="hover:bg-fd-muted/30 transition-colors">
+              <td className="p-3 font-mono text-xs font-semibold text-fd-primary">
+                {prop.name}
+              </td>
+              <td className="p-3 font-mono text-xs text-fd-foreground">
+                <code className="px-1.5 py-0.5 rounded bg-fd-muted border border-fd-border text-fd-foreground text-[11px]">
+                  {prop.type}
+                </code>
+              </td>
+              <td className="p-3 space-y-1">
+                <p className="leading-relaxed text-fd-muted-foreground">{prop.description}</p>
+                {prop.remarks && (
+                  <p className="text-[11px] text-fd-primary/80 italic font-medium font-sans">
+                    @remarks {prop.remarks}
+                  </p>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default function YourPCDocs() {
+  const [activePageId, setActivePageId] = useState(defaultPageId);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [activeOutlineId, setActiveOutlineId] = useState("");
+
+  const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({});
+
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Dynamic Content Loader queries the dynamic database
+  const activePage = pages[activePageId] || pages[defaultPageId];
+
+  // Viewport scrollspy tracking active subsections
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveOutlineId(entry.target.id);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "-15% 0px -70% 0px",
+        threshold: 0,
+      }
+    );
+
+    activePage.outline.forEach((section) => {
+      const el = document.getElementById(section.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [activePageId]);
+
+  // Command+K search box listeners
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+      }
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    if (searchOpen && searchInputRef.current) {
+      setTimeout(() => searchInputRef.current?.focus(), 50);
+    }
+  }, [searchOpen]);
+
+  const handleCopy = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const toggleFolder = (folderTitle: string) => {
+    setExpandedFolders((prev) => ({
+      ...prev,
+      [folderTitle]: !prev[folderTitle]
+    }));
+  };
+
+  // Recursive sidebar renderer capable of compiling folders and sub-pages
+  const renderSidebarItem = (node: DocNode) => {
+    if (node.type === "separator") {
+      return (
+        <h4 
+          key={node.title} 
+          className="text-[11px] uppercase font-bold text-fd-muted-foreground tracking-wider mb-2.5 px-2 mt-5 first:mt-0 font-sans"
+        >
+          {node.title}
+        </h4>
+      );
+    }
+
+    if (node.type === "folder") {
+      const isExpanded = !!expandedFolders[node.title];
+      
+      const hasActiveChild = (children: DocNode[]): boolean => {
+        return children.some((child) => {
+          if (child.type === "page") return child.id === activePageId;
+          if (child.type === "folder") return hasActiveChild(child.children);
+          return false;
+        });
+      };
+      const active = hasActiveChild(node.children);
+
+      return (
+        <div key={node.title} className="space-y-1 font-sans">
+          <button
+            onClick={() => toggleFolder(node.title)}
+            className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              active 
+                ? "text-fd-primary bg-fd-primary/5" 
+                : "text-fd-muted-foreground hover:text-fd-foreground hover:bg-fd-muted/30"
+            }`}
+          >
+            <span>{node.title}</span>
+            <span className={`material-symbols-outlined text-sm transition-transform duration-200 ${isExpanded ? "" : "-rotate-90"}`}>
+              expand_more
+            </span>
+          </button>
+          
+          {isExpanded && (
+            <ul className="pl-2 border-l border-fd-border/30 ml-4 space-y-1 relative">
+              {node.children.map(renderSidebarItem)}
+            </ul>
+          )}
+        </div>
+      );
+    }
+
+    if (node.type === "page") {
+      const isAvailable = !!pages[node.id];
+      const isActive = activePageId === node.id;
+
+      return (
+        <li key={node.id} className="list-none">
+          <button
+            onClick={() => {
+              if (isAvailable) {
+                setActivePageId(node.id);
+                setMobileSidebarOpen(false);
+              }
+            }}
+            disabled={!isAvailable}
+            className={`w-full flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold transition-all relative ${
+              isActive
+                ? "bg-fd-primary/10 text-fd-primary font-semibold"
+                : isAvailable
+                  ? "text-fd-muted-foreground hover:text-fd-foreground hover:bg-fd-muted/50 cursor-pointer"
+                  : "text-fd-muted-foreground/35 cursor-not-allowed"
+            }`}
+          >
+            {isActive && (
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-fd-primary rounded-r" />
+            )}
+            <span className={isActive ? "pl-2 transition-all" : "transition-all"}>{node.title}</span>
+          </button>
+        </li>
+      );
+    }
+
+    return null;
+  };
+
+  // Convert search corpus dynamically
+  const searchCorpus = Object.values(pages).map((p) => ({
+    id: p.id,
+    title: p.title,
+    category: p.category,
+    match: p.breadcrumbs.join(", ")
+  }));
+
+  const filteredSearchResults = searchCorpus.filter((item) =>
+    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.match.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Dynamic renderer maps standard TypeScript definitions into visual subsections
+  const renderSectionNode = (section: any) => {
+    return (
+      <section id={section.id} key={section.id} className="space-y-3.5 scroll-mt-24">
+        <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+          {section.title}
+        </h2>
+        <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] font-normal font-sans">
+          {section.text}
+        </p>
+
+        {section.listItems && (
+          <ul className="list-disc list-inside space-y-2 text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] pl-2 font-sans">
+            {section.listItems.map((item: string, idx: number) => (
+              <li key={idx}>{item}</li>
+            ))}
+          </ul>
+        )}
+
+        {section.showConfigTable && (
+          <TypeTable properties={yourPCConfigProperties} />
+        )}
+
+        {section.id === "overview" && (
+          <Callout type="info" className="my-2 text-fd-foreground bg-fd-muted border-fd-border">
+            PROot safely isolates your virtual filesystem inside the application sandbox without requiring system root privileges.
+          </Callout>
+        )}
+      </section>
+    );
+  };
+
+  return (
+    <div className="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-fd-background text-fd-foreground font-sans antialiased">
+      {/* Top Mobile Bar */}
+      <header className="flex md:hidden items-center justify-between px-6 py-4 border-b border-fd-border bg-fd-background z-50">
+        <div className="flex items-center gap-2">
+          <img src={ypcLogo.src} alt="YourPC Logo" className="h-5 w-5 object-contain rounded shadow-sm" />
+          <span className="font-bold text-fd-foreground tracking-tight">YourPC Docs</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="p-1 text-fd-muted-foreground hover:text-fd-foreground"
+            aria-label="Open search dialog"
+          >
+            <span className="material-symbols-outlined">search</span>
+          </button>
+          <button
+            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+            className="p-1 text-fd-muted-foreground hover:text-fd-foreground"
+            aria-label="Toggle navigation menu"
+          >
+            <span className="material-symbols-outlined">
+              {mobileSidebarOpen ? "close" : "menu"}
+            </span>
+          </button>
+        </div>
+      </header>
+
+      {/* Left Sidebar Layout */}
+      <aside
+        className={`${
+          mobileSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        } fixed md:relative top-0 left-0 bottom-0 z-40 w-64 md:w-[260px] border-r border-fd-border bg-fd-background flex flex-col transition-transform duration-300 ease-in-out h-full shrink-0`}
+      >
+        {/* Header Branding */}
+        <div className="flex items-center justify-between px-6 h-16 shrink-0">
+          <a href="/yourpc" className="flex items-center gap-2.5">
+            <img src={ypcLogo.src} alt="YourPC Logo" className="h-6 w-6 object-contain rounded shadow-sm" />
+            <span className="font-bold text-fd-foreground tracking-tight text-sm">YourPC Docs</span>
+          </a>
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-fd-muted border border-fd-border text-fd-muted-foreground font-mono">v1.0.0</span>
+        </div>
+
+        {/* Sidebar Search Bar */}
+        <div className="px-4 py-2 shrink-0">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-fd-muted border border-fd-border text-fd-muted-foreground hover:text-fd-foreground transition-colors text-xs"
+          >
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-[16px]">search</span>
+              <span>Search...</span>
+            </div>
+            <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-fd-muted border border-fd-border font-mono text-[10px] text-fd-muted-foreground">
+              Ctrl K
+            </kbd>
+          </button>
+        </div>
+
+        {/* Navigation list */}
+        <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+          {pageTree.map(renderSidebarItem)}
+        </nav>
+
+        {/* Global Footer back-to-site link */}
+        <div className="p-4 border-t border-fd-border bg-fd-background shrink-0 flex items-center justify-between">
+          <a
+            href="/yourpc"
+            className="flex items-center gap-1.5 text-xs text-fd-muted-foreground hover:text-fd-foreground font-medium transition-colors"
+          >
+            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+            <span>Back to Product</span>
+          </a>
+        </div>
+      </aside>
+
+      {/* Main Documentation Frame */}
+      <main className="flex-1 flex flex-col h-full overflow-hidden bg-fd-background">
+        <div className="flex-1 flex overflow-y-auto w-full">
+          {/* Middle Article Frame */}
+          <article className="flex-1 px-6 md:px-14 py-12 max-w-[840px] mx-auto overflow-y-auto scroll-smooth">
+            {/* Breadcrumbs */}
+            <div className="flex items-center gap-1 text-xs text-fd-muted-foreground mb-6 font-semibold">
+              {activePage.breadcrumbs.map((crumb, idx) => (
+                <React.Fragment key={crumb}>
+                  {idx > 0 && <span className="material-symbols-outlined text-[12px] text-fd-muted-foreground/60">chevron_right</span>}
+                  <span className={idx === activePage.breadcrumbs.length - 1 ? "text-fd-foreground font-bold" : ""}>
+                    {crumb}
+                  </span>
+                </React.Fragment>
+              ))}
+            </div>
+
+            {/* Document Render Body */}
+            <div className="space-y-10">
+              <div className="space-y-2">
+                <h1 className="text-3xl md:text-4xl font-extrabold text-fd-foreground tracking-tight font-sans">
+                  {activePage.title}
+                </h1>
+                <p className="text-fd-muted-foreground text-base md:text-lg font-normal leading-relaxed">
+                  {activePage.tagline}
+                </p>
+              </div>
+
+              {/* Action Bar */}
+              <div className="flex flex-wrap gap-2 py-1.5 border-b border-fd-border">
+                <button
+                  onClick={() => handleCopy(window.location.href, "page-link")}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-fd-muted border border-fd-border hover:border-fd-primary text-xs text-fd-muted-foreground hover:text-fd-foreground transition-all font-semibold"
+                >
+                  <span className="material-symbols-outlined text-[15px]">link</span>
+                  <span>{copiedId === "page-link" ? "Copied Link!" : "Copy Page Link"}</span>
+                </button>
+                <a
+                  href="https://github.com/zedlabs-corp/YourPC"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-fd-muted border border-fd-border hover:border-fd-primary text-xs text-fd-muted-foreground hover:text-fd-foreground transition-all font-semibold"
+                >
+                  <span className="material-symbols-outlined text-[15px]">open_in_new</span>
+                  <span>Open Github</span>
+                </a>
+              </div>
+
+              {activePage.sections.map(renderSectionNode)}
+            </div>
+
+            {/* Bottom Nav Helper */}
+            <div className="mt-20 pt-8 border-t border-fd-border flex justify-between">
+              <span className="text-xs text-fd-muted-foreground font-semibold">ZedLabs Docs Protocol • 2026</span>
+              <a href="#overview" className="text-xs text-fd-primary hover:underline font-semibold">
+                Back to Top ↑
+              </a>
+            </div>
+          </article>
+
+          {/* Right Sidebar - Scrollspy Table of Contents */}
+          <aside className="hidden lg:block w-56 shrink-0 border-l border-fd-border p-6 overflow-y-auto bg-fd-background">
+            <div className="space-y-4">
+              <h4 className="text-[11px] uppercase font-bold text-fd-muted-foreground tracking-wider">
+                On This Page
+              </h4>
+              
+              {/* Dynamic scroll indicator timeline bar */}
+              <ul className="relative border-l border-fd-border pl-3.5 space-y-3.5 text-[13px] font-semibold py-0.5">
+                {activePage.outline.map((section: any) => {
+                  const isActive = activeOutlineId === section.id;
+                  return (
+                    <li key={section.id} className="relative">
+                      {isActive && (
+                        <div className="absolute -left-[16px] top-1/2 -translate-y-1/2 w-[2.5px] h-3.5 bg-fd-primary rounded-r" />
+                      )}
+                      <a
+                        href={`#${section.id}`}
+                        className={`block transition-colors duration-150 ${
+                          isActive
+                            ? "text-fd-primary font-bold"
+                            : "text-fd-muted-foreground hover:text-fd-foreground"
+                        }`}
+                      >
+                        {section.title}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </main>
+
+      {/* Global Interactive Ctrl+K Search Overlay */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 bg-fd-background/80 backdrop-blur-sm">
+          <div
+            className="relative w-full max-w-xl bg-fd-popover border border-fd-border rounded-xl overflow-hidden shadow-2xl transition-all"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3 px-4 border-b border-fd-border">
+              <span className="material-symbols-outlined text-fd-muted-foreground text-[18px]">search</span>
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search YourPC Docs..."
+                className="w-full py-4 bg-transparent border-0 text-fd-foreground placeholder-fd-muted-foreground focus:ring-0 outline-none text-sm"
+              />
+              <button
+                onClick={() => setSearchOpen(false)}
+                className="text-xs px-2 py-1 rounded bg-fd-muted border border-fd-border text-fd-muted-foreground hover:text-fd-foreground font-semibold"
+              >
+                ESC
+              </button>
+            </div>
+
+            <div className="max-h-[320px] overflow-y-auto p-2 space-y-1">
+              {filteredSearchResults.length > 0 ? (
+                filteredSearchResults.map((result) => (
+                  <button
+                    key={result.id}
+                    onClick={() => {
+                      if (pages[result.id]) {
+                        setActivePageId(result.id);
+                        setSearchOpen(false);
+                        setSearchQuery("");
+                      }
+                    }}
+                    className="w-full text-left p-3 rounded-lg hover:bg-fd-muted/40 transition-colors flex flex-col gap-1 group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-fd-foreground group-hover:text-fd-primary font-bold text-xs md:text-sm">
+                        {result.title}
+                      </span>
+                      <span className="text-[9px] uppercase font-bold text-fd-muted-foreground px-1.5 py-0.5 rounded bg-fd-muted border border-fd-border">
+                        {result.category}
+                      </span>
+                    </div>
+                    <span className="text-xs text-fd-muted-foreground leading-normal line-clamp-1">
+                      {result.match}
+                    </span>
+                  </button>
+                ))
+              ) : (
+                <div className="py-12 text-center text-fd-muted-foreground text-xs md:text-sm">
+                  No matching results found for "{searchQuery}"
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+--------------------------------------------------------------------------------
+
 File location: src\components\homepage.tsx
 
 // HomePage of Zedlabs
@@ -1013,23 +1595,19 @@ export default HomePage;
 
 File location: src\components\page.tsx
 
+/* File location: src/components/page.tsx */
 "use client"
 
 import { useEffect, useState } from "react"
-// Import the Google Play badge image
 import googlePlayBadge from "../assets/google_play/image.png";
 
 export default function Home() {
-
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
   const [showContactForm, setShowContactForm] = useState(false)
   const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
   const [mounted, setMounted] = useState(false)
 
-  // ... [Keep existing Theme and Intersection Observer logic unchanged] ...
-
-  // Theme Logic
   useEffect(() => {
     setMounted(true)
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | "system" | null
@@ -1059,7 +1637,6 @@ export default function Home() {
     })
   }
 
-  // Scroll Spy Logic
   useEffect(() => {
     const observerOptions = { root: null, rootMargin: "-50% 0px -50% 0px", threshold: 0 }
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
@@ -1079,7 +1656,6 @@ export default function Home() {
     else if (sectionId === "home") { window.scrollTo({ top: 0, behavior: "smooth" }) }
   }
 
-  // Contact Form Logic
   useEffect(() => {
     if (showContactForm) {
       const script = document.createElement("script")
@@ -1150,246 +1726,419 @@ export default function Home() {
   }, [showContactForm])
 
   return (
-    <div className="min-h-screen w-full overflow-hidden relative bg-background">
-      {/* ... [Header and Nav code same as before] ... */}
-      <header className="absolute top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-6">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-3 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
-            <img src="/zedlabs_logo.png" alt="zedlabs" className="h-8 md:h-10 w-auto" />
-            <nav className="hidden md:flex items-center gap-8">
-              <a href="#about" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">About</a>
-              <a href="#products" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">Products</a>
-              <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">Privacy</a>
-              <a href="#contact" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular">Contact</a>
-            </nav>
-            <div className="flex items-center gap-2">
-              <button onClick={toggleTheme} className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/50" aria-label="Toggle theme">
-                {mounted && (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-                )}
-              </button>
-              <button className="md:hidden text-foreground p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
-                {mobileMenuOpen ? (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                ) : (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-                )}
-              </button>
-            </div>
+    <div className="min-h-screen w-full relative bg-background text-foreground overflow-x-hidden selection:bg-primary/25">
+
+      {/* Top Navigation Bar - Clean solid header surface */}
+      <header className="fixed top-0 w-full z-50 bg-card border-b border-border shadow-sm transition-all duration-300 h-20">
+        <div className="flex justify-between items-center max-w-7xl mx-auto px-6 md:px-12 h-full">
+          <div className="flex items-center gap-2">
+            <a href="#" className="hover:opacity-85 transition-opacity">
+              <img src="/zedlabs_logo.png" alt="ZedLabs Logo" className="h-9 w-auto" />
+            </a>
+          </div>
+          
+          <nav className="hidden md:flex gap-8 items-center text-sm font-medium">
+            <button onClick={() => scrollToSection("home")} className={`transition-colors quicksand-semibold ${activeSection === "home" ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>Home</button>
+            <button onClick={() => scrollToSection("about")} className={`transition-colors quicksand-semibold ${activeSection === "about" ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>About</button>
+            <button onClick={() => scrollToSection("products")} className={`transition-colors quicksand-semibold ${activeSection === "products" ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>Products</button>
+            <button onClick={() => scrollToSection("privacy")} className={`transition-colors quicksand-semibold ${activeSection === "privacy" ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>Privacy</button>
+            <button onClick={() => scrollToSection("support")} className={`transition-colors quicksand-semibold ${activeSection === "support" ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>Support</button>
+          </nav>
+
+          <div className="flex items-center gap-4">
+            <button onClick={toggleTheme} className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted" aria-label="Toggle theme">
+              {mounted && (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? (
+                <span className="material-symbols-outlined text-xl">light_mode</span>
+              ) : (
+                <span className="material-symbols-outlined text-xl">dark_mode</span>
+              )}
+            </button>
+            <button onClick={() => setShowContactForm(true)} className="bg-primary text-primary-foreground px-6 py-2.5 rounded-full font-bold text-sm hover:opacity-90 transition-opacity quicksand-bold">
+              Get Started
+            </button>
+            <button className="md:hidden text-foreground p-1" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
+              <span className="material-symbols-outlined text-2xl">{mobileMenuOpen ? 'close' : 'menu'}</span>
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation Drawer - Solid surface dropdown */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 mx-4">
-            <nav className="flex flex-col gap-2 px-6 py-4 rounded-xl bg-card/50 backdrop-blur-md border border-border shadow-sm">
-              <a href="#about" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2" onClick={() => setMobileMenuOpen(false)}>About</a>
-              <a href="#products" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2" onClick={() => setMobileMenuOpen(false)}>Products</a>
-              <a href="#privacy" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2" onClick={() => setMobileMenuOpen(false)}>Privacy</a>
-              <a href="#contact" className="text-muted-foreground hover:text-primary text-sm font-medium transition quicksand-regular py-2" onClick={() => setMobileMenuOpen(false)}>Contact</a>
+          <div className="md:hidden absolute top-20 left-0 right-0 p-4 z-40">
+            <nav className="flex flex-col gap-2 px-6 py-4 rounded-xl bg-card border border-border shadow-lg">
+              <button onClick={() => { scrollToSection("home"); setMobileMenuOpen(false); }} className="text-left text-muted-foreground py-2 quicksand-regular">Home</button>
+              <button onClick={() => { scrollToSection("about"); setMobileMenuOpen(false); }} className="text-left text-muted-foreground py-2 quicksand-regular">About</button>
+              <button onClick={() => { scrollToSection("products"); setMobileMenuOpen(false); }} className="text-left text-muted-foreground py-2 quicksand-regular">Products</button>
+              <button onClick={() => { scrollToSection("privacy"); setMobileMenuOpen(false); }} className="text-left text-muted-foreground py-2 quicksand-regular">Privacy</button>
+              <button onClick={() => { scrollToSection("support"); setMobileMenuOpen(false); }} className="text-left text-muted-foreground py-2 quicksand-regular">Support</button>
             </nav>
           </div>
         )}
       </header>
 
-      {/* Dot Navigation */}
-      <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-4">
-        {[{ id: "home", label: "Home" }, { id: "about", label: "About" }, { id: "products", label: "Products" }, { id: "privacy", label: "Privacy" }, { id: "contact", label: "Contact" }].map((section) => (
+      {/* Interactive Dot-Navigation Indicators - Flat, solid indicator boxes */}
+      <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-4">
+        {[
+          { id: "home", label: "Home" },
+          { id: "about", label: "About" },
+          { id: "products", label: "Products" },
+          { id: "privacy", label: "Privacy" },
+          { id: "support", label: "Support" }
+        ].map((section) => (
           <button key={section.id} onClick={() => scrollToSection(section.id)} className="group relative" aria-label={`Go to ${section.label}`}>
-            <div className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${activeSection === section.id ? "bg-primary border-primary scale-125" : "bg-transparent border-muted-foreground/40 hover:border-primary"}`} />
-            <span className="absolute right-6 top-1/2 -translate-y-1/2 bg-card/50 backdrop-blur-md border border-border px-3 py-1 rounded-lg text-foreground text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap quicksand-regular">{section.label}</span>
+            <div className={`w-3 h-3 rounded-full border border-primary/50 transition-all duration-300 ${activeSection === section.id ? "bg-primary scale-125" : "bg-transparent hover:border-primary"}`} />
+            <span className="absolute right-6 top-1/2 -translate-y-1/2 bg-card border border-border px-3 py-1 rounded-lg text-foreground text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap quicksand-medium shadow-sm">{section.label}</span>
           </button>
         ))}
       </div>
 
-      {/* Main Content */}
-      <main id="home" className="relative z-10 min-h-screen flex items-center justify-center px-4 md:px-8">
-        <div className="text-center space-y-6 md:space-y-8 max-w-4xl">
-          <div className="space-y-3 md:space-y-4">
+      {/* Main Container */}
+      <main className="relative z-10">
+
+        {/* Hero Section */}
+        <section id="home" className="min-h-screen flex flex-col items-center justify-center pt-20 px-6 md:px-12 text-center">
+          <div className="space-y-8 max-w-4xl">
             <div className="flex justify-center">
-              <img src="/zedlabs_logo.png" alt="zedlabs" className="w-full max-w-[280px] sm:max-w-md md:max-w-2xl lg:max-w-4xl h-auto" />
+              <img 
+                src="/zedlabs_logo.png" 
+                alt="ZedLabs Logo" 
+                className="w-full max-w-[280px] sm:max-w-md md:max-w-2xl h-auto drop-shadow-[0_4px_16px_rgba(0,0,0,0.08)]" 
+              />
             </div>
-            <p className="text-base sm:text-lg md:text-2xl text-muted-foreground font-light leading-relaxed quicksand-light">where innovation meets execution</p>
+            
+            <h1 className="font-headline-xl text-4xl md:text-6xl tracking-tight leading-tight max-w-4xl mx-auto quicksand-bold">
+              where innovation meets <span className="text-primary">execution</span>
+            </h1>
+
+            <p className="max-w-2xl mx-auto text-muted-foreground text-base md:text-lg font-light leading-relaxed quicksand-light">
+              We build high-performance utility software designed for technical precision and human accessibility. Minimalist tools that empower power users.
+            </p>
+
+            <div className="mt-12 flex gap-4 justify-center">
+              <button onClick={() => scrollToSection("products")} className="bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-base hover:scale-105 transition-transform shadow-md quicksand-bold">
+                Explore Products
+              </button>
+              <button onClick={() => scrollToSection("about")} className="glass-card px-8 py-4 rounded-xl font-bold text-base hover:bg-muted transition-colors quicksand-bold">
+                Learn More
+              </button>
+            </div>
           </div>
-          <p className="text-muted-foreground text-base sm:text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed quicksand-light px-4">
-            Build the future with cutting-edge software solutions designed for everyday people who want simplicity and power in their daily lives
-          </p>
-        </div>
+        </section>
+
+        {/* About Section */}
+        <section id="about" className="py-32 px-6 md:px-12 bg-muted/40 border-y border-border">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+            
+            <div className="space-y-6">
+              <h2 className="text-3xl md:text-5xl font-bold text-primary tracking-tight quicksand-bold">Built in Pune.<br/>Focused Worldwide.</h2>
+              <p className="text-muted-foreground text-base md:text-lg leading-relaxed quicksand-regular">
+                ZedLabs is a 2-person development studio based in the tech hub of Pune, India. We believe software should be lean, focused, and exceptionally fast. Our philosophy centers on stripping away the "chrome" of traditional UI to let functional logic take center stage.
+              </p>
+
+              <div className="flex gap-8 pt-6">
+                <div>
+                  <span className="block text-3xl font-bold text-primary">2</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-widest quicksand-medium">Developers</span>
+                </div>
+                <div>
+                  <span className="block text-3xl font-bold text-primary">5+</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-widest quicksand-medium">Active Tools</span>
+                </div>
+                <div>
+                  <span className="block text-3xl font-bold text-primary">∞</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-widest quicksand-medium">Efficiency</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Redesigned Tech Philosophy (Explicit High-contrast Dark theme container) */}
+            <div className="rounded-2xl border border-neutral-800 overflow-hidden flex flex-col h-[400px] shadow-lg bg-neutral-950 text-neutral-50 select-none">
+              {/* Window Header */}
+              <div className="bg-neutral-900 px-4 py-3 border-b border-neutral-800 flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/40" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/40" />
+                  <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/40" />
+                </div>
+                <span className="text-xs font-mono text-neutral-500">philosophy.json</span>
+                <span className="w-8" />
+              </div>
+
+              {/* Code Workspace Body */}
+              <div className="p-6 md:p-8 flex-1 flex flex-col justify-between font-mono text-[11px] md:text-xs leading-relaxed relative overflow-hidden bg-neutral-950">
+                <div className="space-y-4 relative z-10 text-neutral-400">
+                  <div>
+                    <span className="text-pink-400">"performance"</span>: &#123;
+                    <div className="pl-4">
+                      <span className="text-blue-400">"priority"</span>: <span className="text-amber-400">0</span>,
+                      <br />
+                      <span className="text-blue-400">"logic"</span>: <span className="text-emerald-400">"Strip redundant elements. Built for maximum speed."</span>
+                    </div>
+                    &#125;,
+                  </div>
+
+                  <div>
+                    <span className="text-pink-400">"privacy"</span>: &#123;
+                    <div className="pl-4">
+                      <span className="text-blue-400">"priority"</span>: <span className="text-amber-400">1</span>,
+                      <br />
+                      <span className="text-blue-400">"storage"</span>: <span className="text-emerald-400">"Zero-knowledge logic. Local-first file systems."</span>
+                    </div>
+                    &#125;,
+                  </div>
+
+                  <div>
+                    <span className="text-pink-400">"utility"</span>: &#123;
+                    <div className="pl-4">
+                      <span className="text-blue-400">"priority"</span>: <span className="text-amber-400">2</span>,
+                      <br />
+                      <span className="text-blue-400">"workspace"</span>: <span className="text-emerald-400">"Minimal UI chrome. Keyboard-driven accessibility."</span>
+                    </div>
+                    &#125;
+                  </div>
+                </div>
+
+                {/* Minimalist vector illustration representing Pune node network */}
+                <div className="absolute bottom-2 right-2 w-32 h-32 opacity-15 filter grayscale pointer-events-none">
+                  <svg className="w-full h-full text-primary" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" strokeDasharray="5,5" />
+                    <circle cx="50" cy="50" r="2" fill="currentColor" />
+                    <line x1="10" y1="10" x2="50" y2="50" />
+                    <line x1="90" y1="30" x2="50" y2="50" />
+                    <line x1="30" y1="80" x2="50" y2="50" />
+                    <circle cx="10" cy="10" r="3" fill="currentColor" />
+                    <circle cx="90" cy="30" r="3" fill="currentColor" />
+                    <circle cx="30" cy="80" r="3" fill="currentColor" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* Products Section */}
+        <section id="products" className="py-32 px-6 md:px-12">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-20 text-center space-y-4">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tight quicksand-bold">The Utility Suite</h2>
+              <p className="text-muted-foreground text-lg max-w-xl mx-auto quicksand-regular">Precision engineered tools designed to streamline your daily workflow.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              
+              {/* Notebook */}
+              <div className="glass-card p-8 rounded-2xl hover:border-primary/40 transition-all flex flex-col justify-between group">
+                <div>
+                  <div className="flex justify-between items-start mb-6">
+                    <span className="material-symbols-outlined text-primary text-4xl">edit_note</span>
+                    <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">ACTIVE</span>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors quicksand-semibold mb-3">Notebook</h3>
+                  <p className="text-muted-foreground text-base leading-relaxed mb-6 quicksand-regular">Transform the way you write and organize thoughts. Markdown editor with local-first file persistence.</p>
+                </div>
+                <div className="space-y-4">
+                  <a className="text-primary font-bold inline-flex items-center gap-2 hover:gap-3 transition-all text-sm quicksand-bold" href="/notebook">
+                    Launch Tool <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </a>
+                  <div className="pt-4 border-t border-border">
+                    <a href="https://play.google.com/store/apps/details?id=com.zedlabs.notebook&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-85 transition-opacity">
+                      <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-10 w-auto" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* WebCodeBox */}
+              <div className="glass-card p-8 rounded-2xl hover:border-primary/40 transition-all flex flex-col justify-between group">
+                <div>
+                  <div className="flex justify-between items-start mb-6">
+                    <span className="material-symbols-outlined text-primary text-4xl">terminal</span>
+                    <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">ACTIVE</span>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors quicksand-semibold mb-3">WebCodeBox</h3>
+                  <p className="text-muted-foreground text-base leading-relaxed mb-6 quicksand-regular">Write, test, and debug HTML, CSS, and JS directly on your device with offline sandbox environments.</p>
+                </div>
+                <div className="space-y-4">
+                  <a className="text-primary font-bold inline-flex items-center gap-2 hover:gap-3 transition-all text-sm quicksand-bold" href="/webcodebox">
+                    Launch Tool <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </a>
+                  <div className="pt-4 border-t border-border">
+                    <a href="https://play.google.com/store/apps/details?id=com.zedlabs.webcodebox&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-85 transition-opacity">
+                      <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-10 w-auto" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Shaderboy */}
+              <div className="glass-card p-8 rounded-2xl hover:border-primary/40 transition-all flex flex-col justify-between group">
+                <div>
+                  <div className="flex justify-between items-start mb-6">
+                    <span className="material-symbols-outlined text-primary text-4xl">flare</span>
+                    <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">ACTIVE</span>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors quicksand-semibold mb-3">Shaderboy</h3>
+                  <p className="text-muted-foreground text-base leading-relaxed mb-6 quicksand-regular">Create stunning visual effects and interactive GLSL simulations directly in your browser or phone.</p>
+                </div>
+                <div className="space-y-4">
+                  <a className="text-primary font-bold inline-flex items-center gap-2 hover:gap-3 transition-all text-sm quicksand-bold" href="/shaderboy">
+                    Launch Tool <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </a>
+                  <div className="pt-4 border-t border-border">
+                    <a href="https://play.google.com/store/apps/details?id=com.zedlabs.shaderboy&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-85 transition-opacity">
+                      <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-10 w-auto" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* PocketController */}
+              <div className="glass-card p-8 rounded-2xl hover:border-primary/40 transition-all flex flex-col justify-between group">
+                <div>
+                  <div className="flex justify-between items-start mb-6">
+                    <span className="material-symbols-outlined text-primary text-4xl">gamepad</span>
+                    <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">ACTIVE</span>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors quicksand-semibold mb-3">PocketController</h3>
+                  <p className="text-muted-foreground text-base leading-relaxed mb-6 quicksand-regular">Turn your phone into a low-latency controller, game pad, or DAW device linked to your PC workspace.</p>
+                </div>
+                <div className="space-y-4">
+                  <a className="text-primary font-bold inline-flex items-center gap-2 hover:gap-3 transition-all text-sm quicksand-bold" href="/pocketcontroller">
+                    Launch Tool <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </a>
+                  <div className="pt-4 border-t border-border">
+                    <a href="https://play.google.com/store/apps/details?id=com.zedlabs.pocketcontroller&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-85 transition-opacity">
+                      <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-10 w-auto" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* YourPC */}
+              <div className="glass-card p-8 rounded-2xl hover:border-primary/40 transition-all flex flex-col justify-between group col-span-1 md:col-span-2 max-w-xl mx-auto w-full">
+                <div>
+                  <div className="flex justify-between items-start mb-6">
+                    <span className="material-symbols-outlined text-muted-foreground text-4xl">monitor_heart</span>
+                    <span className="px-3 py-1 bg-muted text-muted-foreground text-xs font-bold rounded-full">BETA</span>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors quicksand-semibold mb-3">YourPC</h3>
+                  <p className="text-muted-foreground text-base leading-relaxed mb-6 quicksand-regular">Linux ecosystem runs. Spin up Debian terminal and direct VNC virtual workspaces inside Android.</p>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex gap-4 items-center">
+                    <a className="text-primary font-bold inline-flex items-center gap-2 hover:gap-3 transition-all text-sm quicksand-bold" href="/yourpc">
+                      Launch Tool <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                    <a className="text-muted-foreground hover:text-primary font-bold inline-flex items-center gap-2 transition-all text-sm quicksand-bold border-l border-border pl-4" href="/yourpc/docs">
+                      Docs <span className="material-symbols-outlined text-sm">menu_book</span>
+                    </a>
+                  </div>
+                  <div className="pt-4 border-t border-border">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border">Coming Soon</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* Privacy summary */}
+        <section id="privacy" className="py-32 px-6 md:px-12 bg-muted/40 border-y border-border">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <span className="material-symbols-outlined text-primary text-5xl">shield_with_heart</span>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight quicksand-bold">Privacy as a Logic Gate</h2>
+            
+            <p className="text-muted-foreground text-base md:text-lg leading-relaxed quicksand-regular max-w-2xl mx-auto">
+              We operate under Zero-Knowledge storage principles. Your data stays locally in your browser storage or your computer's native file systems.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-8">
+              <div className="flex flex-col items-center p-4 bg-card rounded-xl border border-border shadow-sm">
+                <span className="material-symbols-outlined text-primary text-3xl mb-3">database_off</span>
+                <span className="text-sm font-semibold text-foreground quicksand-semibold">No Server Storage</span>
+              </div>
+              <div className="flex flex-col items-center p-4 bg-card rounded-xl border border-border shadow-sm">
+                <span className="material-symbols-outlined text-primary text-3xl mb-3">analytics</span>
+                <span className="text-sm font-semibold text-foreground quicksand-semibold">Zero Tracking Pixels</span>
+              </div>
+              <div className="flex flex-col items-center p-4 bg-card rounded-xl border border-border shadow-sm">
+                <span className="material-symbols-outlined text-primary text-3xl mb-3">lock_person</span>
+                <span className="text-sm font-semibold text-foreground quicksand-semibold">Client-Side Autonomy</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Support Section */}
+        <section id="support" className="py-32 px-6 md:px-12 text-center">
+          <div className="max-w-5xl mx-auto glass-card p-12 md:p-20 rounded-3xl relative overflow-hidden shadow-md">
+            <div className="absolute top-0 right-0 p-8 opacity-5 rotate-12 pointer-events-none">
+              <span className="material-symbols-outlined text-9xl text-primary">support_agent</span>
+            </div>
+            
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6 quicksand-bold">Help &amp; Support</h2>
+            <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-12 quicksand-regular">
+              Have questions, experiencing issues, or want to share feedback about our tools? Access our support portal to submit an inquiry.
+            </p>
+
+            <button 
+              onClick={() => setShowContactForm(true)} 
+              className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-10 py-5 rounded-2xl font-bold text-xl hover:scale-105 transition-transform shadow-md quicksand-bold"
+            >
+              Open Support Form <span className="material-symbols-outlined">mail</span>
+            </button>
+          </div>
+        </section>
+
       </main>
 
-      {/* About Section */}
-      <section id="about" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
-            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">About Us</h2>
-            <p className="text-muted-foreground text-lg md:text-xl leading-relaxed quicksand-regular mb-4">We are a two-person team passionate about creating software that makes life easier. At zedlabs, we focus on developing practical app utilities that solve everyday problems.</p>
-            <p className="text-muted-foreground text-lg md:text-xl leading-relaxed quicksand-regular">Our mission is simple: build tools that people actually need and enjoy using. We believe great software should be intuitive, efficient, and make your daily tasks smoother.</p>
+      {/* Footer */}
+      <footer className="w-full py-16 bg-card border-t border-border relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 max-w-7xl mx-auto px-6 md:px-12">
+          <div className="col-span-1 md:col-span-2 space-y-4">
+            <img src="/zedlabs_logo.png" alt="ZedLabs Logo" className="h-8 w-auto" />
+            <p className="text-muted-foreground text-sm max-w-xs quicksand-regular">
+              © 2026 ZedLabs Studio. Built for extreme workflow performance. Engineered with care in Pune, India.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-bold text-primary mb-4 quicksand-bold">Ecosystem</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground quicksand-regular">
+              <li><a className="hover:text-primary transition-colors" href="/notebook">Notebook</a></li>
+              <li><a className="hover:text-primary transition-colors" href="/webcodebox">WebCodeBox</a></li>
+              <li><a className="hover:text-primary transition-colors" href="/shaderboy">Shaderboy</a></li>
+              <li><a className="hover:text-primary transition-colors" href="/pocketcontroller">PocketController</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-primary mb-4 quicksand-bold">Legal &amp; Support</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground quicksand-regular">
+              <li><a className="hover:text-primary transition-colors" href="#privacy">Privacy Policy</a></li>
+              <li><a className="hover:text-primary transition-colors" href="#support">Contact Support</a></li>
+              <li><p className="text-xs text-muted-foreground/50 pt-2 font-mono">LAT: 18.52° N<br/>LONG: 73.85° E</p></li>
+            </ul>
           </div>
         </div>
-      </section>
+      </footer>
 
-      {/* Products Section */}
-      <section id="products" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-8 md:mb-12 text-center quicksand-bold">Our Products</h2>
-          <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-
-            {/* Notebook Card */}
-            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
-              <a href="/notebook" className="flex-1 focus:outline-none block">
-                <div className="flex justify-between items-start mb-3 md:mb-4">
-                  <h3 className="text-xl md:text-2xl font-bold text-foreground quicksand-semibold">Notebook</h3>
-                  <svg className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </div>
-                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">Transform the way you write and organize your thoughts. Notes, PDFs, and Docs in one place.</p>
-                <p className="text-muted-foreground quicksand-regular text-base md:text-lg mb-4">A versatile writing app for everyone. Create quick Notes for standalone thoughts or structured Books for larger projects.</p>
-              </a>
-              <div className="mt-4 relative z-20">
-                <a href="https://play.google.com/store/apps/details?id=com.zedlabs.notebook&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity">
-                  <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-12 w-auto" />
-                </a>
-              </div>
-            </div>
-
-            {/* WebCodeBox Card */}
-            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
-              <a href="/webcodebox" className="flex-1 focus:outline-none block">
-                <div className="flex justify-between items-start mb-3 md:mb-4">
-                  <h3 className="text-xl md:text-2xl font-bold text-foreground quicksand-semibold">WebCodeBox</h3>
-                  <svg className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </div>
-                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">Code on the Go. A powerful mobile IDE for web development.</p>
-                <p className="text-muted-foreground quicksand-regular text-base md:text-lg mb-4">Write, test, and debug HTML, CSS, and JavaScript directly on your device with live preview and syntax highlighting.</p>
-              </a>
-              <div className="mt-4 relative z-20">
-                <a href="https://play.google.com/store/apps/details?id=com.zedlabs.webcodebox&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="inline-block hover:opacity-80 transition-opacity">
-                  <img src={googlePlayBadge.src} alt="Get it on Google Play" className="h-12 w-auto" />
-                </a>
-              </div>
-            </div>
-
-            {/* Nekochat - Coming Soon */}
-            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between">
-              <div>
-                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Nekochat</h3>
-                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">A powerful private and offline tool to run llama.cpp supported models in mobile.</p>
-                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">Features include local AI model execution, complete privacy, offline functionality, and support for multiple llama.cpp compatible models.</p>
-              </div>
-              <div className="mt-4">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">Coming Soon</span>
-              </div>
-            </div>
-
-            {/* Shaderboy - Updated to be Linkable */}
-            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
-              <a href="/shaderboy" className="flex-1 focus:outline-none block">
-                <div className="flex justify-between items-start mb-3 md:mb-4">
-                  <h3 className="text-xl md:text-2xl font-bold text-foreground quicksand-semibold">Shaderboy</h3>
-                  <svg className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </div>
-                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">
-                  A Shadertoy inspired utility that lets users create shader simulations in their mobile phones.
-                </p>
-                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">
-                  Create stunning visual effects, real-time shader coding, built-in examples, and mobile-optimized performance for creative developers on the go.
-                </p>
-              </a>
-              <div className="mt-4 relative z-20 pointer-events-none">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">
-                  Coming Soon
-                </span>
-              </div>
-            </div>
-
-            {/* Motionbox3d - Coming Soon */}
-            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between">
-              <div>
-                <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 md:mb-4 quicksand-semibold">Motionbox3d</h3>
-                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">Brings the simplicity of a video editor to 3D models in the mobile environment.</p>
-                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">Intuitive timeline-based editing, 3D model manipulation, animation controls, and export capabilities—all optimized for mobile devices.</p>
-              </div>
-              <div className="mt-4">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">Coming Soon</span>
-              </div>
-            </div>
-
-            {/* PocketController - Coming Soon */}
-            <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-6 md:p-8 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group relative">
-              <a href="/pocketcontroller" className="flex-1 focus:outline-none block">
-                <div className="flex justify-between items-start mb-3 md:mb-4">
-                  <h3 className="text-xl md:text-2xl font-bold text-foreground quicksand-semibold">PocketController</h3>
-                  <svg className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </div>
-                <p className="text-muted-foreground quicksand-regular mb-3 md:mb-4 text-base md:text-lg">The ultimate bridge between your mobile device and PC, turning your phone into a powerful controller.</p>
-                <p className="text-muted-foreground quicksand-regular text-base md:text-lg">Customizable layouts, low-latency performance, and hardware-level emulation for a seamless gaming and productivity experience.</p>
-              </a>
-              <div className="mt-4 relative z-20 pointer-events-none">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border/50">Coming Soon</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Privacy, Contact and Modal sections remain unchanged... */}
-      {/* Privacy Section */}
-      <section id="privacy" className="relative z-10 px-4 md:px-8 py-12 md:py-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
-            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Privacy Policy</h2>
-            <div className="space-y-6 text-muted-foreground quicksand-regular">
-              <p className="text-lg md:text-xl leading-relaxed">At ZedLabs, we respect your privacy and are committed to being transparent about how data is handled in our app.</p>
-              <div><h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Information Collection and Use</h3><p className="text-base md:text-lg leading-relaxed">Our app does not require users to create an account and does not directly collect or store personal information such as name, email address, or phone number.</p></div>
-              <div><h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Advertising</h3><p className="text-base md:text-lg leading-relaxed">Our app displays advertisements provided by Google AdMob. AdMob may collect and use information such as the device’s Advertising ID and app interaction data to display and measure ads. This data is used for advertising purposes and may be shared with Google in accordance with their policies.</p></div>
-              <div><h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Data Security</h3><p className="text-base md:text-lg leading-relaxed">Any data transmitted by third-party services such as AdMob is encrypted in transit using secure protocols.</p></div>
-              <div><h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">User Choices</h3><p className="text-base md:text-lg leading-relaxed">Users can manage or reset their Advertising ID through their device settings. You can also opt out of ad personalization from your Google account settings.</p></div>
-              <div><h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Third-Party Privacy Policies</h3><p className="text-base md:text-lg leading-relaxed">For more information on how Google handles data, please review{' '}<a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary underline transition-colors">Google’s Privacy Policy</a>.</p></div>
-              <div><h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2 quicksand-semibold">Changes to This Privacy Policy</h3><p className="text-base md:text-lg leading-relaxed">We may update this Privacy Policy from time to time. Any changes will be posted on this page.</p></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="relative z-10 px-4 md:px-8 py-12 md:py-20 pb-16 md:pb-32">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 md:p-12 shadow-sm">
-            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 md:mb-6 quicksand-bold">Contact Us</h2>
-            <div className="space-y-4 md:space-y-6">
-              <p className="text-muted-foreground text-lg md:text-xl quicksand-regular">Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
-              <div className="grid md:grid-cols-2 gap-4 md:gap-6 text-muted-foreground quicksand-regular">
-                <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Email</h3>
-                  <button onClick={() => setShowContactForm(true)} className="flex items-center gap-2 text-base md:text-lg hover:text-primary transition-colors group">
-                    <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                    <span>Contact Us</span>
-                  </button>
-                </div>
-                <div><h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 quicksand-semibold">Location</h3><p className="text-base md:text-lg">Pune, MH</p></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      {/* Zoho Contact Form Overlay */}
       {showContactForm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-4xl max-h-[90vh] bg-card/90 backdrop-blur-md border border-border rounded-2xl p-6 md:p-8 overflow-y-auto shadow-xl">
-            <button onClick={() => setShowContactForm(false)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10" aria-label="Close form">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60">
+          <div className="relative w-full max-w-4xl max-h-[90vh] bg-card border border-border rounded-2xl p-6 md:p-8 overflow-y-auto shadow-2xl">
+            <button 
+              onClick={() => setShowContactForm(false)} 
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10" 
+              aria-label="Close form"
+            >
+              <span className="material-symbols-outlined text-3xl">close</span>
             </button>
-            <div id="zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18" className="w-full flex justify-center"></div>
+            <div id="zf_div_UTZMDtzQFIg9TeaL7IHsFC6k4NnsLmRx1w6SRcU5d18" className="w-full flex justify-center pt-8"></div>
           </div>
         </div>
       )}
+
     </div>
   )
 }
@@ -1399,25 +2148,27 @@ export default function Home() {
 File location: src\layouts\Layout.astro
 
 ---
+/* File location: src/layouts/Layout.astro */
 import '../styles/global.css';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/png" href="/zedlabs_favicon.png" />
 		<meta name="generator" content={Astro.generator} />
 
-		<!-- Google Fonts -->
+		<!-- Google Fonts & Icons -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
-		<title>zedlabs</title>
+		<title>ZedLabs | Innovation Meets Execution</title>
 	</head>
-	<body>
+	<body class="selection:bg-primary/30 selection:text-primary overflow-x-hidden">
 		<slot />
 	</body>
 </html>
@@ -1597,23 +2348,22 @@ const screenshots = [
 
 const description = `The ultimate bridge between your mobile device and PC, turning your phone into a powerful controller. Customizable layouts, low-latency performance, and hardware-level emulation for a seamless gaming and productivity experience.`;
 
-const prereleaseDownloadUrl = "https://github.com/zedlabs-corp/PocketController/releases/download/Setup/pocketcontroller_prerealease.apk";
 ---
 
-<Layout>
-  <ProductPage 
-    client:load
-    title="PocketController"
-    tagline="Your Phone, Your Controller"
-    description={description}
-    logoSrc={pocketControllerLogo.src}
-    screenshotSrcs={screenshots}
-    pcDownloadLink="/pocketcontroller/download"
-    prereleaseDownloadLink={prereleaseDownloadUrl}
-    isComingSoon={true}
-    privacyVariant="pocketcontroller"
-  />
-</Layout>
+  <Layout>
+    <ProductPage 
+      client:load
+      title="PocketController"
+      tagline="Your Phone, Your Controller"
+      description={description}
+      logoSrc={pocketControllerLogo.src}
+      screenshotSrcs={screenshots}
+      downloadLink="https://play.google.com/store/apps/details?id=com.zedlabs.pocketcontroller&pcampaignid=web_share"
+      pcDownloadLink="/pocketcontroller/download"
+      isComingSoon={false}
+      privacyVariant="pocketcontroller"
+    />
+  </Layout>
 
 
 --------------------------------------------------------------------------------
@@ -1629,6 +2379,7 @@ import pocketControllerLogo from '../../assets/products/pocketcontroller/logo/po
 
 const pcDownloadUrl = "https://github.com/zedlabs-corp/PocketController/releases/download/Setup/PocketController.Setup.1.0.0.exe";
 const vigemDriverUrl = "https://vigembusdriver.com/";
+const microsoftStoreUrl = "https://apps.microsoft.com/detail/9PF57K7RQLTL?referrer=appbadge&mode=full";
 ---
 
 <Layout>
@@ -1639,8 +2390,8 @@ const vigemDriverUrl = "https://vigembusdriver.com/";
     downloadLink={pcDownloadUrl}
     version="1.0.0"
     platform="Windows x64"
-    comingSoon={true}
     vigemDriverLink={vigemDriverUrl}
+    microsoftStoreLink={microsoftStoreUrl}
   />
 </Layout>
 
@@ -1676,6 +2427,8 @@ const screenshots = [
 ];
 
 const description = `Shaderboy is a Shadertoy inspired utility that lets users create shader simulations directly on their mobile phones. It features real-time shader coding, built-in examples, and mobile-optimized performance for creative developers on the go.`;
+
+const googlePlayUrl = "https://play.google.com/store/apps/details?id=com.zedlabs.shaderboy&pcampaignid=web_share";
 ---
 
 <Layout>
@@ -1686,7 +2439,7 @@ const description = `Shaderboy is a Shadertoy inspired utility that lets users c
     description={description}
     logoSrc={shaderboyLogo.src}
     screenshotSrcs={screenshots}
-    isComingSoon={true}
+    downloadLink={googlePlayUrl}
     privacyVariant="shaderboy"
   />
 </Layout>
@@ -1839,89 +2592,790 @@ import PrivacyPolicy from '../../components/PrivacyPolicy';
 
 --------------------------------------------------------------------------------
 
+File location: src\pages\yourpc.astro
+
+---
+/* File location: src/pages/yourpc.astro */
+import Layout from '../layouts/Layout.astro';
+import ProductPage from '../components/ProductPage';
+
+// Import Assets
+import yourpcLogo from '../assets/products/yourpc/logo/YPC_logo.png';
+
+// Import Screenshots
+import screenshot1 from '../assets/products/yourpc/playstore_screenshots/Screenshot_20260512_012755.png';
+import screenshot2 from '../assets/products/yourpc/playstore_screenshots/Screenshot_20260512_012804.png';
+
+const screenshots = [
+  screenshot1.src,
+  screenshot2.src
+];
+
+const description = `YourPC is a powerful application that brings the Linux experience to your Android device. Using proot technology, it allows you to run Linux distributions like Debian directly on your phone, with more distributions on the way. It features a dedicated renderer for smooth performance and provides both terminal and VNC connectivity for a complete desktop-like experience on the go.`;
+---
+
+<Layout>
+  <ProductPage 
+    client:load
+    title="YourPC"
+    tagline="Linux on Android"
+    description={description}
+    logoSrc={yourpcLogo.src}
+    screenshotSrcs={screenshots}
+    isComingSoon={true}
+    privacyVariant="yourpc"
+    docsLink="/yourpc/docs"
+  />
+</Layout>
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\yourpc\docs.astro
+
+---
+/* File location: src/pages/yourpc/docs.astro */
+import YourPCDocs from '../../components/YourPCDocs';
+import '../../styles/docs.css'; // Import the dedicated physical stylesheet
+---
+<!doctype html>
+<html lang="en" class="dark bg-[#0a0a0a]">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/zedlabs_favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <title>YourPC Documentation | ZedLabs Studio</title>
+  </head>
+  <body class="bg-[#0a0a0a] text-[#f4f4f5] overflow-hidden select-none font-sans antialiased font-sans">
+    <YourPCDocs client:load />
+  </body>
+</html>
+
+<style is:global>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0a0a0a !important;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  }
+
+  /* Thin customized webkit scrollbars for document reading comfort */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(39, 39, 42, 0.6);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(63, 63, 70, 0.8);
+  }
+</style>
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\yourpc\docs\PageTree.tsx
+
+/* File location: src/pages/yourpc/docs/PageTree.tsx */
+import { whatIsYourPCData, yourPCConfigProperties, type PageData } from "./page/what-is-yourpc";
+
+// Export types and properties for YourPCDocs to consume
+export { yourPCConfigProperties };
+
+export type DocNode =
+  | { type: 'separator'; title: string }
+  | { type: 'page'; id: string; title: string }
+  | { type: 'folder'; title: string; children: DocNode[] };
+
+// Default Page ID when landing on the documentation portal
+export const defaultPageId = "what-is-yourpc";
+
+// 1. Navigation Tree Structure (Edit this when adding new directories, separators, or folders)
+export const pageTree: DocNode[] = [
+  { type: 'separator', title: 'Introduction' },
+  { type: 'page', id: 'what-is-yourpc', title: 'What is YourPC' }
+];
+
+// 2. Page Database Map (Edit this to register imported page data modules)
+export const pages: Record<string, PageData> = {
+  "what-is-yourpc": whatIsYourPCData
+};
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\yourpc\docs\content.tsx
+
+/* File location: src/pages/yourpc/docs/content.tsx */
+import React from "react";
+
+// Official Fumadocs UI components loaded natively
+import { Callout } from "fumadocs-ui/components/callout";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+import { Step, Steps } from "fumadocs-ui/components/steps";
+import { File, Folder, Files } from "fumadocs-ui/components/files";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+
+// Core recursive node types
+export type DocNode =
+  | { type: 'separator'; title: string }
+  | { type: 'page'; id: string; title: string }
+  | { type: 'folder'; title: string; children: DocNode[] };
+
+// Dynamic Page Tree mapping sections, pages, sub-sections, and sub-pages
+export const pageTree: DocNode[] = [
+  { type: 'separator', title: 'Introduction' },
+  { type: 'page', id: 'what-is-yourpc', title: 'What is YourPC' },
+  { type: 'separator', title: 'Writing' },
+  { type: 'page', id: 'page-slugs', title: 'Page Slugs & Page Tree' },
+  {
+    type: 'folder',
+    title: 'Markdown',
+    children: [
+      { type: 'page', id: 'markdown-math', title: 'Math' },
+      { type: 'page', id: 'markdown-mermaid', title: 'Mermaid' },
+      { type: 'page', id: 'markdown-twoslash', title: 'Twoslash' },
+    ]
+  }
+];
+
+export interface DocPage {
+  id: string;
+  title: string;
+  category: string;
+  breadcrumbs: string[];
+  outline: { id: string; title: string }[];
+  content: React.ReactNode;
+}
+
+export interface TypeProperty {
+  name: string;
+  type: string;
+  description: string;
+  remarks?: string;
+}
+
+export const yourPCConfigProperties: TypeProperty[] = [
+  {
+    name: "distribution",
+    type: "'debian-trixie' | 'debian-sid' | 'debian-bookworm'",
+    description: "The target Linux distribution to execute inside the Android sandbox.",
+    remarks: "Defaults to 'debian-trixie'"
+  },
+  {
+    name: "workspaceMode",
+    type: "'headless' | 'xfce' | 'vnc'",
+    description: "The desktop workspace rendering mode.",
+    remarks: "Choose between headless terminal or graphic VNC clients"
+  },
+  {
+    name: "vncPort",
+    type: "number",
+    description: "Target VNC display server port allocation.",
+    remarks: "Maps local loopbacks on your unrooted Android client"
+  }
+];
+
+function TypeTable({ properties }: { properties: TypeProperty[] }) {
+  return (
+    <div className="overflow-x-auto border border-fd-border rounded-lg bg-fd-card/40 mt-6 max-w-[720px]">
+      <table className="w-full text-left border-collapse text-xs md:text-sm font-sans">
+        <thead>
+          <tr className="border-b border-fd-border bg-fd-muted text-fd-foreground font-semibold">
+            <th className="p-3">Field</th>
+            <th className="p-3">Type</th>
+            <th className="p-3">Description</th>
+          </tr>
+        </thead>
+        <tbody className="text-fd-muted-foreground divide-y divide-fd-border">
+          {properties.map((prop) => (
+            <tr key={prop.name} className="hover:bg-fd-muted/30 transition-colors">
+              <td className="p-3 font-mono text-xs font-semibold text-fd-primary">
+                {prop.name}
+              </td>
+              <td className="p-3 font-mono text-xs text-fd-foreground">
+                <code className="px-1.5 py-0.5 rounded bg-fd-muted border border-fd-border text-fd-foreground text-[11px]">
+                  {prop.type}
+                </code>
+              </td>
+              <td className="p-3 space-y-1">
+                <p className="leading-relaxed text-fd-muted-foreground">{prop.description}</p>
+                {prop.remarks && (
+                  <p className="text-[11px] text-fd-primary/80 italic font-medium font-sans">
+                    @remarks {prop.remarks}
+                  </p>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// Complete physical content database for each page and sub-page
+export const pages: Record<string, DocPage> = {
+  "what-is-yourpc": {
+    id: "what-is-yourpc",
+    title: "What is YourPC",
+    category: "Introduction",
+    breadcrumbs: ["Introduction", "What is YourPC"],
+    outline: [
+      { id: "overview", title: "Overview" },
+      { id: "core-capabilities", title: "Core Capabilities" },
+      { id: "configuration-api", title: "Configuration API" }
+    ],
+    content: (
+      <div className="space-y-10">
+        <div className="space-y-2">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-fd-foreground tracking-tight font-sans">
+            What is YourPC
+          </h1>
+          <p className="text-fd-muted-foreground text-base md:text-lg font-normal leading-relaxed">
+            Explore the framework architecture and core execution details.
+          </p>
+        </div>
+
+        <section id="overview" className="space-y-3.5 scroll-mt-24">
+          <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+            Overview
+          </h2>
+          <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] font-normal font-sans">
+            YourPC makes desktop virtualization accessible on Android. Unlike native virtual machines, it operates without root requirements or kernel modifications, acting as a lightweight layer mapping system calls directly onto the AOSP kernel.
+          </p>
+        </section>
+
+        <section id="core-capabilities" className="space-y-3.5 scroll-mt-24">
+          <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+            Core Capabilities
+          </h2>
+          <ul className="list-disc list-inside space-y-2 text-fd-muted-foreground text-[15px] leading-7 max-w-[720px]">
+            <li>High Performance frame buffers with minimal drawing latency.</li>
+            <li>Local directory structures accessible directly from native file browsers.</li>
+            <li>Pre-compiled standard Debian repositories.</li>
+          </ul>
+        </section>
+
+        <section id="configuration-api" className="space-y-3.5 scroll-mt-24">
+          <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+            Configuration API
+          </h2>
+          <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px]">
+            Properties declared within your TypeScript schema config file:
+          </p>
+          <TypeTable properties={yourPCConfigProperties} />
+        </section>
+      </div>
+    )
+  },
+
+  "page-slugs": {
+    id: "page-slugs",
+    title: "Page Slugs & Page Tree",
+    category: "Writing",
+    breadcrumbs: ["Writing", "Page Slugs & Page Tree"],
+    outline: [
+      { id: "slug-routing", title: "Slug Routing" },
+      { id: "directory-tree", title: "Directory Tree" }
+    ],
+    content: (
+      <div className="space-y-10">
+        <div className="space-y-2">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-fd-foreground tracking-tight font-sans">
+            Page Slugs & Page Tree
+          </h1>
+          <p className="text-fd-muted-foreground text-base md:text-lg font-normal leading-relaxed">
+            Understand how dynamic file structures map to your layout navigation categories.
+          </p>
+        </div>
+
+        <section id="slug-routing" className="space-y-3.5 scroll-mt-24">
+          <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+            Slug Routing
+          </h2>
+          <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] font-sans">
+            YourPC parses catch-all dynamic path routes under Catch-All parameters. Every file loaded inside your document directories establishes unique slug identifiers mapped natively to sidebar triggers.
+          </p>
+        </section>
+
+        <section id="directory-tree" className="space-y-4 scroll-mt-24">
+          <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+            Directory Tree
+          </h2>
+          <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px]">
+            The workspace files configuration matches this standard structure:
+          </p>
+          <div className="max-w-[720px] bg-fd-muted/30 p-2 rounded-xl border border-fd-border">
+            <Files>
+              <Folder name="src" defaultOpen>
+                <Folder name="pages" defaultOpen>
+                  <Folder name="yourpc" defaultOpen>
+                    <Folder name="docs" defaultOpen>
+                      <File name="content.tsx" />
+                      <File name="index.astro" />
+                    </Folder>
+                  </Folder>
+                </Folder>
+              </Folder>
+            </Files>
+          </div>
+        </section>
+      </div>
+    )
+  },
+
+  "markdown-math": {
+    id: "markdown-math",
+    title: "Math",
+    category: "Markdown",
+    breadcrumbs: ["Writing", "Markdown", "Math"],
+    outline: [
+      { id: "math-equations", title: "Math Equations" },
+      { id: "katex-rendering", title: "KaTeX Rendering" }
+    ],
+    content: (
+      <div className="space-y-10">
+        <div className="space-y-2">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-fd-foreground tracking-tight font-sans">
+            Math Formatting
+          </h1>
+          <p className="text-fd-muted-foreground text-base md:text-lg font-normal leading-relaxed">
+            Write beautiful, mathematical formulas using LaTeX parameters.
+          </p>
+        </div>
+
+        <section id="math-equations" className="space-y-3.5 scroll-mt-24">
+          <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+            Math Equations
+          </h2>
+          <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] font-sans">
+            Standard mathematical equations can be rendered inline or in separate blocks using LaTeX expressions wrapped inside double dollar signs.
+          </p>
+          <Callout type="info" className="max-w-[720px] text-fd-foreground bg-fd-muted border-fd-border">
+            Always wrap equations inside <code className="bg-fd-accent px-1 py-0.5 rounded text-fd-primary">$$</code> delimiters to compile block equations cleanly.
+          </Callout>
+        </section>
+
+        <section id="katex-rendering" className="space-y-3.5 scroll-mt-24">
+          <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+            KaTeX Rendering
+          </h2>
+          <pre className="p-4 rounded-lg bg-fd-muted border border-fd-border font-mono text-xs text-fd-foreground max-w-[720px]">
+            <code>{"$$ f(x) = \\int_{-\\infty}^{\\infty} \\hat{f}(\\xi)\\,e^{2 \\pi i \\xi x}\\,d\\xi $$"}</code>
+          </pre>
+        </section>
+      </div>
+    )
+  },
+
+  "markdown-mermaid": {
+    id: "markdown-mermaid",
+    title: "Mermaid",
+    category: "Markdown",
+    breadcrumbs: ["Writing", "Markdown", "Mermaid"],
+    outline: [
+      { id: "mermaid-diagrams", title: "Mermaid Diagrams" },
+      { id: "flowchart-example", title: "Flowchart Example" }
+    ],
+    content: (
+      <div className="space-y-10">
+        <div className="space-y-2">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-fd-foreground tracking-tight font-sans">
+            Mermaid Diagrams
+          </h1>
+          <p className="text-fd-muted-foreground text-base md:text-lg font-normal leading-relaxed">
+            Generate visual diagrams and flowcharts directly inside markdown code blocks.
+          </p>
+        </div>
+
+        <section id="mermaid-diagrams" className="space-y-3.5 scroll-mt-24">
+          <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+            Mermaid Diagrams
+          </h2>
+          <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px]">
+            Fumadocs supports compiling Mermaid.js flowchart schemas on-the-fly, generating clean graphics layouts directly in the client body.
+          </p>
+        </section>
+
+        <section id="flowchart-example" className="space-y-3.5 scroll-mt-24">
+          <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+            Flowchart Example
+          </h2>
+          <pre className="p-4 rounded-lg bg-fd-muted border border-fd-border font-mono text-xs text-fd-foreground max-w-[720px]">
+            <code>{`graph TD;
+    A[Start] --> B(Configure PRoot);
+    B --> C{Verify Memory Limit};
+    C -- Yes --> D[Launch Desktop];
+    C -- No --> E[Display Error];`}</code>
+          </pre>
+        </section>
+      </div>
+    )
+  },
+
+  "markdown-twoslash": {
+    id: "markdown-twoslash",
+    title: "Twoslash",
+    category: "Markdown",
+    breadcrumbs: ["Writing", "Markdown", "Twoslash"],
+    outline: [
+      { id: "twoslash-compilation", title: "Twoslash Compilation" },
+      { id: "syntax-verification", title: "Syntax Verification" }
+    ],
+    content: (
+      <div className="space-y-10">
+        <div className="space-y-2">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-fd-foreground tracking-tight font-sans">
+            Twoslash Integration
+          </h1>
+          <p className="text-fd-muted-foreground text-base md:text-lg font-normal leading-relaxed">
+            Integrate live, compile-time TypeScript code errors and descriptions on hover.
+          </p>
+        </div>
+
+        <section id="twoslash-compilation" className="space-y-3.5 scroll-mt-24">
+          <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+            Twoslash Compilation
+          </h2>
+          <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px]">
+            Twoslash compiles your inline code blocks through TypeScript compilers. It displays interactive compiler warning flags and type descriptions directly when readers hover over variables.
+          </p>
+        </section>
+
+        <section id="syntax-verification" className="space-y-3.5 scroll-mt-24">
+          <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
+            Syntax Verification
+          </h2>
+          <pre className="p-4 rounded-lg bg-fd-muted border border-fd-border font-mono text-xs text-fd-foreground max-w-[720px]">
+            <code>{"// @noErrors\nconst config: YourPCConfig = {\n  distribution: 'debian-trixie',\n  vncPort: 5901\n};"}</code>
+          </pre>
+        </section>
+      </div>
+    )
+  }
+};
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\yourpc\docs\index.astro
+
+---
+/* File location: src/pages/yourpc/docs/index.astro */
+import YourPCDocs from '../../../components/YourPCDocs';
+import '../../../styles/docs.css';
+---
+<!doctype html>
+<html lang="en" class="dark bg-[#0a0a0a]">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/zedlabs_favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <title>YourPC Documentation | ZedLabs Studio</title>
+  </head>
+  <body class="bg-[#0a0a0a] text-[#f4f4f5] overflow-hidden select-none font-sans antialiased font-sans">
+    <YourPCDocs client:load />
+  </body>
+</html>
+
+<style is:global>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0a0a0a !important;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  }
+
+  /* Thin customized webkit scrollbars for document reading comfort */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(39, 39, 42, 0.6);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(63, 63, 70, 0.8);
+  }
+</style>
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\yourpc\docs\metadata.ts
+
+/* File location: src/pages/yourpc/docs/metadata.ts */
+
+/**
+ * Standard configuration options for YourPC's Linux virtualization engine.
+ */
+export interface YourPCConfig {
+  /**
+   * The target Linux distribution to execute inside the Android sandbox.
+   * @remarks Stable Debian trixie or bookworm distribution formats.
+   */
+  distribution: 'debian-trixie' | 'debian-sid' | 'debian-bookworm';
+  
+  /**
+   * The desktop workspace rendering mode.
+   * @remarks Choose between headless terminal or XFCE graphic clients.
+   */
+  workspaceMode: 'headless' | 'xfce' | 'vnc';
+  
+  /**
+   * Target VNC display server port allocation.
+   * @remarks Maps local loopbacks on your unrooted Android client.
+   */
+  vncPort: number;
+}
+
+export interface TypeProperty {
+  name: string;
+  type: string;
+  description: string;
+  remarks?: string;
+}
+
+// Simulated AST property parser from the YourPCConfig TS interface definition above
+export const yourPCConfigProperties: TypeProperty[] = [
+  {
+    name: "distribution",
+    type: "'debian-trixie' | 'debian-sid' | 'debian-bookworm'",
+    description: "The target Linux distribution to execute inside the Android sandbox.",
+    remarks: "Defaults to 'debian-trixie'"
+  },
+  {
+    name: "workspaceMode",
+    type: "'headless' | 'xfce' | 'vnc'",
+    description: "The desktop workspace rendering mode.",
+    remarks: "Choose between headless terminal or graphic VNC clients"
+  },
+  {
+    name: "vncPort",
+    type: "number",
+    description: "Target VNC display server port allocation.",
+    remarks: "Maps local loopbacks on your unrooted Android client"
+  }
+];
+
+// Low-Level Page Tree definitions conforming to official Fumadocs schemas
+export type PageTreeItem =
+  | { type: 'page'; id: string; title: string; url?: string }
+  | { type: 'folder'; title: string; children: PageTreeItem[] }
+  | { type: 'separator'; title: string };
+
+export const pageTree: PageTreeItem[] = [
+  { type: 'separator', title: 'Introduction' },
+  { type: 'page', id: 'what-is-yourpc', title: 'What is YourPC' }
+];
+
+export const docPageMetadata = {
+  id: "what-is-yourpc",
+  title: "What is YourPC",
+  category: "Introduction",
+  breadcrumbs: ["Introduction", "What is YourPC"],
+  outline: [
+    { id: "overview", title: "Overview" },
+    { id: "core-capabilities", title: "Core Capabilities" },
+    { id: "configuration-api", title: "Configuration API" }
+  ]
+};
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\yourpc\docs\page\what-is-yourpc.ts
+
+/* File location: src/pages/yourpc/docs/page/what-is-yourpc.ts */
+
+export interface SectionData {
+  id: string;
+  title: string;
+  text: string;
+  listItems?: string[];
+  showConfigTable?: boolean;
+}
+
+export interface PageData {
+  id: string;
+  title: string;
+  category: string;
+  tagline: string;
+  breadcrumbs: string[];
+  outline: { id: string; title: string }[];
+  sections: SectionData[];
+}
+
+export interface TypeProperty {
+  name: string;
+  type: string;
+  description: string;
+  remarks?: string;
+}
+
+// Config table properties cleared as requested
+export const yourPCConfigProperties: TypeProperty[] = [];
+
+export const whatIsYourPCData: PageData = {
+  id: "what-is-yourpc",
+  title: "What is YourPC",
+  category: "Introduction",
+  tagline: "Run Debian and other Linux distros in one click.",
+  breadcrumbs: ["Introduction", "What is YourPC"],
+  outline: [
+    { id: "what-is-yourpc", title: "What is YourPC" },
+    { id: "why-name-it", title: "Why name it YourPC?" },
+    { id: "what-is-planned", title: "What is planned?" }
+  ],
+  sections: [
+    {
+      id: "what-is-yourpc",
+      title: "What is YourPC",
+      text: "YourPC is an app that lets users run Debian and other Linux distros in one click. It is developed such that anyone, whether familiar with Linux or not, can use it."
+    },
+    {
+      id: "why-name-it",
+      title: "Why name it YourPC?",
+      text: "Well, the idea was to make an app that gives the concept of using a mini PC. I was going to add a bootloader like GRUB that loads the Linux distro, make a small VM, etc., but due to some technical and time limitations, I dropped it over time.\n\nYourPC or YPC are both the same thing.\n\nNote: Currently YourPC is a very early product which will change over time. It is being developed by a single solo developer."
+    },
+    {
+      id: "what-is-planned",
+      title: "What is planned?",
+      text: "Well, many things. I was not able to implement all of them because of time constraints, but here is what I have in mind:",
+      listItems: [
+        "YPC SHELL - This will be a default shell which will support core Linux.",
+        "Terminal extension support - since the Terminal is written in React, I will later try to make it modular enough to add extensions and fully customize it.",
+        "GPU Support for YPC Renderer.",
+        "Replace PRoot.",
+        "Custom Rootfs.",
+        "Custom Scripts."
+      ]
+    }
+  ]
+};
+
+--------------------------------------------------------------------------------
+
+File location: src\styles\docs.css
+
+/* File location: src/styles/docs.css */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+
+/* Override raw CSS properties utilized inside compiled Fumadocs modules */
+:root, .dark {
+  --fd-background: #121212 !important;
+  --fd-foreground: #ffffff !important;
+  --fd-card: #252525 !important;
+  --fd-card-foreground: #ffffff !important;
+  --fd-popover: #252525 !important;
+  --fd-popover-foreground: #ffffff !important;
+  --fd-muted: #252525 !important;
+  --fd-muted-foreground: #bfbfbf !important;
+  --fd-border: #303030 !important;
+  --fd-accent: #303030 !important;
+  --fd-accent-foreground: #ffffff !important;
+  --fd-secondary: #252525 !important;
+  --fd-secondary-foreground: #ffffff !important;
+  --fd-primary: #facc15 !important;
+  --fd-primary-foreground: #000000 !important;
+}
+
+/* Map the same overrides to the Tailwind v4 compilation theme engine */
+@theme {
+  --color-fd-background: #121212;
+  --color-fd-foreground: #ffffff;
+  --color-fd-card: #252525;
+  --color-fd-card-foreground: #ffffff;
+  --color-fd-popover: #252525;
+  --color-fd-popover-foreground: #ffffff;
+  --color-fd-muted: #252525;
+  --color-fd-muted-foreground: #bfbfbf;
+  --color-fd-border: #303030;
+  --color-fd-accent: #303030;
+  --color-fd-accent-foreground: #ffffff;
+  --color-fd-secondary: #252525;
+  --color-fd-secondary-foreground: #ffffff;
+  
+  --color-fd-primary: #facc15;
+  --color-fd-primary-foreground: #000000;
+}
+
+--------------------------------------------------------------------------------
+
 File location: src\styles\global.css
 
+/* File location: src/styles/global.css */
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Light Theme */
-  --background: oklch(0.985 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  /* Material Design - Light Mode Palette */
+  --background: oklch(0.98 0.005 240);       /* #f8f9fa - Solid clean light grey background */
+  --foreground: oklch(0.20 0.01 240);         /* #202124 - High contrast body text */
+  --card: oklch(1 0 0);                       /* #ffffff - Solid white elevated surface */
+  --card-foreground: oklch(0.20 0.01 240);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.6 0.15 230);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.145 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.35 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.145 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.886 0 0);
-  --input: oklch(0.886 0 0);
-  --ring: oklch(0.6 0.15 230);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.145 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.145 0 0);
-  --sidebar-border: oklch(0.886 0 0);
-  --sidebar-ring: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.20 0.01 240);
+  --primary: oklch(0.55 0.18 260);            /* Material Indigo Blue */
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.60 0.15 260);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.94 0.01 240);              /* #f1f3f4 - Soft gray containers */
+  --muted-foreground: oklch(0.45 0.01 240);   /* #5f6368 - Muted label text */
+  --border: oklch(0.90 0.01 240);             /* #dadce0 - Solid flat borders */
+  --input: oklch(0.94 0.01 240);
+  --ring: oklch(0.55 0.18 260);
+  
+  /* Material Elevation Shadows */
+  --shadow-elevation-1: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-elevation-2: 0 3px 6px rgba(0, 0, 0, 0.05), 0 3px 6px rgba(0, 0, 0, 0.08);
 }
 
 .dark {
-  /* Dark Theme */
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.6 0.15 230);
-  --primary-foreground: oklch(0.145 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.6 0.15 230);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.6 0.15 230);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  /* Material Design - Dark Mode Palette */
+  --background: oklch(0.12 0 0);             /* #121212 - Material dark canvas */
+  --foreground: oklch(0.94 0.01 240);         /* #e8eaed - High contrast light text */
+  --card: oklch(0.18 0.01 240);               /* #1e1e1e - Solid dark container background */
+  --card-foreground: oklch(0.94 0.01 240);
+  --popover: oklch(0.15 0.01 240);
+  --popover-foreground: oklch(0.94 0.01 240);
+  --primary: oklch(0.80 0.08 260);            /* Dark Mode blue-violet accent */
+  --primary-foreground: oklch(0.12 0 0);
+  --secondary: oklch(0.80 0.08 260);
+  --secondary-foreground: oklch(0.12 0 0);
+  --muted: oklch(0.22 0.01 240);              /* #2d2d30 - Muted dark layout blocks */
+  --muted-foreground: oklch(0.70 0.01 240);   /* #9aa0a6 - Soft gray text */
+  --border: oklch(0.26 0.01 240);             /* #3c4043 - Solid dark outline */
+  --input: oklch(0.22 0.01 240);
+  --ring: oklch(0.80 0.08 260);
+
+  --shadow-elevation-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-elevation-2: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 @theme inline {
-  --font-sans: "Geist", "Geist Fallback";
-  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --font-sans: "Quicksand", "Geist", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -1934,122 +3388,42 @@ File location: src\styles\global.css
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-
   body {
-    @apply text-foreground;
-    position: relative;
-  }
-
-  /* Hide Scrollbar */
-  ::-webkit-scrollbar {
-    width: 0px;
-    display: none;
-  }
-
-  /* Firefox scrollbar */
-  * {
-    scrollbar-width: none;
-  }
-}
-
-/* Added tech glyph animation styles */
-@keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.glyph {
-  animation: float 6s ease-in-out infinite;
-  opacity: 0.08;
-}
-
-.glyph-rotate {
-  animation: rotate 20s linear infinite;
-}
-
-
-
-@layer components {
-  .body {
+    @apply bg-background text-foreground;
     font-family: 'Quicksand', sans-serif;
+    scroll-behavior: smooth;
   }
 }
 
-.quicksand-light {
-  font-family: "Quicksand", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+/* Redefined card components as solid, elevated Material design containers */
+.glass-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-elevation-1);
 }
 
-.quicksand-regular {
-  font-family: "Quicksand", sans-serif;
-  font-weight: 500;
-  font-style: normal;
+.glass-panel {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-elevation-2);
 }
 
-.quicksand-medium {
-  font-family: "Quicksand", sans-serif;
-  font-weight: 600;
-  font-style: normal;
+/* Custom scrolling classes */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
-
-.quicksand-semibold {
-  font-family: "Quicksand", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.quicksand-bold {
-  font-family: "Quicksand", sans-serif;
-  font-weight: 700;
-  font-style: normal;
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 --------------------------------------------------------------------------------

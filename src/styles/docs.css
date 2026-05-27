@@ -1,0 +1,44 @@
+/* File location: src/styles/docs.css */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+
+/* Override raw CSS properties utilized inside compiled Fumadocs modules */
+:root, .dark {
+  --fd-background: #121212 !important;
+  --fd-foreground: #ffffff !important;
+  --fd-card: #252525 !important;
+  --fd-card-foreground: #ffffff !important;
+  --fd-popover: #252525 !important;
+  --fd-popover-foreground: #ffffff !important;
+  --fd-muted: #252525 !important;
+  --fd-muted-foreground: #bfbfbf !important;
+  --fd-border: #303030 !important;
+  --fd-accent: #303030 !important;
+  --fd-accent-foreground: #ffffff !important;
+  --fd-secondary: #252525 !important;
+  --fd-secondary-foreground: #ffffff !important;
+  --fd-primary: #facc15 !important;
+  --fd-primary-foreground: #000000 !important;
+}
+
+/* Map the same overrides to the Tailwind v4 compilation theme engine */
+@theme {
+  --color-fd-background: #121212;
+  --color-fd-foreground: #ffffff;
+  --color-fd-card: #252525;
+  --color-fd-card-foreground: #ffffff;
+  --color-fd-popover: #252525;
+  --color-fd-popover-foreground: #ffffff;
+  --color-fd-muted: #252525;
+  --color-fd-muted-foreground: #bfbfbf;
+  --color-fd-border: #303030;
+  --color-fd-accent: #303030;
+  --color-fd-accent-foreground: #ffffff;
+  --color-fd-secondary: #252525;
+  --color-fd-secondary-foreground: #ffffff;
+  
+  --color-fd-primary: #facc15;
+  --color-fd-primary-foreground: #000000;
+}
