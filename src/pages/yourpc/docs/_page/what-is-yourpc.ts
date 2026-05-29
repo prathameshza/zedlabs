@@ -7,7 +7,9 @@ export interface SectionData {
   listItems?: string[];
   showConfigTable?: boolean;
   note?: string;
+  noteType?: "info" | "warning" | "success" | "error";
   imageSrc?: string;
+  codeblock?: { lang: string; code: string };
 }
 
 export interface PageData {

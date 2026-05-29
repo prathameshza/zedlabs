@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 // Official Fumadocs components loaded natively
 import { Callout } from "fumadocs-ui/components/callout";
+import { DynamicCodeBlock } from "fumadocs-ui/components/dynamic-codeblock";
 
 // Import all dynamic metadata, databases, and structural parameters from PageTree
 import { 
@@ -26,6 +27,46 @@ export interface TypeProperty {
   description: string;
   remarks?: string;
 }
+
+// Callout UI types and configuration styling rules
+const calloutStyles = {
+  info: {
+    border: "border-blue-500/20",
+    bg: "bg-blue-500/5",
+    text: "text-blue-200/90",
+    icon: "info",
+    iconColor: "text-blue-400",
+    prefix: "Info: ",
+    prefixColor: "text-blue-400"
+  },
+  warning: {
+    border: "border-yellow-500/20",
+    bg: "bg-yellow-500/5",
+    text: "text-yellow-200/90",
+    icon: "warning",
+    iconColor: "text-yellow-400",
+    prefix: "Warning: ",
+    prefixColor: "text-yellow-400"
+  },
+  success: {
+    border: "border-emerald-500/20",
+    bg: "bg-emerald-500/5",
+    text: "text-emerald-200/90",
+    icon: "check_circle",
+    iconColor: "text-emerald-400",
+    prefix: "Success: ",
+    prefixColor: "text-emerald-400"
+  },
+  error: {
+    border: "border-red-500/20",
+    bg: "bg-red-500/5",
+    text: "text-red-200/90",
+    icon: "error",
+    iconColor: "text-red-400",
+    prefix: "Error: ",
+    prefixColor: "text-red-400"
+  }
+};
 
 // High-density TypeTable component mapped directly to TS definitions
 function TypeTable({ properties }: { properties: TypeProperty[] }) {
@@ -243,19 +284,64 @@ export default function YourPCDocs() {
     return item.fullSearchableText.toLowerCase().includes(query);
   });
 
-  // Replaces text placeholders like "(play-button image)" with inline UI images
-  const renderTextWithInlineImages = (text: string) => {
-    const placeholder = "(play-button image)";
-    if (!text.includes(placeholder)) {
-      return text;
+  // Parses generic (icon:icon_name) tokens inline and applies button frames
+  const parseIcons = (part: string) => {
+    const iconRegex = /\(icon:([a-z_]+)\)/g;
+    if (!iconRegex.test(part)) {
+      return part;
     }
-    const parts = text.split(placeholder);
+
+    iconRegex.lastIndex = 0; // Reset state
+
+    const elements: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = iconRegex.exec(part)) !== null) {
+      const plainText = part.substring(lastIndex, match.index);
+      if (plainText) {
+        elements.push(plainText);
+      }
+      const iconName = match[1];
+      elements.push(
+        <span 
+          key={`icon-${match.index}`}
+          className="material-symbols-outlined text-[15px] inline-block align-middle mx-1.5 select-none text-fd-primary border border-fd-border bg-fd-muted rounded p-0.5"
+        >
+          {iconName}
+        </span>
+      );
+      lastIndex = iconRegex.lastIndex;
+    }
+
+    const remainingText = part.substring(lastIndex);
+    if (remainingText) {
+      elements.push(remainingText);
+    }
+
     return (
-      <>
-        {parts.map((part: string, i: number) => (
+      <React.Fragment>
+        {elements.map((el, i) => (
+          <React.Fragment key={i}>{el}</React.Fragment>
+        ))}
+      </React.Fragment>
+    );
+  };
+
+  // Helper routine to render inline play button image segments
+  const parsePlayButtons = (part: string) => {
+    const playButtonPlaceholder = "(play-button image)";
+    if (!part.includes(playButtonPlaceholder)) {
+      return parseIcons(part);
+    }
+
+    const subparts = part.split(playButtonPlaceholder);
+    return (
+      <React.Fragment>
+        {subparts.map((subpart, i) => (
           <React.Fragment key={i}>
-            {part}
-            {i < parts.length - 1 && (
+            {parseIcons(subpart)}
+            {i < subparts.length - 1 && (
               <img 
                 src={playButtonIcon.src} 
                 alt="Play Button Icon" 
@@ -264,8 +350,73 @@ export default function YourPCDocs() {
             )}
           </React.Fragment>
         ))}
-      </>
+      </React.Fragment>
     );
+  };
+
+  // Parses Markdown-style links [text](url), processes inline images, and injects DynamicCodeBlock containers
+  const parseFormattedText = (text: string, codeblock?: { lang: string; code: string }) => {
+    if (!text) return "";
+
+    const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    const parts: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = markdownLinkRegex.exec(text)) !== null) {
+      const plainText = text.substring(lastIndex, match.index);
+      if (plainText) {
+        parts.push(plainText);
+      }
+      const linkText = match[1];
+      const linkUrl = match[2];
+      parts.push(
+        <a
+          key={`link-${match.index}`}
+          href={linkUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-fd-primary hover:underline font-semibold"
+        >
+          {linkText}
+        </a>
+      );
+      lastIndex = markdownLinkRegex.lastIndex;
+    }
+
+    const remainingText = text.substring(lastIndex);
+    if (remainingText) {
+      parts.push(remainingText);
+    }
+
+    const codeBlockPlaceholder = "(code-block)";
+
+    return parts.map((part, index) => {
+      if (typeof part !== 'string') {
+        return part;
+      }
+
+      // Handle custom (code-block) marker dynamically mapping over active schema properties
+      if (part.includes(codeBlockPlaceholder) && codeblock) {
+        const subparts = part.split(codeBlockPlaceholder);
+        return (
+          <React.Fragment key={`codeblock-wrapper-${index}`}>
+            {subparts.map((subpart, i) => (
+              <React.Fragment key={i}>
+                {parsePlayButtons(subpart)}
+                {i < subparts.length - 1 && (
+                  <div className="my-4 max-w-[720px] font-sans">
+                    <DynamicCodeBlock lang={codeblock.lang} code={codeblock.code} />
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </React.Fragment>
+        );
+      }
+
+      return parsePlayButtons(part);
+    });
   };
 
   // Dynamic renderer maps standard TypeScript definitions into visual subsections
@@ -279,27 +430,36 @@ export default function YourPCDocs() {
           {section.title}
         </h2>
         <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] font-normal font-sans whitespace-pre-line">
-          {renderTextWithInlineImages(section.text)}
+          {parseFormattedText(section.text, section.codeblock)}
         </p>
 
         {section.listItems && (
           <ul className="list-disc list-inside space-y-2 text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] pl-2 font-sans">
             {section.listItems.map((item: string, idx: number) => (
-              <li key={idx}>{item}</li>
+              <li key={idx}>{parseFormattedText(item)}</li>
             ))}
           </ul>
         )}
 
-        {/* Note box rendering logic */}
-        {section.note && (
-          <div className="p-4 rounded-xl border border-yellow-500/20 bg-yellow-500/5 text-yellow-200/90 text-sm font-sans mt-4 leading-relaxed max-w-[720px] flex gap-3">
-            <span className="material-symbols-outlined text-yellow-400 select-none shrink-0">info</span>
-            <div>
-              <span className="font-bold text-yellow-400">Note: </span>
-              {section.note}
+        {/* Note/Callout box rendering logic */}
+        {section.note && (() => {
+          const type = section.noteType || "warning";
+          const style = calloutStyles[type] || calloutStyles.warning;
+          const prefixText = section.noteType ? style.prefix : "Note: ";
+          const prefixColor = section.noteType ? style.prefixColor : "text-yellow-400";
+          const icon = section.noteType ? style.icon : "info"; 
+          const iconColor = section.noteType ? style.iconColor : "text-yellow-400";
+
+          return (
+            <div className={`p-4 rounded-xl border ${style.border} ${style.bg} ${style.text} text-sm font-sans mt-4 leading-relaxed max-w-[720px] flex gap-3`}>
+              <span className={`material-symbols-outlined ${iconColor} select-none shrink-0`}>{icon}</span>
+              <div>
+                <span className={`font-bold ${prefixColor}`}>{prefixText}</span>
+                {parseFormattedText(section.note)}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Developer Image & Subtitle Section */}
         {section.id === "why-name-it" && (
@@ -323,7 +483,7 @@ export default function YourPCDocs() {
 
         {section.id === "overview" && (
           <Callout type="info" className="my-2 text-fd-foreground bg-fd-muted border-fd-border">
-            PROot safely isolates your virtual filesystem inside the application sandbox without requiring system root privileges.
+            PROot safely isolates your Linux filesystem inside the application sandbox without requiring system root privileges.
           </Callout>
         )}
       </div>

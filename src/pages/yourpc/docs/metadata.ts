@@ -1,7 +1,7 @@
 /* File location: src/pages/yourpc/docs/metadata.ts */
 
 /**
- * Standard configuration options for YourPC's Linux virtualization engine.
+ * Standard configuration options for YourPC's Linux execution environment.
  */
 export interface YourPCConfig {
   /**

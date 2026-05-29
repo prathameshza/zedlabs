@@ -183,6 +183,18 @@ Asset file: src\assets\products\webcodebox\WebCodeBox PlayStore Screenshots\fram
 
 Asset file: src\assets\products\webcodebox\logo\logo.png
 
+Asset file: src\assets\products\yourpc\docs-assets\HowToDesktop\DebianDesktop.png
+
+Asset file: src\assets\products\yourpc\docs-assets\HowToDesktop\HomeScreen.png
+
+Asset file: src\assets\products\yourpc\docs-assets\HowToDesktop\MainScreen.png
+
+Asset file: src\assets\products\yourpc\docs-assets\HowToDesktop\PlayButtonGreen.png
+
+Asset file: src\assets\products\yourpc\docs-assets\HowToDesktop\play-button.png
+
+Asset file: src\assets\products\yourpc\docs-assets\buri-buri-zaemon.jpeg
+
 Asset file: src\assets\products\yourpc\logo\YPC_logo.png
 
 Asset file: src\assets\products\yourpc\playstore_screenshots\Screenshot_20260512_012755.png
@@ -1077,11 +1089,15 @@ import {
   pages, 
   defaultPageId, 
   yourPCConfigProperties, 
-  type DocNode 
-} from "../pages/yourpc/docs/PageTree";
+  type DocNode,
+  type PageData,
+  type SectionData
+} from "../pages/yourpc/docs/_PageTree";
 
-// Import the official YourPC logo gracefully
+// Import visual assets
 import ypcLogo from "../assets/products/yourpc/logo/YPC_logo.png";
+import buriBuriImage from "../assets/products/yourpc/docs-assets/buri-buri-zaemon.jpeg";
+import playButtonIcon from "../assets/products/yourpc/docs-assets/HowToDesktop/play-button.png";
 
 export interface TypeProperty {
   name: string;
@@ -1103,7 +1119,7 @@ function TypeTable({ properties }: { properties: TypeProperty[] }) {
           </tr>
         </thead>
         <tbody className="text-fd-muted-foreground divide-y divide-fd-border">
-          {properties.map((prop) => (
+          {properties.map((prop: TypeProperty) => (
             <tr key={prop.name} className="hover:bg-fd-muted/30 transition-colors">
               <td className="p-3 font-mono text-xs font-semibold text-fd-primary">
                 {prop.name}
@@ -1133,7 +1149,6 @@ export default function YourPCDocs() {
   const [activePageId, setActivePageId] = useState(defaultPageId);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [copiedId, setCopiedId] = useState<string | null>(null);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [activeOutlineId, setActiveOutlineId] = useState("");
 
@@ -1189,12 +1204,6 @@ export default function YourPCDocs() {
       setTimeout(() => searchInputRef.current?.focus(), 50);
     }
   }, [searchOpen]);
-
-  const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
-  };
 
   const toggleFolder = (folderTitle: string) => {
     setExpandedFolders((prev) => ({
@@ -1287,29 +1296,69 @@ export default function YourPCDocs() {
     return null;
   };
 
-  // Convert search corpus dynamically
-  const searchCorpus = Object.values(pages).map((p) => ({
-    id: p.id,
-    title: p.title,
-    category: p.category,
-    match: p.breadcrumbs.join(", ")
-  }));
+  // Convert search corpus dynamically (including taglines, descriptions, and section body texts)
+  const searchCorpus = Object.values(pages).map((p: PageData) => {
+    const sectionsText = p.sections
+      .map((sec: SectionData) => {
+        const listText = sec.listItems ? sec.listItems.join(" ") : "";
+        const noteText = sec.note ? sec.note : "";
+        return `${sec.title} ${sec.text} ${listText} ${noteText}`;
+      })
+      .join(" ");
 
-  const filteredSearchResults = searchCorpus.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.match.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+    return {
+      id: p.id,
+      title: p.title,
+      category: p.category,
+      tagline: p.tagline,
+      breadcrumbsText: p.breadcrumbs.join(" "),
+      fullSearchableText: `${p.title} ${p.tagline} ${p.category} ${p.breadcrumbs.join(" ")} ${sectionsText}`
+    };
+  });
+
+  const filteredSearchResults = searchCorpus.filter((item) => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return true;
+    return item.fullSearchableText.toLowerCase().includes(query);
+  });
+
+  // Replaces text placeholders like "(play-button image)" with inline UI images
+  const renderTextWithInlineImages = (text: string) => {
+    const placeholder = "(play-button image)";
+    if (!text.includes(placeholder)) {
+      return text;
+    }
+    const parts = text.split(placeholder);
+    return (
+      <>
+        {parts.map((part: string, i: number) => (
+          <React.Fragment key={i}>
+            {part}
+            {i < parts.length - 1 && (
+              <img 
+                src={playButtonIcon.src} 
+                alt="Play Button Icon" 
+                className="inline-block h-5 w-auto mx-1 align-middle select-none border border-fd-border bg-fd-card/40 rounded p-0.5" 
+              />
+            )}
+          </React.Fragment>
+        ))}
+      </>
+    );
+  };
 
   // Dynamic renderer maps standard TypeScript definitions into visual subsections
-  const renderSectionNode = (section: any) => {
-    return (
-      <section id={section.id} key={section.id} className="space-y-3.5 scroll-mt-24">
+  const renderSectionNode = (section: SectionData) => {
+    const hasImage = !!section.imageSrc;
+
+    // Isolate structural page text elements to allow structural grid distribution
+    const textContent = (
+      <div className="space-y-3.5">
         <h2 className="text-xl md:text-2xl font-bold text-fd-foreground tracking-tight">
           {section.title}
         </h2>
-        <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] font-normal font-sans">
-          {section.text}
+        <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] font-normal font-sans whitespace-pre-line">
+          {renderTextWithInlineImages(section.text)}
         </p>
 
         {section.listItems && (
@@ -1320,6 +1369,33 @@ export default function YourPCDocs() {
           </ul>
         )}
 
+        {/* Note box rendering logic */}
+        {section.note && (
+          <div className="p-4 rounded-xl border border-yellow-500/20 bg-yellow-500/5 text-yellow-200/90 text-sm font-sans mt-4 leading-relaxed max-w-[720px] flex gap-3">
+            <span className="material-symbols-outlined text-yellow-400 select-none shrink-0">info</span>
+            <div>
+              <span className="font-bold text-yellow-400">Note: </span>
+              {section.note}
+            </div>
+          </div>
+        )}
+
+        {/* Developer Image & Subtitle Section */}
+        {section.id === "why-name-it" && (
+          <div className="mt-6 space-y-3">
+            <p className="text-fd-muted-foreground text-xs md:text-sm font-sans italic font-medium">
+              Developed by me...
+            </p>
+            <div className="max-w-[280px] sm:max-w-[320px] rounded-xl overflow-hidden border border-fd-border bg-fd-card/20 p-1 shadow-sm">
+              <img 
+                src={buriBuriImage.src} 
+                alt="Developer Illustration" 
+                className="w-full h-auto rounded-lg object-contain"
+              />
+            </div>
+          </div>
+        )}
+
         {section.showConfigTable && (
           <TypeTable properties={yourPCConfigProperties} />
         )}
@@ -1328,6 +1404,33 @@ export default function YourPCDocs() {
           <Callout type="info" className="my-2 text-fd-foreground bg-fd-muted border-fd-border">
             PROot safely isolates your virtual filesystem inside the application sandbox without requiring system root privileges.
           </Callout>
+        )}
+      </div>
+    );
+
+    return (
+      <section id={section.id} key={section.id} className="scroll-mt-24 py-4 first:pt-0 border-b border-fd-border/30 last:border-b-0 pb-10">
+        {hasImage ? (
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            {/* Left column: Image */}
+            <div className="md:col-span-6 flex justify-center">
+              <div className="w-full max-w-[450px] md:max-w-full rounded-xl overflow-hidden border border-fd-border bg-fd-card/20 p-1.5 shadow-md">
+                <img 
+                  src={section.imageSrc} 
+                  alt={section.title} 
+                  className="w-full h-auto rounded-lg object-contain select-none max-h-[300px] md:max-h-[400px]"
+                />
+              </div>
+            </div>
+            {/* Right column: Text content */}
+            <div className="md:col-span-6">
+              {textContent}
+            </div>
+          </div>
+        ) : (
+          <div>
+            {textContent}
+          </div>
         )}
       </section>
     );
@@ -1416,7 +1519,7 @@ export default function YourPCDocs() {
           <article className="flex-1 px-6 md:px-14 py-12 max-w-[840px] mx-auto overflow-y-auto scroll-smooth">
             {/* Breadcrumbs */}
             <div className="flex items-center gap-1 text-xs text-fd-muted-foreground mb-6 font-semibold">
-              {activePage.breadcrumbs.map((crumb, idx) => (
+              {activePage.breadcrumbs.map((crumb: string, idx: number) => (
                 <React.Fragment key={crumb}>
                   {idx > 0 && <span className="material-symbols-outlined text-[12px] text-fd-muted-foreground/60">chevron_right</span>}
                   <span className={idx === activePage.breadcrumbs.length - 1 ? "text-fd-foreground font-bold" : ""}>
@@ -1437,26 +1540,6 @@ export default function YourPCDocs() {
                 </p>
               </div>
 
-              {/* Action Bar */}
-              <div className="flex flex-wrap gap-2 py-1.5 border-b border-fd-border">
-                <button
-                  onClick={() => handleCopy(window.location.href, "page-link")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-fd-muted border border-fd-border hover:border-fd-primary text-xs text-fd-muted-foreground hover:text-fd-foreground transition-all font-semibold"
-                >
-                  <span className="material-symbols-outlined text-[15px]">link</span>
-                  <span>{copiedId === "page-link" ? "Copied Link!" : "Copy Page Link"}</span>
-                </button>
-                <a
-                  href="https://github.com/zedlabs-corp/YourPC"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-fd-muted border border-fd-border hover:border-fd-primary text-xs text-fd-muted-foreground hover:text-fd-foreground transition-all font-semibold"
-                >
-                  <span className="material-symbols-outlined text-[15px]">open_in_new</span>
-                  <span>Open Github</span>
-                </a>
-              </div>
-
               {activePage.sections.map(renderSectionNode)}
             </div>
 
@@ -1470,7 +1553,7 @@ export default function YourPCDocs() {
           </article>
 
           {/* Right Sidebar - Scrollspy Table of Contents */}
-          <aside className="hidden lg:block w-56 shrink-0 border-l border-fd-border p-6 overflow-y-auto bg-fd-background">
+          <aside className="hidden lg:block w-56 shrink-0 border-l border-fd-border/30 p-6 overflow-y-auto bg-fd-background">
             <div className="space-y-4">
               <h4 className="text-[11px] uppercase font-bold text-fd-muted-foreground tracking-wider">
                 On This Page
@@ -1552,7 +1635,7 @@ export default function YourPCDocs() {
                       </span>
                     </div>
                     <span className="text-xs text-fd-muted-foreground leading-normal line-clamp-1">
-                      {result.match}
+                      {result.tagline}
                     </span>
                   </button>
                 ))
@@ -2683,12 +2766,14 @@ import '../../styles/docs.css'; // Import the dedicated physical stylesheet
 
 --------------------------------------------------------------------------------
 
-File location: src\pages\yourpc\docs\PageTree.tsx
+File location: src\pages\yourpc\docs\_PageTree.tsx
 
-/* File location: src/pages/yourpc/docs/PageTree.tsx */
-import { whatIsYourPCData, yourPCConfigProperties, type PageData } from "./page/what-is-yourpc";
+/* File location: src/pages/yourpc/docs/_PageTree.tsx */
+import { whatIsYourPCData, yourPCConfigProperties, type PageData } from "./_page/what-is-yourpc";
+import { howToLaunchData } from "./_page/how-to-launch";
 
-// Export types and properties for YourPCDocs to consume
+// Re-export the core content interfaces for complete strict TypeScript typing
+export type { PageData, SectionData } from "./_page/what-is-yourpc";
 export { yourPCConfigProperties };
 
 export type DocNode =
@@ -2699,15 +2784,146 @@ export type DocNode =
 // Default Page ID when landing on the documentation portal
 export const defaultPageId = "what-is-yourpc";
 
-// 1. Navigation Tree Structure (Edit this when adding new directories, separators, or folders)
+// 1. Navigation Tree Structure
 export const pageTree: DocNode[] = [
   { type: 'separator', title: 'Introduction' },
-  { type: 'page', id: 'what-is-yourpc', title: 'What is YourPC' }
+  { type: 'page', id: 'what-is-yourpc', title: 'What is YourPC' },
+  { type: 'separator', title: 'Getting Started' },
+  { type: 'page', id: 'how-to-launch', title: 'How to launch Linux Desktop' }
 ];
 
-// 2. Page Database Map (Edit this to register imported page data modules)
+// 2. Page Database Map
 export const pages: Record<string, PageData> = {
-  "what-is-yourpc": whatIsYourPCData
+  "what-is-yourpc": whatIsYourPCData,
+  "how-to-launch": howToLaunchData
+};
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\yourpc\docs\_page\how-to-launch.ts
+
+/* File location: src/pages/yourpc/docs/_page/how-to-launch.ts */
+import { type PageData } from "./what-is-yourpc";
+
+// Import step screenshots dynamically from your assets directory
+import homeScreenImg from "../../../../assets/products/yourpc/docs-assets/HowToDesktop/HomeScreen.png";
+import mainScreenImg from "../../../../assets/products/yourpc/docs-assets/HowToDesktop/MainScreen.png";
+import playButtonGreenImg from "../../../../assets/products/yourpc/docs-assets/HowToDesktop/PlayButtonGreen.png";
+import debianDesktopImg from "../../../../assets/products/yourpc/docs-assets/HowToDesktop/DebianDesktop.png";
+
+export const howToLaunchData: PageData = {
+  id: "how-to-launch",
+  title: "How to launch Linux Desktop",
+  category: "Getting Started",
+  tagline: "Follow these step-by-step instructions to initialize and run a fully operational Linux Desktop experience.",
+  breadcrumbs: ["Getting Started", "How to launch Linux Desktop"],
+  outline: [
+    { id: "step-1", title: "Step 1: Open YourPC" },
+    { id: "step-2", title: "Step 2: Download the Rootfs" },
+    { id: "step-3", title: "Step 3: Start the Renderer" },
+    { id: "step-4", title: "Step 4: Launching Debian" },
+    { id: "why-only-debian", title: "Why only Debian?" }
+  ],
+  sections: [
+    {
+      id: "step-1",
+      title: "Step 1: Open YourPC",
+      text: "When you open the app, you will be greeted with this playful dino dashboard illustration. Click on the Debian option visible on this page to load its parameters.",
+      imageSrc: homeScreenImg.src
+    },
+    {
+      id: "step-2",
+      title: "Step 2: Download the Rootfs",
+      text: "You will see this Dashboard. Click on the play icon (play-button image), you will be prompted to download the Debian rootfs. Proceed and it will download and extract the rootfs in the app's Linux directory. Then when extraction is complete click on the play button again.",
+      imageSrc: mainScreenImg.src
+    },
+    {
+      id: "step-3",
+      title: "Step 3: Start the Renderer",
+      text: "Wait for the play icon button indicator to turn solid green. When it displays green, click on it once more to initialize the YPC Renderer system process.",
+      imageSrc: playButtonGreenImg.src
+    },
+    {
+      id: "step-4",
+      title: "Step-4: Launching Debian",
+      text: "And voilà! Enjoy a highly stable, performance-optimized Debian desktop environment running natively inside your Android sandbox environment.",
+      imageSrc: debianDesktopImg.src
+    },
+    {
+      id: "why-only-debian",
+      title: "Why only Debian?",
+      text: "Other Linux distributions will be added over time once the foundational system architecture matures and reaches extreme stability.\n\nFurthermore, we plan to modify the architecture to allow custom rootfs loading rather than simply hardcoding default download targets. The ultimate goal is to cater to everyone's custom requirements, which wouldn't be possible simply by providing predefined static options."
+    }
+  ]
+};
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\yourpc\docs\_page\what-is-yourpc.ts
+
+/* File location: src/pages/yourpc/docs/_page/what-is-yourpc.ts */
+
+export interface SectionData {
+  id: string;
+  title: string;
+  text: string;
+  listItems?: string[];
+  showConfigTable?: boolean;
+  note?: string;
+  imageSrc?: string;
+}
+
+export interface PageData {
+  id: string;
+  title: string;
+  category: string;
+  tagline: string;
+  breadcrumbs: string[];
+  outline: { id: string; title: string }[];
+  sections: SectionData[];
+}
+
+export interface TypeProperty {
+  name: string;
+  type: string;
+  description: string;
+  remarks?: string;
+}
+
+// Config table properties
+export const yourPCConfigProperties: TypeProperty[] = [];
+
+export const whatIsYourPCData: PageData = {
+  id: "what-is-yourpc",
+  title: "What is YourPC",
+  category: "Introduction",
+  tagline: "YourPC is an app that lets users run Debian and other Linux distros in one click. It is developed such that anyone, whether familiar with Linux or not, can use it.",
+  breadcrumbs: ["Introduction", "What is YourPC"],
+  outline: [
+    { id: "why-name-it", title: "Why name it YourPC?" },
+    { id: "what-is-planned", title: "What is planned?" }
+  ],
+  sections: [
+    {
+      id: "why-name-it",
+      title: "Why name it YourPC?",
+      text: "Well, the idea was to make an app that gives the concept of using a mini PC. I was going to add a bootloader like GRUB that loads the Linux distro, make a small VM, etc., but due to some technical and time limitations, I dropped it over time.\n\nYourPC or YPC are both the same thing.",
+      note: "Currently YourPC is a very early product which will change over time. It is being developed by a single solo developer."
+    },
+    {
+      id: "what-is-planned",
+      title: "What is planned?",
+      text: "Well, many things. I was not able to implement all of them because of time constraints, but here is what I have in mind:",
+      listItems: [
+        "YPC SHELL - This will be a default shell which will support core Linux.",
+        "Terminal extension support - since the Terminal is written in React, I will later try to make it modular enough to add extensions and fully customize it.",
+        "GPU Support for YPC Renderer.",
+        "Replace PRoot.",
+        "Custom Rootfs.",
+        "Custom Scripts."
+      ]
+    }
+  ]
 };
 
 --------------------------------------------------------------------------------
@@ -3195,78 +3411,6 @@ export const docPageMetadata = {
     { id: "overview", title: "Overview" },
     { id: "core-capabilities", title: "Core Capabilities" },
     { id: "configuration-api", title: "Configuration API" }
-  ]
-};
-
---------------------------------------------------------------------------------
-
-File location: src\pages\yourpc\docs\page\what-is-yourpc.ts
-
-/* File location: src/pages/yourpc/docs/page/what-is-yourpc.ts */
-
-export interface SectionData {
-  id: string;
-  title: string;
-  text: string;
-  listItems?: string[];
-  showConfigTable?: boolean;
-}
-
-export interface PageData {
-  id: string;
-  title: string;
-  category: string;
-  tagline: string;
-  breadcrumbs: string[];
-  outline: { id: string; title: string }[];
-  sections: SectionData[];
-}
-
-export interface TypeProperty {
-  name: string;
-  type: string;
-  description: string;
-  remarks?: string;
-}
-
-// Config table properties cleared as requested
-export const yourPCConfigProperties: TypeProperty[] = [];
-
-export const whatIsYourPCData: PageData = {
-  id: "what-is-yourpc",
-  title: "What is YourPC",
-  category: "Introduction",
-  tagline: "Run Debian and other Linux distros in one click.",
-  breadcrumbs: ["Introduction", "What is YourPC"],
-  outline: [
-    { id: "what-is-yourpc", title: "What is YourPC" },
-    { id: "why-name-it", title: "Why name it YourPC?" },
-    { id: "what-is-planned", title: "What is planned?" }
-  ],
-  sections: [
-    {
-      id: "what-is-yourpc",
-      title: "What is YourPC",
-      text: "YourPC is an app that lets users run Debian and other Linux distros in one click. It is developed such that anyone, whether familiar with Linux or not, can use it."
-    },
-    {
-      id: "why-name-it",
-      title: "Why name it YourPC?",
-      text: "Well, the idea was to make an app that gives the concept of using a mini PC. I was going to add a bootloader like GRUB that loads the Linux distro, make a small VM, etc., but due to some technical and time limitations, I dropped it over time.\n\nYourPC or YPC are both the same thing.\n\nNote: Currently YourPC is a very early product which will change over time. It is being developed by a single solo developer."
-    },
-    {
-      id: "what-is-planned",
-      title: "What is planned?",
-      text: "Well, many things. I was not able to implement all of them because of time constraints, but here is what I have in mind:",
-      listItems: [
-        "YPC SHELL - This will be a default shell which will support core Linux.",
-        "Terminal extension support - since the Terminal is written in React, I will later try to make it modular enough to add extensions and fully customize it.",
-        "GPU Support for YPC Renderer.",
-        "Replace PRoot.",
-        "Custom Rootfs.",
-        "Custom Scripts."
-      ]
-    }
   ]
 };
 

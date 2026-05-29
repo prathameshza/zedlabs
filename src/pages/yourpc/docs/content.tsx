@@ -134,7 +134,7 @@ export const pages: Record<string, DocPage> = {
             Overview
           </h2>
           <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] font-normal font-sans">
-            YourPC makes desktop virtualization accessible on Android. Unlike native virtual machines, it operates without root requirements or kernel modifications, acting as a lightweight layer mapping system calls directly onto the AOSP kernel.
+            YourPC makes running Linux desktop environments accessible on Android. Unlike native virtual machines or emulators, it operates without root requirements or kernel modifications, acting as a lightweight translation layer mapping user-space system calls directly onto the AOSP kernel via PRoot.
           </p>
         </section>
 
