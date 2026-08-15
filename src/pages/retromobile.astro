@@ -1,0 +1,36 @@
+---
+/* File location: src/pages/retromobile.astro */
+import Layout from '../layouts/Layout.astro';
+import ProductPage from '../components/ProductPage';
+
+// Import Assets
+import retroMobileLogo from '../assets/products/retromobile/logo/RetroMobileLogo.png';
+
+// Import Screenshots
+import screenshot1 from '../assets/products/retromobile/playstore_screenshots/Screenshot_20260815_230133.png';
+import screenshot2 from '../assets/products/retromobile/playstore_screenshots/Screenshot_20260815_230210.png';
+import screenshot3 from '../assets/products/retromobile/playstore_screenshots/Screenshot_20260815_230856.png';
+import screenshot4 from '../assets/products/retromobile/playstore_screenshots/Screenshot_20260815_231653.png';
+
+const screenshots = [
+  screenshot1.src,
+  screenshot2.src,
+  screenshot3.src,
+  screenshot4.src
+];
+
+const description = `RetroMobile is a high-performance J2ME and Java MIDlet emulator for Android. Relive the golden era of classic mobile gaming by running your favorite .jar and .jad applications and games smoothly with responsive on-screen virtual controls, sound support, and customizable display scaling.`;
+---
+
+<Layout>
+  <ProductPage 
+    client:load
+    title="RetroMobile"
+    tagline="J2ME & Java MIDlet Emulator"
+    description={description}
+    logoSrc={retroMobileLogo.src}
+    screenshotSrcs={screenshots}
+    isComingSoon={true}
+    privacyVariant="retromobile"
+  />
+</Layout>

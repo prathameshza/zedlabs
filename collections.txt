@@ -151,6 +151,16 @@ Asset file: src\assets\products\pocketcontroller\PocketControllerFlashcards\flas
 
 Asset file: src\assets\products\pocketcontroller\logo\pocketcontroller.png
 
+Asset file: src\assets\products\retromobile\logo\RetroMobileLogo.png
+
+Asset file: src\assets\products\retromobile\playstore_screenshots\Screenshot_20260815_230133.png
+
+Asset file: src\assets\products\retromobile\playstore_screenshots\Screenshot_20260815_230210.png
+
+Asset file: src\assets\products\retromobile\playstore_screenshots\Screenshot_20260815_230856.png
+
+Asset file: src\assets\products\retromobile\playstore_screenshots\Screenshot_20260815_231653.png
+
 Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 1.png
 
 Asset file: src\assets\products\shaderboy\Shaderboy PlayStore Screenshots\Frame 2.png
@@ -183,6 +193,18 @@ Asset file: src\assets\products\webcodebox\WebCodeBox PlayStore Screenshots\fram
 
 Asset file: src\assets\products\webcodebox\logo\logo.png
 
+Asset file: src\assets\products\yourpc\docs-assets\AndroidPhantomKiller\DisableChildProcessRestrictions.png
+
+Asset file: src\assets\products\yourpc\docs-assets\AndroidPhantomKiller\EnableDevelopereOptions.png
+
+Asset file: src\assets\products\yourpc\docs-assets\AndroidPhantomKiller\SearchDeveloperOptions.png
+
+Asset file: src\assets\products\yourpc\docs-assets\AndroidPhantomKiller\SoftwareVersion.png
+
+Asset file: src\assets\products\yourpc\docs-assets\ForeGroundService\ForegroundServiceinBar.jpeg
+
+Asset file: src\assets\products\yourpc\docs-assets\ForeGroundService\NotificationPermission.jpeg
+
 Asset file: src\assets\products\yourpc\docs-assets\HowToDesktop\DebianDesktop.png
 
 Asset file: src\assets\products\yourpc\docs-assets\HowToDesktop\HomeScreen.png
@@ -192,6 +214,20 @@ Asset file: src\assets\products\yourpc\docs-assets\HowToDesktop\MainScreen.png
 Asset file: src\assets\products\yourpc\docs-assets\HowToDesktop\PlayButtonGreen.png
 
 Asset file: src\assets\products\yourpc\docs-assets\HowToDesktop\play-button.png
+
+Asset file: src\assets\products\yourpc\docs-assets\Terminal\NewoFetch.jpeg
+
+Asset file: src\assets\products\yourpc\docs-assets\Terminal\TerminalMatrix.jpeg
+
+Asset file: src\assets\products\yourpc\docs-assets\Terminal\lazygit.jpeg
+
+Asset file: src\assets\products\yourpc\docs-assets\VNC\NewConnection.jpeg
+
+Asset file: src\assets\products\yourpc\docs-assets\VNC\VNCSCreen.jpeg
+
+Asset file: src\assets\products\yourpc\docs-assets\VNC\VNCStart.jpeg
+
+Asset file: src\assets\products\yourpc\docs-assets\VNC\VNCViewerExample.jpeg
 
 Asset file: src\assets\products\yourpc\docs-assets\buri-buri-zaemon.jpeg
 
@@ -1082,6 +1118,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 // Official Fumadocs components loaded natively
 import { Callout } from "fumadocs-ui/components/callout";
+import { DynamicCodeBlock } from "fumadocs-ui/components/dynamic-codeblock";
 
 // Import all dynamic metadata, databases, and structural parameters from PageTree
 import { 
@@ -1105,6 +1142,46 @@ export interface TypeProperty {
   description: string;
   remarks?: string;
 }
+
+// Callout UI types and configuration styling rules
+const calloutStyles = {
+  info: {
+    border: "border-blue-500/20",
+    bg: "bg-blue-500/5",
+    text: "text-blue-200/90",
+    icon: "info",
+    iconColor: "text-blue-400",
+    prefix: "Info: ",
+    prefixColor: "text-blue-400"
+  },
+  warning: {
+    border: "border-yellow-500/20",
+    bg: "bg-yellow-500/5",
+    text: "text-yellow-200/90",
+    icon: "warning",
+    iconColor: "text-yellow-400",
+    prefix: "Warning: ",
+    prefixColor: "text-yellow-400"
+  },
+  success: {
+    border: "border-emerald-500/20",
+    bg: "bg-emerald-500/5",
+    text: "text-emerald-200/90",
+    icon: "check_circle",
+    iconColor: "text-emerald-400",
+    prefix: "Success: ",
+    prefixColor: "text-emerald-400"
+  },
+  error: {
+    border: "border-red-500/20",
+    bg: "bg-red-500/5",
+    text: "text-red-200/90",
+    icon: "error",
+    iconColor: "text-red-400",
+    prefix: "Error: ",
+    prefixColor: "text-red-400"
+  }
+};
 
 // High-density TypeTable component mapped directly to TS definitions
 function TypeTable({ properties }: { properties: TypeProperty[] }) {
@@ -1322,19 +1399,64 @@ export default function YourPCDocs() {
     return item.fullSearchableText.toLowerCase().includes(query);
   });
 
-  // Replaces text placeholders like "(play-button image)" with inline UI images
-  const renderTextWithInlineImages = (text: string) => {
-    const placeholder = "(play-button image)";
-    if (!text.includes(placeholder)) {
-      return text;
+  // Parses generic (icon:icon_name) tokens inline and applies button frames
+  const parseIcons = (part: string) => {
+    const iconRegex = /\(icon:([a-z_]+)\)/g;
+    if (!iconRegex.test(part)) {
+      return part;
     }
-    const parts = text.split(placeholder);
+
+    iconRegex.lastIndex = 0; // Reset state
+
+    const elements: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = iconRegex.exec(part)) !== null) {
+      const plainText = part.substring(lastIndex, match.index);
+      if (plainText) {
+        elements.push(plainText);
+      }
+      const iconName = match[1];
+      elements.push(
+        <span 
+          key={`icon-${match.index}`}
+          className="material-symbols-outlined text-[15px] inline-block align-middle mx-1.5 select-none text-fd-primary border border-fd-border bg-fd-muted rounded p-0.5"
+        >
+          {iconName}
+        </span>
+      );
+      lastIndex = iconRegex.lastIndex;
+    }
+
+    const remainingText = part.substring(lastIndex);
+    if (remainingText) {
+      elements.push(remainingText);
+    }
+
     return (
-      <>
-        {parts.map((part: string, i: number) => (
+      <React.Fragment>
+        {elements.map((el, i) => (
+          <React.Fragment key={i}>{el}</React.Fragment>
+        ))}
+      </React.Fragment>
+    );
+  };
+
+  // Helper routine to render inline play button image segments
+  const parsePlayButtons = (part: string) => {
+    const playButtonPlaceholder = "(play-button image)";
+    if (!part.includes(playButtonPlaceholder)) {
+      return parseIcons(part);
+    }
+
+    const subparts = part.split(playButtonPlaceholder);
+    return (
+      <React.Fragment>
+        {subparts.map((subpart, i) => (
           <React.Fragment key={i}>
-            {part}
-            {i < parts.length - 1 && (
+            {parseIcons(subpart)}
+            {i < subparts.length - 1 && (
               <img 
                 src={playButtonIcon.src} 
                 alt="Play Button Icon" 
@@ -1343,8 +1465,73 @@ export default function YourPCDocs() {
             )}
           </React.Fragment>
         ))}
-      </>
+      </React.Fragment>
     );
+  };
+
+  // Parses Markdown-style links [text](url), processes inline images, and injects DynamicCodeBlock containers
+  const parseFormattedText = (text: string, codeblock?: { lang: string; code: string }) => {
+    if (!text) return "";
+
+    const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    const parts: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = markdownLinkRegex.exec(text)) !== null) {
+      const plainText = text.substring(lastIndex, match.index);
+      if (plainText) {
+        parts.push(plainText);
+      }
+      const linkText = match[1];
+      const linkUrl = match[2];
+      parts.push(
+        <a
+          key={`link-${match.index}`}
+          href={linkUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-fd-primary hover:underline font-semibold"
+        >
+          {linkText}
+        </a>
+      );
+      lastIndex = markdownLinkRegex.lastIndex;
+    }
+
+    const remainingText = text.substring(lastIndex);
+    if (remainingText) {
+      parts.push(remainingText);
+    }
+
+    const codeBlockPlaceholder = "(code-block)";
+
+    return parts.map((part, index) => {
+      if (typeof part !== 'string') {
+        return part;
+      }
+
+      // Handle custom (code-block) marker dynamically mapping over active schema properties
+      if (part.includes(codeBlockPlaceholder) && codeblock) {
+        const subparts = part.split(codeBlockPlaceholder);
+        return (
+          <React.Fragment key={`codeblock-wrapper-${index}`}>
+            {subparts.map((subpart, i) => (
+              <React.Fragment key={i}>
+                {parsePlayButtons(subpart)}
+                {i < subparts.length - 1 && (
+                  <div className="my-4 max-w-[720px] font-sans">
+                    <DynamicCodeBlock lang={codeblock.lang} code={codeblock.code} />
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </React.Fragment>
+        );
+      }
+
+      return parsePlayButtons(part);
+    });
   };
 
   // Dynamic renderer maps standard TypeScript definitions into visual subsections
@@ -1358,27 +1545,36 @@ export default function YourPCDocs() {
           {section.title}
         </h2>
         <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] font-normal font-sans whitespace-pre-line">
-          {renderTextWithInlineImages(section.text)}
+          {parseFormattedText(section.text, section.codeblock)}
         </p>
 
         {section.listItems && (
           <ul className="list-disc list-inside space-y-2 text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] pl-2 font-sans">
             {section.listItems.map((item: string, idx: number) => (
-              <li key={idx}>{item}</li>
+              <li key={idx}>{parseFormattedText(item)}</li>
             ))}
           </ul>
         )}
 
-        {/* Note box rendering logic */}
-        {section.note && (
-          <div className="p-4 rounded-xl border border-yellow-500/20 bg-yellow-500/5 text-yellow-200/90 text-sm font-sans mt-4 leading-relaxed max-w-[720px] flex gap-3">
-            <span className="material-symbols-outlined text-yellow-400 select-none shrink-0">info</span>
-            <div>
-              <span className="font-bold text-yellow-400">Note: </span>
-              {section.note}
+        {/* Note/Callout box rendering logic */}
+        {section.note && (() => {
+          const type = section.noteType || "warning";
+          const style = calloutStyles[type] || calloutStyles.warning;
+          const prefixText = section.noteType ? style.prefix : "Note: ";
+          const prefixColor = section.noteType ? style.prefixColor : "text-yellow-400";
+          const icon = section.noteType ? style.icon : "info"; 
+          const iconColor = section.noteType ? style.iconColor : "text-yellow-400";
+
+          return (
+            <div className={`p-4 rounded-xl border ${style.border} ${style.bg} ${style.text} text-sm font-sans mt-4 leading-relaxed max-w-[720px] flex gap-3`}>
+              <span className={`material-symbols-outlined ${iconColor} select-none shrink-0`}>{icon}</span>
+              <div>
+                <span className={`font-bold ${prefixColor}`}>{prefixText}</span>
+                {parseFormattedText(section.note)}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Developer Image & Subtitle Section */}
         {section.id === "why-name-it" && (
@@ -1402,7 +1598,7 @@ export default function YourPCDocs() {
 
         {section.id === "overview" && (
           <Callout type="info" className="my-2 text-fd-foreground bg-fd-muted border-fd-border">
-            PROot safely isolates your virtual filesystem inside the application sandbox without requiring system root privileges.
+            PROot safely isolates your Linux filesystem inside the application sandbox without requiring system root privileges.
           </Callout>
         )}
       </div>
@@ -2732,7 +2928,7 @@ import '../../styles/docs.css'; // Import the dedicated physical stylesheet
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <title>YourPC Documentation | ZedLabs Studio</title>
   </head>
-  <body class="bg-[#0a0a0a] text-[#f4f4f5] overflow-hidden select-none font-sans antialiased font-sans">
+  <body class="bg-[#0a0a0a] text-[#f4f4f5] overflow-hidden font-sans antialiased">
     <YourPCDocs client:load />
   </body>
 </html>
@@ -2771,6 +2967,10 @@ File location: src\pages\yourpc\docs\_PageTree.tsx
 /* File location: src/pages/yourpc/docs/_PageTree.tsx */
 import { whatIsYourPCData, yourPCConfigProperties, type PageData } from "./_page/what-is-yourpc";
 import { howToLaunchData } from "./_page/how-to-launch";
+import { howToUseTerminalData } from "./_page/how_to_use_terminal";
+import { howToUseVNCData } from "./_page/how_to_use_vnc";
+import { foregroundServiceData } from "./_page/foreground_service";
+import { androidPhantomKillerData } from "./_page/android_phantom_killer";
 
 // Re-export the core content interfaces for complete strict TypeScript typing
 export type { PageData, SectionData } from "./_page/what-is-yourpc";
@@ -2789,13 +2989,156 @@ export const pageTree: DocNode[] = [
   { type: 'separator', title: 'Introduction' },
   { type: 'page', id: 'what-is-yourpc', title: 'What is YourPC' },
   { type: 'separator', title: 'Getting Started' },
-  { type: 'page', id: 'how-to-launch', title: 'How to launch Linux Desktop' }
+  { type: 'page', id: 'how-to-launch', title: 'How to launch Linux Desktop' },
+  { type: 'page', id: 'how-to-use-terminal', title: 'How to use Terminal?' },
+  { type: 'page', id: 'how-to-use-vnc', title: 'How to use VNC?' },
+  { type: 'page', id: 'foreground-service', title: 'Foreground Service' },
+  { type: 'separator', title: 'Known limitations and Issues' },
+  { type: 'page', id: 'android-phantom-killer', title: 'Android Phantom Killer' }
 ];
 
 // 2. Page Database Map
 export const pages: Record<string, PageData> = {
   "what-is-yourpc": whatIsYourPCData,
-  "how-to-launch": howToLaunchData
+  "how-to-launch": howToLaunchData,
+  "how-to-use-terminal": howToUseTerminalData,
+  "how-to-use-vnc": howToUseVNCData,
+  "foreground-service": foregroundServiceData,
+  "android-phantom-killer": androidPhantomKillerData
+};
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\yourpc\docs\_page\android_phantom_killer.ts
+
+/* File location: src/pages/yourpc/docs/_page/android_phantom_killer.ts */
+import { type PageData } from "./what-is-yourpc";
+
+// Import step screenshots dynamically from your assets directory
+import softwareVersionImg from "../../../../assets/products/yourpc/docs-assets/AndroidPhantomKiller/SoftwareVersion.png";
+import searchDeveloperOptionsImg from "../../../../assets/products/yourpc/docs-assets/AndroidPhantomKiller/SearchDeveloperOptions.png";
+import enableDeveloperOptionsImg from "../../../../assets/products/yourpc/docs-assets/AndroidPhantomKiller/EnableDevelopereOptions.png";
+import disableChildProcessRestrictionsImg from "../../../../assets/products/yourpc/docs-assets/AndroidPhantomKiller/DisableChildProcessRestrictions.png";
+
+export const androidPhantomKillerData: PageData = {
+  id: "android-phantom-killer",
+  title: "Android Phantom Killer",
+  category: "Known limitations and Issues",
+  tagline: "Understand why background Linux environment processes sometimes crash and learn how to prevent Android from aggressively terminating your PRoot environment.",
+  breadcrumbs: ["Known limitations and Issues", "Android Phantom Killer"],
+  outline: [
+    { id: "what-is-phantom-killer", title: "What is Android Phantom Killer?" },
+    { id: "disable-via-adb", title: "Disable via ADB" },
+    { id: "enable-developer-options", title: "Step 1: Enable Developer Options" },
+    { id: "search-developer-options", title: "Step 2: Find Developer Options" },
+    { id: "toggle-developer-options", title: "Step 3: Toggle Developer Options" },
+    { id: "disable-child-restrictions", title: "Step 4: Disable Restrictions" }
+  ],
+  sections: [
+    {
+      id: "what-is-phantom-killer",
+      title: "What is Android Phantom Killer?",
+      text: "The Android Phantom Killer is a process monitoring system introduced in Android 12. It aggressively tracks background processes and automatically terminates child subprocesses spawned by applications—such as terminal processes running inside PRoot containers—if they exceed system-defined process or resource thresholds.\n\nBecause YourPC utilizes PRoot to provide an environment for Linux to run on inside an Android application sandbox, these background threads can be flagged as 'phantom processes' and terminated abruptly, leading to unexpected desktop or terminal connection drops."
+    },
+    {
+      id: "disable-via-adb",
+      title: "Disable via ADB",
+      text: "The most robust method to prevent phantom process termination is to disable the feature entirely using ADB (Android Debug Bridge).\n\nConnect your mobile device to a computer with ADB set up, open your terminal, and execute the following command:\n\n(code-block)\n\nThis flag disables the global phantom process monitor on Android, allowing your Linux desktop to run stable in the background.",
+      codeblock: {
+        lang: "bash",
+        code: 'adb shell "settings put global settings_enable_monitor_phantom_procs false"'
+      },
+      note: "For detailed commands and extensive background info, you can [see this docs on this topic](https://github.com/agnostic-apollo/Android-Docs/blob/master/en/docs/apps/processes/phantom-cached-and-empty-processes.md#commands-to-disable-phantom-process-killing-and-tldr).",
+      noteType: "info"
+    },
+    {
+      id: "enable-developer-options",
+      title: "Step 1: Enable Developer Options",
+      text: "Alternatively, you can manually disable child process restrictions directly from your device options.\n\nFirst, go to Settings -> About phone -> Version info, and tap multiple times at 'Software Version' or 'Build number' until Developer Options are unlocked.",
+      imageSrc: softwareVersionImg.src,
+      note: "Please note that this option is laid out differently across different device manufacturers. Check the specific navigation path for your own device model if it differs.",
+      noteType: "info"
+    },
+    {
+      id: "search-developer-options",
+      title: "Step 2: Find Developer Options",
+      text: "After enabling Developer Options, open your main Settings app and use the top search bar to search for 'Developer options' to quickly locate and access the hidden menu.",
+      imageSrc: searchDeveloperOptionsImg.src
+    },
+    {
+      id: "toggle-developer-options",
+      title: "Step 3: Toggle Developer Options",
+      text: "Open the Developer Options page, ensure the main Developer options toggle is enabled, and click 'OK' if prompted with any warning message.",
+      imageSrc: enableDeveloperOptionsImg.src
+    },
+    {
+      id: "disable-child-restrictions",
+      title: "Step 4: Disable Restrictions",
+      text: "Navigate down towards the Apps section and locate the 'Disable Child Process Restrictions' option. Enable the toggle to prevent the system from aggressively terminating your background workloads.",
+      imageSrc: disableChildProcessRestrictionsImg.src,
+      note: "Enabling this option provides significant relief and prevents many common background crashes, but it may not completely guarantee full immunity against background termination depending on your manufacturer's specific battery optimizer settings.",
+      noteType: "info"
+    }
+  ]
+};
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\yourpc\docs\_page\foreground_service.ts
+
+/* File location: src/pages/yourpc/docs/_page/foreground_service.ts */
+import { type PageData } from "./what-is-yourpc";
+
+// Import step screenshots dynamically from your assets directory
+import notificationPermissionImg from "../../../../assets/products/yourpc/docs-assets/ForeGroundService/NotificationPermission.jpeg";
+import foregroundServiceBarImg from "../../../../assets/products/yourpc/docs-assets/ForeGroundService/ForegroundServiceinBar.jpeg";
+
+export const foregroundServiceData: PageData = {
+  id: "foreground-service",
+  title: "Foreground Service",
+  category: "Getting Started",
+  tagline: "Learn how the Foreground Service keeps your PRoot environment active, responsive, and immune to background process freezing.",
+  breadcrumbs: ["Getting Started", "Foreground Service"],
+  outline: [
+    { id: "about-foreground-service", title: "What is a Foreground Service?" },
+    { id: "notification-permission", title: "Notification Permission" },
+    { id: "active-monitoring", title: "Foreground Service Activation" },
+    { id: "background-freezing", title: "Why This Service Is Necessary" },
+    { id: "closing-service", title: "Stopping the Service" }
+  ],
+  sections: [
+    {
+      id: "about-foreground-service",
+      title: "What is a Foreground Service?",
+      text: "A Foreground Service is a specialized Android system component used to perform long-running background tasks that are noticeable to the user. In YourPC, the foreground service acts as a persistent shield for your PRoot environment, preventing the operating system from suspending or killing user-space Linux processes when you navigate away from the app."
+    },
+    {
+      id: "notification-permission",
+      title: "Notification Permission",
+      text: "When you open YourPC for the first time, you will be greeted by an 'Allow Notification' system popup. It is essential to click 'Allow' so that Android can display the active persistent notification required to keep the foreground service running.",
+      imageSrc: notificationPermissionImg.src,
+      note: "Be sure to allow this permission. If notifications are blocked, Android will not allow the foreground service to execute, which directly impacts background environment stability.",
+      noteType: "info"
+    },
+    {
+      id: "active-monitoring",
+      title: "Foreground Service Activation",
+      text: "Anytime you initialize the Linux Desktop, load the Terminal, or start the VNC server, this foreground service is automatically activated. You will see an active, persistent entry in your device's notification bar indicating that the environment is currently active.",
+      imageSrc: foregroundServiceBarImg.src
+    },
+    {
+      id: "background-freezing",
+      title: "Why This Service Is Necessary",
+      text: "Although YourPC will technically function fine without this service while the app is actively on your screen, you will face issues when the app goes into the background.\n\nWithout an active foreground service, Android will immediately freeze YourPC's background processes to conserve system resources. This halts your running terminals, pauses compilation tasks, and suspends drawing buffers, leaving you confused as to why your Linux environment has stopped responding."
+    },
+    {
+      id: "closing-service",
+      title: "Stopping the Service",
+      text: "You do not need to manually manage the lifecycle of this service under normal operation. Once you properly close the Linux Desktop, exit the Terminal, or stop the VNC server, the foreground service will dismantle itself and close automatically.\n\nAlternatively, if you ever need to forcefully terminate the environment, you can stop the service immediately by clicking the 'Stop' or 'Close' action directly from the persistent notification itself.",
+      note: "Force-closing the service from the notification bar will immediately terminate all active PRoot subprocesses, which may cause unsaved data in your Linux session to be lost.",
+      noteType: "warning"
+    }
+  ]
 };
 
 --------------------------------------------------------------------------------
@@ -2859,6 +3202,132 @@ export const howToLaunchData: PageData = {
 
 --------------------------------------------------------------------------------
 
+File location: src\pages\yourpc\docs\_page\how_to_use_terminal.ts
+
+/* File location: src/pages/yourpc/docs/_page/how_to_use_terminal.ts */
+import { type PageData } from "./what-is-yourpc";
+
+// Import terminal step screenshots dynamically from your assets directory
+import terminalMatrixImg from "../../../../assets/products/yourpc/docs-assets/Terminal/TerminalMatrix.jpeg";
+import neofetchImg from "../../../../assets/products/yourpc/docs-assets/Terminal/NewoFetch.jpeg";
+import lazygitImg from "../../../../assets/products/yourpc/docs-assets/Terminal/lazygit.jpeg";
+
+export const howToUseTerminalData: PageData = {
+  id: "how-to-use-terminal",
+  title: "How to use Terminal?",
+  category: "Getting Started",
+  tagline: "Learn how to access, configure, and maximize the high-performance xterm-compliant shell interface in YourPC.",
+  breadcrumbs: ["Getting Started", "How to use Terminal?"],
+  outline: [
+    { id: "distro-requirement", title: "Direct Connection & Requirements" },
+    { id: "xterm-compliance", title: "ANSI & Color Fidelity" },
+    { id: "neofetch-view", title: "System Monitoring (Neofetch)" },
+    { id: "lazygit-view", title: "TUI Clients (lazygit)" },
+    { id: "multi-terminal", title: "Multi-Terminal Workspaces" },
+    { id: "toolbar-actions", title: "Toolbar Operations" }
+  ],
+  sections: [
+    {
+      id: "distro-requirement",
+      title: "Direct Connection & Requirements",
+      text: "Before you can open your terminal, you must first download and extract the Linux distribution rootfs (following the Getting Started instructions).\n\nOnce the rootfs installation is complete, launching the Terminal option opens a direct shell connection straight into your local Linux distribution environment. There are no virtual machines or emulation translation layers; you are communicating directly with the PRoot user-space environment, allowing you to run compilers, package managers, and text editors with native performance."
+    },
+    {
+      id: "xterm-compliance",
+      title: "ANSI & Color Fidelity",
+      text: "The built-in terminal is fully xterm-compliant, meaning it supports 256-color spaces, dynamic window resizing, and ANSI escape sequences. This compliance ensures that colors, highlights, and layouts render precisely the way your active Linux distro displays them, allowing you to run complex utilities like cmatrix without graphical glitches.",
+      imageSrc: terminalMatrixImg.src
+    },
+    {
+      id: "neofetch-view",
+      title: "System Monitoring (Neofetch)",
+      text: "You can execute popular monitoring and information tools such as neofetch or fastfetch. The ASCII art, system stats, and theme configurations align seamlessly, mirroring a physical terminal workspace.",
+      imageSrc: neofetchImg.src
+    },
+    {
+      id: "lazygit-view",
+      title: "TUI Clients (lazygit)",
+      text: "Interactive terminal user interfaces (TUIs) such as lazygit, htop, vim, and neovim render with full keyboard support and clear color separation. This lets you manage files, view Git commits, or edit code on the go without requiring a graphical desktop environment.",
+      imageSrc: lazygitImg.src
+    },
+    {
+      id: "multi-terminal",
+      title: "Multi-Terminal Workspaces",
+      text: "The terminal interface supports opening multiple concurrent shell tabs. This enables powerful multitasking options, letting you manage complex development structures simultaneously.\n\nFor example, you can spin up a local development web server (like a Python HTTP server or Node.js runtime) in your first terminal tab, monitor background database systems in your second tab, and perform standard file manipulations or Git operations in your third tab without interrupting any active processes."
+    },
+    {
+      id: "toolbar-actions",
+      title: "Toolbar Operations",
+      text: "At the top of the active terminal session, you will find a dedicated action toolbar designed to simplify common console workflows:\n\n• **Copy Button** (icon:content_copy): Clicking this copies the entire active scrollback buffer of your terminal directly to your Android system clipboard.\n\n• **Close (Cross) Button** (icon:close): Tapping this safely terminates the current active session. This button signals a clean interrupt to your running subprocesses, preventing orphaned threads from continuing to consume system memory in the background.",
+      note: "Always use the top close button to terminate active terminal sessions. This ensures the underlying PRoot process tree dismantles and stops cleanly.",
+      noteType: "info"
+    }
+  ]
+};
+
+--------------------------------------------------------------------------------
+
+File location: src\pages\yourpc\docs\_page\how_to_use_vnc.ts
+
+/* File location: src/pages/yourpc/docs/_page/how_to_use_vnc.ts */
+import { type PageData } from "./what-is-yourpc";
+
+// Import VNC step screenshots dynamically from your assets directory
+import vncScreenImg from "../../../../assets/products/yourpc/docs-assets/VNC/VNCSCreen.jpeg";
+import vncStartImg from "../../../../assets/products/yourpc/docs-assets/VNC/VNCStart.jpeg";
+import newConnectionImg from "../../../../assets/products/yourpc/docs-assets/VNC/NewConnection.jpeg";
+import vncViewerExampleImg from "../../../../assets/products/yourpc/docs-assets/VNC/VNCViewerExample.jpeg";
+
+export const howToUseVNCData: PageData = {
+  id: "how-to-use-vnc",
+  title: "How to use VNC?",
+  category: "Getting Started",
+  tagline: "Learn how to start the graphic display server in YourPC and connect to your Linux desktop environment using a VNC viewer.",
+  breadcrumbs: ["Getting Started", "How to use VNC?"],
+  outline: [
+    { id: "vnc-menu", title: "Step 1: Open VNC Screen" },
+    { id: "vnc-start", title: "Step 2: Start VNC Server" },
+    { id: "vnc-client-setup", title: "Step 3: Setup Client Application" },
+    { id: "vnc-new-connection", title: "Step 4: Establish Connection" },
+    { id: "vnc-connection-success", title: "Step 5: Successful Display" }
+  ],
+  sections: [
+    {
+      id: "vnc-menu",
+      title: "Step 1: Open VNC Screen",
+      text: "First, select the connect icon displayed on your main dashboard, and then select the VNC window card from the list of options to open its parameters page.",
+      imageSrc: vncScreenImg.src
+    },
+    {
+      id: "vnc-start",
+      title: "Step 2: Start VNC Server",
+      text: "Once you are on the VNC configuration dashboard, click on the 'Run Server' option. Wait a moment for the background server system to initialize until the status indicator displays 'Running'.",
+      imageSrc: vncStartImg.src
+    },
+    {
+      id: "vnc-client-setup",
+      title: "Step 3: Setup Client Application",
+      text: "After the VNC server starts inside YourPC, you can download any third-party VNC viewer application on your phone to view and interact with your Linux desktop GUI.\n\nBecause the display server listens on local network ports, you can also connect to your Linux desktop from other devices on your network, such as your desktop PC, laptop, or tablet.",
+      note: "You must be connected to the exact same Wi-Fi or hotspot network on both your Android host and your client device (PC, laptop, or other phone) for local network connection loops to bridge successfully.",
+      noteType: "info"
+    },
+    {
+      id: "vnc-new-connection",
+      title: "Step 4: Establish Connection",
+      text: "Once you open your preferred VNC application, start a new connection configured with the matching host IP and port settings.\n\nHere, we are using the 'VNC Viewer' application as an example, but you are free to use any third-party software. (Please note we are not affiliated with or sponsored by them, though we would certainly welcome the opportunity!).",
+      imageSrc: newConnectionImg.src
+    },
+    {
+      id: "vnc-connection-success",
+      title: "Step 5: Successful Display",
+      text: "Once the address and port parameters are entered and the connection is initiated, you will see a fully operational, responsive desktop workspace running straight on your mobile client.",
+      imageSrc: vncViewerExampleImg.src
+    }
+  ]
+};
+
+--------------------------------------------------------------------------------
+
 File location: src\pages\yourpc\docs\_page\what-is-yourpc.ts
 
 /* File location: src/pages/yourpc/docs/_page/what-is-yourpc.ts */
@@ -2870,7 +3339,9 @@ export interface SectionData {
   listItems?: string[];
   showConfigTable?: boolean;
   note?: string;
+  noteType?: "info" | "warning" | "success" | "error";
   imageSrc?: string;
+  codeblock?: { lang: string; code: string };
 }
 
 export interface PageData {
@@ -3066,7 +3537,7 @@ export const pages: Record<string, DocPage> = {
             Overview
           </h2>
           <p className="text-fd-muted-foreground text-[15px] leading-7 max-w-[720px] font-normal font-sans">
-            YourPC makes desktop virtualization accessible on Android. Unlike native virtual machines, it operates without root requirements or kernel modifications, acting as a lightweight layer mapping system calls directly onto the AOSP kernel.
+            YourPC makes running Linux desktop environments accessible on Android. Unlike native virtual machines or emulators, it operates without root requirements or kernel modifications, acting as a lightweight translation layer mapping user-space system calls directly onto the AOSP kernel via PRoot.
           </p>
         </section>
 
@@ -3301,7 +3772,7 @@ import '../../../styles/docs.css';
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <title>YourPC Documentation | ZedLabs Studio</title>
   </head>
-  <body class="bg-[#0a0a0a] text-[#f4f4f5] overflow-hidden select-none font-sans antialiased font-sans">
+  <body class="bg-[#0a0a0a] text-[#f4f4f5] overflow-hidden font-sans antialiased">
     <YourPCDocs client:load />
   </body>
 </html>
@@ -3340,7 +3811,7 @@ File location: src\pages\yourpc\docs\metadata.ts
 /* File location: src/pages/yourpc/docs/metadata.ts */
 
 /**
- * Standard configuration options for YourPC's Linux virtualization engine.
+ * Standard configuration options for YourPC's Linux execution environment.
  */
 export interface YourPCConfig {
   /**

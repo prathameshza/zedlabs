@@ -244,7 +244,7 @@ export default function Home() {
                   <span className="text-xs text-muted-foreground uppercase tracking-widest quicksand-medium">Developers</span>
                 </div>
                 <div>
-                  <span className="block text-3xl font-bold text-primary">5+</span>
+                  <span className="block text-3xl font-bold text-primary">6+</span>
                   <span className="text-xs text-muted-foreground uppercase tracking-widest quicksand-medium">Active Tools</span>
                 </div>
                 <div>
@@ -328,7 +328,7 @@ export default function Home() {
               <p className="text-muted-foreground text-lg max-w-xl mx-auto quicksand-regular">Precision engineered tools designed to streamline your daily workflow.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               
               {/* Notebook */}
               <div className="glass-card p-8 rounded-2xl hover:border-primary/40 transition-all flex flex-col justify-between group">
@@ -418,8 +418,28 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* RetroMobile */}
+              <div className="glass-card p-8 rounded-2xl hover:border-primary/40 transition-all flex flex-col justify-between group">
+                <div>
+                  <div className="flex justify-between items-start mb-6">
+                    <span className="material-symbols-outlined text-primary text-4xl">sports_esports</span>
+                    <span className="px-3 py-1 bg-muted text-muted-foreground text-xs font-bold rounded-full">SOON</span>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors quicksand-semibold mb-3">RetroMobile</h3>
+                  <p className="text-muted-foreground text-base leading-relaxed mb-6 quicksand-regular">Run classic J2ME Java JAR and JAD games/apps directly on Android with customized on-screen controls.</p>
+                </div>
+                <div className="space-y-4">
+                  <a className="text-primary font-bold inline-flex items-center gap-2 hover:gap-3 transition-all text-sm quicksand-bold" href="/retromobile">
+                    Launch Tool <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </a>
+                  <div className="pt-4 border-t border-border">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground quicksand-medium border border-border">Coming Soon</span>
+                  </div>
+                </div>
+              </div>
+
               {/* YourPC */}
-              <div className="glass-card p-8 rounded-2xl hover:border-primary/40 transition-all flex flex-col justify-between group col-span-1 md:col-span-2 max-w-xl mx-auto w-full">
+              <div className="glass-card p-8 rounded-2xl hover:border-primary/40 transition-all flex flex-col justify-between group">
                 <div>
                   <div className="flex justify-between items-start mb-6">
                     <span className="material-symbols-outlined text-muted-foreground text-4xl">monitor_heart</span>
@@ -513,6 +533,8 @@ export default function Home() {
               <li><a className="hover:text-primary transition-colors" href="/webcodebox">WebCodeBox</a></li>
               <li><a className="hover:text-primary transition-colors" href="/shaderboy">Shaderboy</a></li>
               <li><a className="hover:text-primary transition-colors" href="/pocketcontroller">PocketController</a></li>
+              <li><a className="hover:text-primary transition-colors" href="/retromobile">RetroMobile</a></li>
+              <li><a className="hover:text-primary transition-colors" href="/yourpc">YourPC</a></li>
             </ul>
           </div>
           <div>

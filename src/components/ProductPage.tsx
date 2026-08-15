@@ -15,7 +15,7 @@ interface ProductPageProps {
   pcDownloadLink?: string;
   prereleaseDownloadLink?: string;
   isComingSoon?: boolean;
-  privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller' | 'yourpc';
+  privacyVariant?: 'general' | 'notebook' | 'webcodebox' | 'shaderboy' | 'pocketcontroller' | 'yourpc' | 'retromobile';
   docsLink?: string;
 }
 
